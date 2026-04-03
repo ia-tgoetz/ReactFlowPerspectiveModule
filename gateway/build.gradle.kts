@@ -25,8 +25,7 @@ tasks.named<ProcessResources>("processResources") {
     val webpackTask = project(":web").tasks.named("webpack")
     dependsOn(webpackTask)
 
-    // THE REAL FIX: Copy the file directly into the "mounted" folder
-    from(project(":web").file("packages/client/dist/DatabaseSchemaClient.js")) {
-        into("mounted") 
-    }
+    // Grab the Webpack output (which already contains the 'mounted' folder)
+    // and copy it as-is. No 'into()' block needed!
+    from(webpackTask) 
 }
