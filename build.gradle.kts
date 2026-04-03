@@ -35,7 +35,7 @@ ignitionModule {
     projectScopes.putAll(
         mapOf(
             ":gateway" to "G",
-            ":web" to "GD",      // <--- Change "G" to "GD"
+            // Removed the :web scope so it stops building web-1.0.0.jar
             ":designer" to "D",
             ":common" to "GD"
         )
