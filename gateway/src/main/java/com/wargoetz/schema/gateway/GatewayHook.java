@@ -34,4 +34,9 @@ public class GatewayHook extends AbstractGatewayModuleHook {
     public Optional<String> getMountedResourceFolder() {
         return Optional.of("mounted"); 
     }
+    // This creates the URL: /res/com.wargoetz.databaseschema/*
+    @Override
+    public Optional<String> getMountPathAlias() {
+        return Optional.of(DatabaseSchemaMeta.MODULE_ID);
+    }
 }

@@ -43,10 +43,11 @@ ignitionModule {
 
     // 'hook classes' are the things that Ignition loads and runs when your module is installed.  This map tells
     // Ignition which classes should be loaded in a given scope.
+// 'hook classes' are the things that Ignition loads and runs when your module is installed.
     hooks.putAll(
         mapOf(
-            "com.wargoetz.schema.gateway.GatewayHook" to "G", // <-- Updated Gateway Hook path
-            "com.wargoetz.schema.designer.DesignerHook" to "D"  // <-- Updated Designer Hook path
+            "com.wargoetz.schema.gateway.GatewayHook" to "G", // Class Path -> Scope
+            "com.wargoetz.schema.designer.DesignerHook" to "D"  // Class Path -> Scope
         )
     )
     skipModlSigning.set(true)

@@ -16,7 +16,7 @@ public class DatabaseSchemaMeta {
     public static final BrowserResource JS_RESOURCE = new BrowserResource(
         "databaseschema-client",
         "/res/com.wargoetz.databaseschema/DatabaseSchemaClient.js",
-        BrowserResource.ResourceType.JS // Correctly scoped enum
+        BrowserResource.ResourceType.JS
     );
 
     // Builds the actual descriptor expected by Perspective

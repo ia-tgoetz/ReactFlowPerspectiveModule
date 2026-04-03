@@ -3,7 +3,7 @@
     "version": "2.0.0",
     "description": "SQL Historian Database Schema client component",
     "main": "dist/index.js",
-    "typings": "dist/typings/databaseschema-client.d.ts",
+    "typings": "dist/typings/index.d.ts",
     "license": "UNLICENSED",
     "scripts": {
         "build": "yarn run clean && webpack --mode development",
