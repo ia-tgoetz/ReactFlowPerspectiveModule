@@ -1,0 +1,29 @@
+{
+  "type": "object",
+  "properties": {
+    "tables": {
+      "type": "array",
+      "default": [
+        { "id": "sqlth_drv", "name": "sqlth_drv", "columns": ["id", "name", "provider"] },
+        { "id": "sqlth_partitions", "name": "sqlth_partitions", "columns": ["pname", "drvid", "start_time", "end_time", "blocksize", "flags"] },
+        { "id": "sqlth_scinfo", "name": "sqlth_scinfo", "columns": ["id", "scname", "drvid"] },
+        { "id": "sqlth_sce", "name": "sqlth_sce", "columns": ["scid", "start_time", "end_time", "rate"] },
+        { "id": "sqlth_te", "name": "sqlth_te", "columns": ["id", "tagpath", "scid", "datatype", "querymode", "created", "retired"] },
+        { "id": "sqlth_data", "name": "sqlth_data_(drvid)_(date)", "columns": ["tagid", "intvalue", "floatvalue", "stringvalue", "datevalue", "dataintegrity", "t_stamp"] },
+        { "id": "sqlth_annotations", "name": "sqlth_annotations", "columns": ["id", "tagid", "start_time", "end_time", "type", "datavalue", "annotationid"] }
+      ]
+    },
+    "relationships": {
+      "type": "array",
+      "default": [
+        { "source": "sqlth_drv", "sourceColumn": "id", "target": "sqlth_partitions", "targetColumn": "drvid", "type": "one-to-many" },
+        { "source": "sqlth_drv", "sourceColumn": "id", "target": "sqlth_scinfo", "targetColumn": "drvid", "type": "one-to-many" },
+        { "source": "sqlth_scinfo", "sourceColumn": "id", "target": "sqlth_sce", "targetColumn": "scid", "type": "one-to-many" },
+        { "source": "sqlth_scinfo", "sourceColumn": "id", "target": "sqlth_te", "targetColumn": "scid", "type": "one-to-many" },
+        { "source": "sqlth_te", "sourceColumn": "id", "target": "sqlth_data", "targetColumn": "tagid", "type": "one-to-many" },
+        { "source": "sqlth_te", "sourceColumn": "id", "target": "sqlth_annotations", "targetColumn": "tagid", "type": "one-to-many" },
+        { "source": "sqlth_partitions", "sourceColumn": "pname", "target": "sqlth_data", "targetColumn": "", "type": "one-to-many" }
+      ]
+    }
+  }
+}
