@@ -1,5 +1,7 @@
 package com.wargoetz.schema.gateway;
 
+import java.util.Optional; // 1. ADD THIS IMPORT
+
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.gateway.model.AbstractGatewayModuleHook;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
@@ -24,5 +26,12 @@ public class GatewayHook extends AbstractGatewayModuleHook {
     public void shutdown() {
         PerspectiveContext perspectiveContext = PerspectiveContext.get(this.gatewayContext);
         perspectiveContext.getComponentRegistry().removeComponent(DatabaseSchemaMeta.COMPONENT_ID);
+    }
+
+    // 2. ADD THIS ENTIRE METHOD
+    // This tells the Gateway's ResourceLocator exactly where to find the JavaScript files
+    @Override
+    public Optional<String> getMountedResourceFolder() {
+        return Optional.of("mounted"); 
     }
 }
