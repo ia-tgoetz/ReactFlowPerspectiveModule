@@ -24,8 +24,8 @@ export interface DatabaseSchemaProps {
 
 // 3. Create the React Component
 export function DatabaseSchema(props: ComponentProps<DatabaseSchemaProps>) {
-    // We only pull 'tables' from the props to avoid "unused variable" errors for 'relationships'
-    const { tables } = props.props;
+    // SAFETY TWEAK: Add '|| []' so it never crashes if tables is undefined on load
+    const tables = props.props.tables || [];
 
     const containerStyle: React.CSSProperties = {
         padding: '10px',
@@ -40,8 +40,7 @@ export function DatabaseSchema(props: ComponentProps<DatabaseSchemaProps>) {
         <div style={containerStyle} {...props.emit()}>
             <h2>SQL Historian Schema</h2>
             <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-                {/* Ensure tables exists before mapping */}
-                {tables && tables.map((table: TableDef) => (
+                {tables.map((table: TableDef) => (
                     <div key={table.id} style={{ border: '1px solid black', padding: '10px', background: 'white', minWidth: '150px' }}>
                         <strong>{table.name}</strong>
                         <hr />

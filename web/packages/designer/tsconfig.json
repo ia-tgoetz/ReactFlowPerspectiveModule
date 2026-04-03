@@ -1,14 +1,9 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
+        "rootDir": "./typescript",
         "allowJs": false,
         "allowSyntheticDefaultImports": true,
-        "baseUrl": ".",
-        "paths" : {
-          "*": [
-              "*"
-          ]
-        },
         "declaration": true,
         "declarationDir": "dist/typings/",
         "experimentalDecorators": true,
@@ -19,7 +14,6 @@
         "noImplicitThis": true,
         "noImplicitReturns": false,
         "noImplicitAny": true,
-        "suppressImplicitAnyIndexErrors": true,
         "noUnusedLocals": true,
         "outDir": "dist/",
         "pretty": true,
@@ -27,7 +21,7 @@
         "sourceMap": true,
         "strictNullChecks": true,
         "target": "es6",
-        "lib": ["es2015.collection", "es2015.promise", "es2015.symbol", "es5", "es6", "dom", "es7", "es2017"]
+        "lib": ["es6", "dom", "es7", "es2017"]
     },
     "include": [
         "./typescript/**/*.ts",

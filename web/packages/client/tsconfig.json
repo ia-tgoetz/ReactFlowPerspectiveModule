@@ -1,14 +1,9 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
+        "rootDir": "./typescript",
         "allowJs": false,
         "allowSyntheticDefaultImports": true,
-        "baseUrl": ".",
-        "paths" : {
-          "*": [
-              "*"
-          ]
-        },
         "declaration": true,
         "declarationDir": "dist/typings/",
         "experimentalDecorators": true,
@@ -19,7 +14,6 @@
         "noImplicitThis": true,
         "noImplicitReturns": false,
         "noImplicitAny": true,
-        "suppressImplicitAnyIndexErrors": true,
         "noUnusedLocals": true,
         "outDir": "dist/",
         "pretty": true,

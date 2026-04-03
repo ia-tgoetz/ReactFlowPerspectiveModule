@@ -1,10 +1,9 @@
 import { DesignerComponentStore } from '@inductiveautomation/perspective-designer';
+// Import the component directly from your client package library
 import { DatabaseSchema } from '@wargoetz/databaseschema-client';
 
-// In this version, the Store is the registry. 
-// We use 'registerComponent' or 'register' depending on the exact build.
-// If .register() fails, try .registerComponent()
-(DesignerComponentStore as any).register({
-    type: "wargoetz.display.databaseschema",
+// Register it with the Designer workspace
+(DesignerComponentStore as any).registerComponent({
+    type: 'wargoetz.display.databaseschema',
     component: DatabaseSchema
 });
