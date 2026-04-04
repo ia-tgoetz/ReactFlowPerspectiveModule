@@ -1,57 +1,58 @@
+// 1. THIS IS THE CRUCIAL CHANGE: import * as React
 import * as React from 'react';
 import { ComponentProps } from '@inductiveautomation/perspective-client';
+// @ts-ignore
+import ReactFlow, { Background, Controls, Node, Edge } from 'reactflow';
+// @ts-ignore
+import 'reactflow/dist/style.css';
 
-// 1. Define the shape of our data based on databaseschema.props.json
-export interface TableDef {
-    id: string;
-    name: string;
-    columns: string[];
-}
-
-export interface RelationshipDef {
-    source: string;
-    sourceColumn: string;
-    target: string;
-    targetColumn: string;
-    type: string;
-}
-
-// 2. Define the main properties interface
 export interface DatabaseSchemaProps {
-    tables: TableDef[];
-    relationships: RelationshipDef[];
+    tables: Array<{ id: string, name: string, columns: string[] }>;
+    relationships: Array<{ source: string, sourceColumn: string, target: string, targetColumn: string, type: string }>;
 }
 
-// 3. Create the React Component
 export function DatabaseSchema(props: ComponentProps<DatabaseSchemaProps>) {
-    // SAFETY TWEAK: Add '|| []' so it never crashes if tables is undefined on load
-    const tables = props.props.tables || [];
+    const { tables, relationships } = props.props;
 
-    const containerStyle: React.CSSProperties = {
-        padding: '10px',
-        backgroundColor: '#f4f4f4',
-        border: '1px solid #ccc',
-        width: '100%',
-        height: '100%',
-        overflow: 'auto'
-    };
+    // 2. We use React.useMemo now instead of just useMemo
+    const nodes: Node[] = React.useMemo(() => {
+        if (!tables) return [];
+        return tables.map((table, index) => ({
+            id: table.id,
+            data: { 
+                label: (
+                    <div style={{ padding: '10px', textAlign: 'left' }}>
+                        <strong>{table.name}</strong>
+                        <hr style={{ margin: '5px 0' }}/>
+                        <div style={{ fontSize: '10px' }}>
+                            {table.columns?.map(c => <div key={c}>🔑 {c}</div>)}
+                        </div>
+                    </div>
+                ) 
+            },
+            position: { x: (index % 3) * 250, y: Math.floor(index / 3) * 150 },
+            style: { border: '1px solid #777', borderRadius: '5px', background: '#fff', minWidth: '150px' }
+        }));
+    }, [tables]);
+
+    const edges: Edge[] = React.useMemo(() => {
+        if (!relationships) return [];
+        return relationships.map((rel, index) => ({
+            id: `edge-${index}`,
+            source: rel.source,
+            target: rel.target,
+            animated: rel.type === 'one-to-many',
+            label: rel.type,
+            style: { stroke: '#007BFF', strokeWidth: 2 }
+        }));
+    }, [relationships]);
 
     return (
-        <div style={containerStyle} {...props.emit()}>
-            <h2>SQL Historian Schema</h2>
-            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-                {tables.map((table: TableDef) => (
-                    <div key={table.id} style={{ border: '1px solid black', padding: '10px', background: 'white', minWidth: '150px' }}>
-                        <strong>{table.name}</strong>
-                        <hr />
-                        <ul style={{ paddingLeft: '20px', margin: 0 }}>
-                            {table.columns.map((col: string, idx: number) => (
-                                <li key={idx}>{col}</li>
-                            ))}
-                        </ul>
-                    </div>
-                ))}
-            </div>
+        <div {...props.emit()} style={{ width: '100%', height: '100%', minHeight: '400px', background: '#f4f4f4' }}>
+            <ReactFlow nodes={nodes} edges={edges} fitView>
+                <Background />
+                <Controls />
+            </ReactFlow>
         </div>
     );
 }

@@ -1,6 +1,7 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
+        "skipLibCheck": true,
         "rootDir": "./typescript",
         "allowJs": false,
         "allowSyntheticDefaultImports": true,
