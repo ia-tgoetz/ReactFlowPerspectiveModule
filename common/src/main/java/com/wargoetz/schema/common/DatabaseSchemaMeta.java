@@ -25,6 +25,8 @@ public class DatabaseSchemaMeta {
             .setModuleId(MODULE_ID)
             .setPaletteCategory("Display")
             .setName("Database Schema")
+            // ---> THIS IS THE MISSING PIECE! <---
+            .addPaletteEntry("", "Database Schema", "Visualizes SQL Historian schemas.", null, null)
             .setDefaultMetaName("dbSchema")
             .setResources(Set.of(JS_RESOURCE))
             .setSchema(JsonSchema.parse(DatabaseSchemaMeta.class.getResourceAsStream("/databaseschema.props.json")))

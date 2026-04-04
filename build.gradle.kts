@@ -8,8 +8,8 @@ plugins {
 }
 
 allprojects {
-    version = "2.0.0"
-    group = "com.wargoetz.schema" // <-- Updated Group
+    version = "2.0.0" // <-- Change this from 2.0.0 to force the Designer to download the new files!
+    group = "com.wargoetz.schema"
 }
 
 ignitionModule {

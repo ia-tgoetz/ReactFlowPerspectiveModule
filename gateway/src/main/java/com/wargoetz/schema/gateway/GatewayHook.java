@@ -1,6 +1,6 @@
 package com.wargoetz.schema.gateway;
 
-import java.util.Optional; // 1. ADD THIS IMPORT
+import java.util.Optional; // <-- Make sure to add this import!
 
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.gateway.model.AbstractGatewayModuleHook;
@@ -9,6 +9,7 @@ import com.inductiveautomation.perspective.gateway.api.PerspectiveContext;
 import com.wargoetz.schema.common.DatabaseSchemaMeta;
 
 public class GatewayHook extends AbstractGatewayModuleHook {
+    
     private GatewayContext gatewayContext;
 
     @Override
@@ -28,15 +29,10 @@ public class GatewayHook extends AbstractGatewayModuleHook {
         perspectiveContext.getComponentRegistry().removeComponent(DatabaseSchemaMeta.COMPONENT_ID);
     }
 
-    // 2. ADD THIS ENTIRE METHOD
-    // This tells the Gateway's ResourceLocator exactly where to find the JavaScript files
+    // --- THIS IS THE MAGIC METHOD ---
+    // Tells the Gateway web server to expose your compiled JavaScript files!
     @Override
     public Optional<String> getMountedResourceFolder() {
-        return Optional.of("mounted"); 
-    }
-    // This creates the URL: /res/com.wargoetz.databaseschema/*
-    @Override
-    public Optional<String> getMountPathAlias() {
-        return Optional.of(DatabaseSchemaMeta.MODULE_ID);
+        return Optional.of("mounted");
     }
 }
