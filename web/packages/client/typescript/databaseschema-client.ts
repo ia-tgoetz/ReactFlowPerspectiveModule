@@ -1,30 +1,33 @@
 import { ComponentMeta, ComponentRegistry } from '@inductiveautomation/perspective-client';
 import { DatabaseSchema } from './components/DatabaseSchema';
 
-// 1. Keep the wildcard export so the designer package can access it
-export * from './components/DatabaseSchema';
-
-// 2. Build the Meta class exactly how Ignition expects it
 export class DatabaseSchemaMeta implements ComponentMeta {
-    
-    // Ignition calls this to know the ID
     getComponentType(): string {
         return 'wargoetz.display.databaseschema';
     }
 
-    // Ignition calls this to get your React component
     getViewComponent(): any {
-        return DatabaseSchema;
+        return DatabaseSchema as any;
     }
 
-    // Ignition calls this when you drag it onto the screen
     getDefaultSize(): any {
+        return { width: 800, height: 600 };
+    }
+
+    // --- THIS IS THE MISSING DATA BRIDGE ---
+    // Grabs the properties from the Ignition Designer and hands them to React Flow
+    getPropsReducer(tree: any): any {
         return {
-            width: 600,
-            height: 600
+            tables: tree.read('tables'),
+            relationships: tree.read('relationships')
         };
     }
 }
 
-// 3. Register a new instance of our class
-ComponentRegistry.register(new DatabaseSchemaMeta());
+// Safely registers the component
+const registry = ComponentRegistry as any;
+if (registry.registerComponent) {
+    registry.registerComponent(new DatabaseSchemaMeta());
+} else {
+    registry.register(new DatabaseSchemaMeta());
+}

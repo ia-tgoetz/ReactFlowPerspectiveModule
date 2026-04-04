@@ -2,6 +2,7 @@ import { ComponentDesignDelegate, InteractionRegistry } from '@inductiveautomati
 import { DatabaseSchema } from '@wargoetz/databaseschema-client';
 
 // 1. Create a delegate to tell the Designer how to render your component
+
 const delegate: ComponentDesignDelegate = {
     // This MUST match your DatabaseSchemaMeta.COMPONENT_ID in Java exactly
     type: 'wargoetz.display.databaseschema',

@@ -12,23 +12,28 @@ public class DatabaseSchemaMeta {
     public static final String COMPONENT_ID = "wargoetz.display.databaseschema";
     public static final String MODULE_ID = "com.wargoetz.databaseschema";
 
-    // In 8.3, ResourceType is a nested enum: BrowserResource.ResourceType
     public static final BrowserResource JS_RESOURCE = new BrowserResource(
-        "databaseschema-client",
+        "databaseschema-client-js",
         "/res/com.wargoetz.databaseschema/DatabaseSchemaClient.js",
         BrowserResource.ResourceType.JS
     );
 
-    // Builds the actual descriptor expected by Perspective
+    // 1. ADD THE CSS RESOURCE
+    public static final BrowserResource CSS_RESOURCE = new BrowserResource(
+        "databaseschema-client-css",
+        "/res/com.wargoetz.databaseschema/DatabaseSchemaClient.css",
+        BrowserResource.ResourceType.CSS
+    );
+
     public static final ComponentDescriptor DESCRIPTOR = ComponentDescriptorImpl.ComponentBuilder.newBuilder()
             .setId(COMPONENT_ID)
             .setModuleId(MODULE_ID)
             .setPaletteCategory("Display")
             .setName("Database Schema")
-            // ---> THIS IS THE MISSING PIECE! <---
             .addPaletteEntry("", "Database Schema", "Visualizes SQL Historian schemas.", null, null)
             .setDefaultMetaName("dbSchema")
-            .setResources(Set.of(JS_RESOURCE))
+            // 2. MAKE SURE BOTH JS AND CSS ARE REGISTERED HERE:
+            .setResources(Set.of(JS_RESOURCE, CSS_RESOURCE))
             .setSchema(JsonSchema.parse(DatabaseSchemaMeta.class.getResourceAsStream("/databaseschema.props.json")))
             .build();
 }
