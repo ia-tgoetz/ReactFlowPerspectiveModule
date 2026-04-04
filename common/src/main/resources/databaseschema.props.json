@@ -15,14 +15,29 @@
     },
     "relationships": {
       "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source": { "type": "string" },
+          "sourceColumn": { "type": "string" },
+          "target": { "type": "string" },
+          "targetColumn": { "type": "string" },
+          "type": { "type": "string" },
+          "lineType": { 
+            "type": "string", 
+            "enum": ["default", "smoothstep", "step", "straight"],
+            "description": "The shape of the connection line."
+          }
+        }
+      },
       "default": [
-        { "source": "sqlth_drv", "sourceColumn": "id", "target": "sqlth_partitions", "targetColumn": "drvid", "type": "one-to-many" },
-        { "source": "sqlth_drv", "sourceColumn": "id", "target": "sqlth_scinfo", "targetColumn": "drvid", "type": "one-to-many" },
-        { "source": "sqlth_scinfo", "sourceColumn": "id", "target": "sqlth_sce", "targetColumn": "scid", "type": "one-to-many" },
-        { "source": "sqlth_scinfo", "sourceColumn": "id", "target": "sqlth_te", "targetColumn": "scid", "type": "one-to-many" },
-        { "source": "sqlth_te", "sourceColumn": "id", "target": "sqlth_data", "targetColumn": "tagid", "type": "one-to-many" },
-        { "source": "sqlth_te", "sourceColumn": "id", "target": "sqlth_annotations", "targetColumn": "tagid", "type": "one-to-many" },
-        { "source": "sqlth_partitions", "sourceColumn": "pname", "target": "sqlth_data", "targetColumn": "", "type": "one-to-many" }
+        { "source": "sqlth_drv", "sourceColumn": "id", "target": "sqlth_partitions", "targetColumn": "drvid", "type": "one-to-many", "lineType": "default" },
+        { "source": "sqlth_drv", "sourceColumn": "id", "target": "sqlth_scinfo", "targetColumn": "drvid", "type": "one-to-many", "lineType": "default" },
+        { "source": "sqlth_scinfo", "sourceColumn": "id", "target": "sqlth_sce", "targetColumn": "scid", "type": "one-to-many", "lineType": "default" },
+        { "source": "sqlth_scinfo", "sourceColumn": "id", "target": "sqlth_te", "targetColumn": "scid", "type": "one-to-many", "lineType": "default" },
+        { "source": "sqlth_te", "sourceColumn": "id", "target": "sqlth_data", "targetColumn": "tagid", "type": "one-to-many", "lineType": "default" },
+        { "source": "sqlth_te", "sourceColumn": "id", "target": "sqlth_annotations", "targetColumn": "tagid", "type": "one-to-many", "lineType": "default" },
+        { "source": "sqlth_partitions", "sourceColumn": "pname", "target": "sqlth_data", "targetColumn": "", "type": "one-to-many", "lineType": "default" }
       ]
     }
   }
