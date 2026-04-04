@@ -1,16 +1,65 @@
 {
   "type": "object",
   "properties": {
+    "headerStyle": {
+      "$ref": "urn:ignition-schema:schemas/style-properties.schema.json",
+      "description": "Global CSS styles applied to all table headers.",
+      "default": {}
+    },
+    "rowStyle": {
+      "$ref": "urn:ignition-schema:schemas/style-properties.schema.json",
+      "description": "Global CSS styles applied to all table bodies.",
+      "default": {}
+    },
     "tables": {
       "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "columns": { "type": "array", "items": { "type": "string" } },
+          "headerStyle": { 
+            "$ref": "urn:ignition-schema:schemas/style-properties.schema.json",
+            "description": "Overrides global headerStyle for this specific table." 
+          },
+          "rowStyle": { 
+            "$ref": "urn:ignition-schema:schemas/style-properties.schema.json",
+            "description": "Overrides global rowStyle for this specific table." 
+          }
+        }
+      },
       "default": [
-        { "id": "sqlth_drv", "name": "sqlth_drv", "columns": ["id", "name", "provider"] },
-        { "id": "sqlth_partitions", "name": "sqlth_partitions", "columns": ["pname", "drvid", "start_time", "end_time", "blocksize", "flags"] },
-        { "id": "sqlth_scinfo", "name": "sqlth_scinfo", "columns": ["id", "scname", "drvid"] },
-        { "id": "sqlth_sce", "name": "sqlth_sce", "columns": ["scid", "start_time", "end_time", "rate"] },
-        { "id": "sqlth_te", "name": "sqlth_te", "columns": ["id", "tagpath", "scid", "datatype", "querymode", "created", "retired"] },
-        { "id": "sqlth_data", "name": "sqlth_data_(drvid)_(date)", "columns": ["tagid", "intvalue", "floatvalue", "stringvalue", "datevalue", "dataintegrity", "t_stamp"] },
-        { "id": "sqlth_annotations", "name": "sqlth_annotations", "columns": ["id", "tagid", "start_time", "end_time", "type", "datavalue", "annotationid"] }
+        {
+          "id": "sqlth_partitions",
+          "name": "sqlth_partitions",
+          "columns": ["pname", "drvid", "start_time", "end_time", "blocksize", "flags"]
+        },
+        {
+          "id": "sqlth_data",
+          "name": "sqlth_data_(drvid)_(date)",
+          "columns": ["tagid", "intvalue", "floatvalue", "stringvalue", "datevalue", "dataintegrity", "t_stamp"]
+        },
+        {
+          "id": "sqlth_te",
+          "name": "sqlth_te",
+          "columns": ["id", "tagpath", "scid", "datatype", "querymode", "created", "retired"]
+        },
+        {
+          "id": "sqlth_sce",
+          "name": "sqlth_sce",
+          "columns": ["scid", "start_time", "end_time", "rate"]
+        },
+        {
+          "id": "sqlth_scinfo",
+          "name": "sqlth_scinfo",
+          "columns": ["id", "scname", "drvid"]
+        },
+        {
+          "id": "sqlth_drv",
+          "name": "sqlth_drv",
+          "columns": ["id", "name", "provider"]
+        }
       ]
     },
     "relationships": {
@@ -23,21 +72,64 @@
           "target": { "type": "string" },
           "targetColumn": { "type": "string" },
           "type": { "type": "string" },
-          "lineType": { 
-            "type": "string", 
-            "enum": ["default", "smoothstep", "step", "straight"],
-            "description": "The shape of the connection line."
+          "lineType": { "type": "string", "enum": ["default", "smoothstep", "step", "straight"] },
+          "lineColor": { "type": "string" },
+          "lineWidth": { "type": "number" },
+          "style": { 
+            "$ref": "urn:ignition-schema:schemas/style-properties.schema.json",
+            "description": "Additional CSS for the line." 
           }
         }
       },
       "default": [
-        { "source": "sqlth_drv", "sourceColumn": "id", "target": "sqlth_partitions", "targetColumn": "drvid", "type": "one-to-many", "lineType": "default" },
-        { "source": "sqlth_drv", "sourceColumn": "id", "target": "sqlth_scinfo", "targetColumn": "drvid", "type": "one-to-many", "lineType": "default" },
-        { "source": "sqlth_scinfo", "sourceColumn": "id", "target": "sqlth_sce", "targetColumn": "scid", "type": "one-to-many", "lineType": "default" },
-        { "source": "sqlth_scinfo", "sourceColumn": "id", "target": "sqlth_te", "targetColumn": "scid", "type": "one-to-many", "lineType": "default" },
-        { "source": "sqlth_te", "sourceColumn": "id", "target": "sqlth_data", "targetColumn": "tagid", "type": "one-to-many", "lineType": "default" },
-        { "source": "sqlth_te", "sourceColumn": "id", "target": "sqlth_annotations", "targetColumn": "tagid", "type": "one-to-many", "lineType": "default" },
-        { "source": "sqlth_partitions", "sourceColumn": "pname", "target": "sqlth_data", "targetColumn": "", "type": "one-to-many", "lineType": "default" }
+        {
+          "source": "sqlth_partitions",
+          "sourceColumn": "pname",
+          "target": "sqlth_data",
+          "targetColumn": "",
+          "type": "one-to-many",
+          "lineType": "default"
+        },
+        {
+          "source": "sqlth_partitions",
+          "sourceColumn": "drvid",
+          "target": "sqlth_drv",
+          "targetColumn": "id",
+          "type": "many-to-one",
+          "lineType": "default"
+        },
+        {
+          "source": "sqlth_data",
+          "sourceColumn": "tagid",
+          "target": "sqlth_te",
+          "targetColumn": "id",
+          "type": "many-to-one",
+          "lineType": "default"
+        },
+        {
+          "source": "sqlth_te",
+          "sourceColumn": "scid",
+          "target": "sqlth_scinfo",
+          "targetColumn": "id",
+          "type": "many-to-one",
+          "lineType": "default"
+        },
+        {
+          "source": "sqlth_sce",
+          "sourceColumn": "scid",
+          "target": "sqlth_scinfo",
+          "targetColumn": "id",
+          "type": "many-to-one",
+          "lineType": "default"
+        },
+        {
+          "source": "sqlth_scinfo",
+          "sourceColumn": "drvid",
+          "target": "sqlth_drv",
+          "targetColumn": "id",
+          "type": "many-to-one",
+          "lineType": "default"
+        }
       ]
     }
   }
