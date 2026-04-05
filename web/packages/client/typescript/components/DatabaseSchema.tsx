@@ -2,15 +2,15 @@ import * as React from 'react';
 import { ComponentProps } from '@inductiveautomation/perspective-client';
 import { observer } from 'mobx-react';
 // @ts-ignore
-import ReactFlow, { Background, Controls, Node, Edge, Handle, Position, useNodesState, useEdgesState, addEdge, Connection, ConnectionMode } from 'reactflow';
+import ReactFlow, { Background, Controls, Node, Edge, Handle, Position, useNodesState, useEdgesState, addEdge, Connection, ConnectionMode, MarkerType } from 'reactflow';
 // @ts-ignore
 import 'reactflow/dist/style.css';
 
+import './DatabaseSchema.css'; 
+
 export interface DatabaseSchemaProps {
-    tables: Array<{ id: string, name: string, columns: string[], headerStyle?: any, rowStyle?: any }>;
+    tables: Array<{ id: string, name: string, columns: string[], headerStyle?: any, rowStyle?: any, position?: { x: number, y: number } }>;
     relationships: Array<{ source: string, sourceColumn: string, target: string, targetColumn: string, type: string, lineType?: string, lineColor?: string, lineWidth?: number, style?: any }>;
-    headerStyle?: any;
-    rowStyle?: any;
 }
 
 const isPrimaryKey = (colName: string) => {
@@ -18,38 +18,60 @@ const isPrimaryKey = (colName: string) => {
     return lower === 'id' || lower.endsWith('id');
 };
 
-// STRIPS "CLASSES" OUT SO REACT DOESN'T COMPLAIN
-const sanitizeStyle = (styleObj: any) => {
-    if (!styleObj) return {};
-    const { classes, ...cssProps } = styleObj;
+// 1. THE BULLETPROOF IGNITION EXTRACTOR
+const extractDeep = (obj: any): any => {
+    if (obj === null || obj === undefined) return undefined;
+    
+    // Immediately return basic types (strings, numbers, booleans) so they don't crash!
+    if (typeof obj !== 'object') return obj;
+    
+    // Safely check for Arrays (or MobX observable arrays that act like arrays)
+    if (Array.isArray(obj) || typeof obj.map === 'function') {
+        return obj.map((item: any) => extractDeep(item));
+    }
+    
+    // Extract actual Objects by looping their keys
+    const plain: any = {};
+    for (const key in obj) {
+        plain[key] = extractDeep(obj[key]);
+    }
+    return plain;
+};
+
+// 2. THE STYLE SANITIZER
+const getStyle = (styleObj: any) => {
+    const plain = extractDeep(styleObj);
+    if (!plain) return {};
+    const { classes, ...cssProps } = plain;
     return cssProps;
 };
 
 const TableNode = ({ data }: any) => {
     return (
-        <div style={data.rowStyle}>
-            <Handle type="target" position={Position.Top} id="table-top-target" style={{ width: '10px', height: '10px', background: '#555', top: '-5px' }} />
-            <Handle type="source" position={Position.Top} id="table-top-source" style={{ width: '10px', height: '10px', background: '#555', top: '-5px' }} />
+        <div className="db-schema-node" style={data.rowStyle}>
             
-            <Handle type="target" position={Position.Bottom} id="table-bottom-target" style={{ width: '10px', height: '10px', background: '#555', bottom: '-5px' }} />
-            <Handle type="source" position={Position.Bottom} id="table-bottom-source" style={{ width: '10px', height: '10px', background: '#555', bottom: '-5px' }} />
+            <Handle type="target" position={Position.Top} id="table-top-target" style={{ width: '10px', height: '10px', background: '#555', top: '-5px', zIndex: -1 }} />
+            <Handle type="source" position={Position.Top} id="table-top-source" style={{ width: '10px', height: '10px', background: '#555', top: '-5px', zIndex: 1 }} />
+            
+            <Handle type="target" position={Position.Bottom} id="table-bottom-target" style={{ width: '10px', height: '10px', background: '#555', bottom: '-5px', zIndex: -1 }} />
+            <Handle type="source" position={Position.Bottom} id="table-bottom-source" style={{ width: '10px', height: '10px', background: '#555', bottom: '-5px', zIndex: 1 }} />
 
-            <div style={data.headerStyle}>
+            <div className="db-schema-header" style={data.headerStyle}>
                 {data.name}
             </div>
             
-            <div style={{ padding: '10px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div className="db-schema-body">
                 {data.columns?.map((col: string) => (
-                    <div key={col} style={{ position: 'relative', fontSize: '12px', display: 'flex', alignItems: 'center' }}>
-                        <Handle type="target" position={Position.Left} id={`${col}-left-target`} style={{ left: '-14px', width: '8px', height: '8px' }} />
-                        <Handle type="source" position={Position.Left} id={`${col}-left-source`} style={{ left: '-14px', width: '8px', height: '8px' }} />
+                    <div key={col} className="db-schema-row">
+                        <Handle type="target" position={Position.Left} id={`${col}-left-target`} style={{ left: '-14px', width: '8px', height: '8px', zIndex: -1 }} />
+                        <Handle type="source" position={Position.Left} id={`${col}-left-source`} style={{ left: '-14px', width: '8px', height: '8px', zIndex: 1 }} />
                         
                         <span style={{ marginLeft: '10px' }}>
                             {isPrimaryKey(col) ? '🔑 ' : '📄 '} {col}
                         </span>
                         
-                        <Handle type="target" position={Position.Right} id={`${col}-right-target`} style={{ right: '-14px', width: '8px', height: '8px' }} />
-                        <Handle type="source" position={Position.Right} id={`${col}-right-source`} style={{ right: '-14px', width: '8px', height: '8px' }} />
+                        <Handle type="target" position={Position.Right} id={`${col}-right-target`} style={{ right: '-14px', width: '8px', height: '8px', zIndex: -1 }} />
+                        <Handle type="source" position={Position.Right} id={`${col}-right-source`} style={{ right: '-14px', width: '8px', height: '8px', zIndex: 1 }} />
                     </div>
                 ))}
             </div>
@@ -59,35 +81,27 @@ const TableNode = ({ data }: any) => {
 
 const nodeTypes = { tableNode: TableNode };
 
-const BASE_HEADER_STYLE = { padding: '10px', borderBottom: '1px solid #ccc', fontWeight: 'bold', backgroundColor: '#333333', color: '#ffffff', borderTopLeftRadius: '4px', borderTopRightRadius: '4px' };
-const BASE_ROW_STYLE = { position: 'relative', border: '1px solid #555', borderRadius: '5px', backgroundColor: '#ffffff', color: '#333333', width: '250px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' };
-
 export const DatabaseSchema = observer((props: ComponentProps<DatabaseSchemaProps>) => {
     
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-    const tablesString = JSON.stringify(props.props.tables || []);
-    const relsString = JSON.stringify(props.props.relationships || []);
-    const rootHeaderStyleStr = JSON.stringify(props.props.headerStyle || {});
-    const rootRowStyleStr = JSON.stringify(props.props.rowStyle || {});
+    // 3. EXTRACT EVERYTHING using the deep loop
+    const plainTables = extractDeep(props.props.tables) || [];
+    const plainRels = extractDeep(props.props.relationships) || [];
+
+    // Force stringification so React guarantees a re-render when data changes
+    const tablesStr = JSON.stringify(plainTables);
+    const relsStr = JSON.stringify(plainRels);
 
     React.useEffect(() => {
-        let cleanTables = [];
-        let cleanRels = [];
-        let globalHeaderStyle = {};
-        let globalRowStyle = {};
-        
-        try {
-            cleanTables = JSON.parse(tablesString);
-            cleanRels = JSON.parse(relsString);
-            globalHeaderStyle = sanitizeStyle(JSON.parse(rootHeaderStyleStr));
-            globalRowStyle = sanitizeStyle(JSON.parse(rootRowStyleStr));
-        } catch(e) {}
+        const mappedNodes: Node[] = plainTables.map((table: any, index: number) => {
+            const finalHeaderStyle = getStyle(table.headerStyle);
+            const finalRowStyle = getStyle(table.rowStyle);
 
-        const mappedNodes: Node[] = cleanTables.map((table: any, index: number) => {
-            const finalHeaderStyle = { ...BASE_HEADER_STYLE, ...globalHeaderStyle, ...sanitizeStyle(table.headerStyle) };
-            const finalRowStyle = { ...BASE_ROW_STYLE, ...globalRowStyle, ...sanitizeStyle(table.rowStyle) };
+            // Read from the property if it exists, otherwise auto-grid
+            const posX = table.position?.x !== undefined ? table.position.x : (index % 3) * 350;
+            const posY = table.position?.y !== undefined ? table.position.y : Math.floor(index / 3) * 300;
 
             return {
                 id: String(table.id),
@@ -95,40 +109,65 @@ export const DatabaseSchema = observer((props: ComponentProps<DatabaseSchemaProp
                 data: { 
                     name: table.name, 
                     columns: table.columns || [], 
-                    headerStyle: finalHeaderStyle, 
-                    rowStyle: finalRowStyle 
+                    headerStyle: Object.keys(finalHeaderStyle).length > 0 ? finalHeaderStyle : undefined, 
+                    rowStyle: Object.keys(finalRowStyle).length > 0 ? finalRowStyle : undefined
                 },
-                position: { x: (index % 3) * 350, y: Math.floor(index / 3) * 300 }
+                position: { x: posX, y: posY }
             };
         });
 
-        const mappedEdges: Edge[] = cleanRels.map((rel: any, index: number) => {
+        const mappedEdges: Edge[] = plainRels.map((rel: any, index: number) => {
             const hasSourceCol = !!rel.sourceColumn;
             const hasTargetCol = !!rel.targetColumn;
 
-            const finalEdgeStyle = {
-                stroke: rel.lineColor || '#007BFF',
-                strokeWidth: rel.lineWidth || 2,
-                ...sanitizeStyle(rel.style) 
-            };
+            const edgeColor = rel.lineColor || 'var(--callToAction)';
+            const inlineEdgeStyle: any = { ...getStyle(rel.style), stroke: edgeColor };
+            if (rel.lineWidth) inlineEdgeStyle.strokeWidth = rel.lineWidth;
+
+            let markerStart;
+            let markerEnd;
+            let isAnimated = false;
+
+            switch (rel.type) {
+                case 'one-to-many':
+                    markerEnd = { type: MarkerType.ArrowClosed, color: edgeColor };
+                    isAnimated = true;
+                    break;
+                case 'many-to-one':
+                    markerStart = { type: MarkerType.ArrowClosed, color: edgeColor };
+                    isAnimated = true;
+                    break;
+                case 'one-to-one':
+                    markerStart = { type: MarkerType.ArrowClosed, color: edgeColor };
+                    markerEnd = { type: MarkerType.ArrowClosed, color: edgeColor };
+                    isAnimated = false;
+                    break;
+                case 'none':
+                default:
+                    isAnimated = false;
+                    break;
+            }
 
             return {
                 id: `edge-${index}`,
                 source: String(rel.source),
                 target: String(rel.target),
+                className: 'db-schema-edge',
                 data: { sourceCol: rel.sourceColumn, targetCol: rel.targetColumn, lineType: rel.lineType || 'default' }, 
                 sourceHandle: hasSourceCol ? `${rel.sourceColumn}-right-source` : 'table-bottom-source',
                 targetHandle: hasTargetCol ? `${rel.targetColumn}-left-target` : 'table-top-target',
                 type: rel.lineType || 'default', 
-                animated: rel.type === 'one-to-many',
-                label: rel.type,
-                style: finalEdgeStyle
+                animated: isAnimated,
+                markerStart: markerStart,
+                markerEnd: markerEnd,
+                style: Object.keys(inlineEdgeStyle).length > 0 ? inlineEdgeStyle : undefined
             };
         });
 
         setNodes(mappedNodes);
         setEdges(mappedEdges);
-    }, [tablesString, relsString, rootHeaderStyleStr, rootRowStyleStr, setNodes, setEdges]);
+        
+    }, [tablesStr, relsStr, setNodes, setEdges]); 
 
     React.useEffect(() => {
         setEdges((currentEdges) => {
@@ -180,13 +219,39 @@ export const DatabaseSchema = observer((props: ComponentProps<DatabaseSchemaProp
             data: { sourceCol: baseSource, targetCol: baseTarget, lineType: 'default' },
             type: 'default', 
             animated: true, 
-            style: { stroke: '#28a745', strokeWidth: 2 } 
+            className: 'db-schema-edge'
         };
         setEdges((eds) => addEdge(newEdge, eds));
     }, [setEdges]);
 
+// 4. THE WRITE-BACK EVENT
+    const onNodeDragStop = React.useCallback((event: React.MouseEvent, node: Node) => {
+        // 1. Find the index safely
+        const safeTables = extractDeep(props.props.tables) || [];
+        const tableIndex = safeTables.findIndex((t: any) => String(t.id) === node.id);
+        
+        if (tableIndex !== -1) {
+            const newX = Math.round(node.position.x);
+            const newY = Math.round(node.position.y);
+            
+            // 2. THE FIX: Tell the Perspective Gateway to update the property tree!
+            if (props.store && props.store.props) {
+                // This writes exactly to the specific table's position object in the Designer
+                props.store.props.write(`tables[${tableIndex}].position`, { x: newX, y: newY });
+            } else {
+                // Fallback (Local memory only)
+                const targetTable = props.props.tables[tableIndex];
+                if (targetTable.position) {
+                    targetTable.position!.x = newX;
+                    targetTable.position!.y = newY;
+                }
+            }
+        }
+    }, [props.props.tables, props.store]); // <-- Added props.store to dependencies
+
+    
     return (
-        <div {...props.emit()} style={{ width: '100%', height: '100%', minHeight: '400px', background: '#eaeaea', pointerEvents: 'auto' }}>
+        <div {...props.emit()} className="db-schema-root">
             <ReactFlow 
                 nodes={nodes} 
                 edges={edges} 
@@ -194,6 +259,7 @@ export const DatabaseSchema = observer((props: ComponentProps<DatabaseSchemaProp
                 onNodesChange={onNodesChange} 
                 onEdgesChange={onEdgesChange} 
                 onConnect={onConnect}
+                onNodeDragStop={onNodeDragStop}
                 connectionMode={ConnectionMode.Loose}
                 fitView
             >
