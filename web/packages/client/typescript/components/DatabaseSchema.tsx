@@ -21,16 +21,10 @@ const isPrimaryKey = (colName: string) => {
 // 1. THE BULLETPROOF IGNITION EXTRACTOR
 const extractDeep = (obj: any): any => {
     if (obj === null || obj === undefined) return undefined;
-    
-    // Immediately return basic types (strings, numbers, booleans) so they don't crash!
     if (typeof obj !== 'object') return obj;
-    
-    // Safely check for Arrays (or MobX observable arrays that act like arrays)
     if (Array.isArray(obj) || typeof obj.map === 'function') {
         return obj.map((item: any) => extractDeep(item));
     }
-    
-    // Extract actual Objects by looping their keys
     const plain: any = {};
     for (const key in obj) {
         plain[key] = extractDeep(obj[key]);
@@ -38,7 +32,6 @@ const extractDeep = (obj: any): any => {
     return plain;
 };
 
-// 2. THE STYLE SANITIZER
 const getStyle = (styleObj: any) => {
     const plain = extractDeep(styleObj);
     if (!plain) return {};
@@ -62,7 +55,12 @@ const TableNode = ({ data }: any) => {
             
             <div className="db-schema-body">
                 {data.columns?.map((col: string) => (
-                    <div key={col} className="db-schema-row">
+                    <div 
+                        key={col} 
+                        className="db-schema-row"
+                        onClick={() => data.onRowClick && data.onRowClick(col)}
+                        style={{ cursor: 'pointer' }} 
+                    >
                         <Handle type="target" position={Position.Left} id={`${col}-left-target`} style={{ left: '-14px', width: '8px', height: '8px', zIndex: -1 }} />
                         <Handle type="source" position={Position.Left} id={`${col}-left-source`} style={{ left: '-14px', width: '8px', height: '8px', zIndex: 1 }} />
                         
@@ -86,11 +84,9 @@ export const DatabaseSchema = observer((props: ComponentProps<DatabaseSchemaProp
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-    // 3. EXTRACT EVERYTHING using the deep loop
     const plainTables = extractDeep(props.props.tables) || [];
     const plainRels = extractDeep(props.props.relationships) || [];
 
-    // Force stringification so React guarantees a re-render when data changes
     const tablesStr = JSON.stringify(plainTables);
     const relsStr = JSON.stringify(plainRels);
 
@@ -99,7 +95,6 @@ export const DatabaseSchema = observer((props: ComponentProps<DatabaseSchemaProp
             const finalHeaderStyle = getStyle(table.headerStyle);
             const finalRowStyle = getStyle(table.rowStyle);
 
-            // Read from the property if it exists, otherwise auto-grid
             const posX = table.position?.x !== undefined ? table.position.x : (index % 3) * 350;
             const posY = table.position?.y !== undefined ? table.position.y : Math.floor(index / 3) * 300;
 
@@ -110,7 +105,14 @@ export const DatabaseSchema = observer((props: ComponentProps<DatabaseSchemaProp
                     name: table.name, 
                     columns: table.columns || [], 
                     headerStyle: Object.keys(finalHeaderStyle).length > 0 ? finalHeaderStyle : undefined, 
-                    rowStyle: Object.keys(finalRowStyle).length > 0 ? finalRowStyle : undefined
+                    rowStyle: Object.keys(finalRowStyle).length > 0 ? finalRowStyle : undefined,
+                    
+                    // The correctly typed Perspective Event Emitter
+                    onRowClick: (columnName: string) => {
+                        if (props.componentEvents) {
+                            props.componentEvents.fireComponentEvent('onRowClick', { tableId: table.id, column: columnName });
+                        }
+                    }
                 },
                 position: { x: posX, y: posY }
             };
@@ -167,7 +169,7 @@ export const DatabaseSchema = observer((props: ComponentProps<DatabaseSchemaProp
         setNodes(mappedNodes);
         setEdges(mappedEdges);
         
-    }, [tablesStr, relsStr, setNodes, setEdges]); 
+    }, [tablesStr, relsStr, setNodes, setEdges, props]); 
 
     React.useEffect(() => {
         setEdges((currentEdges) => {
@@ -177,21 +179,41 @@ export const DatabaseSchema = observer((props: ComponentProps<DatabaseSchemaProp
                 const targetNode = nodes.find(n => n.id === edge.target);
                 
                 if (sourceNode && targetNode && edge.data) {
-                    const sourceIsLeft = sourceNode.position.x < targetNode.position.x;
-                    const sourceIsAbove = sourceNode.position.y < targetNode.position.y;
+                    const sourceX = sourceNode.position.x;
+                    const targetX = targetNode.position.x;
+                    const sourceY = sourceNode.position.y;
+                    const targetY = targetNode.position.y;
+                    
+                    const isVerticallyAligned = Math.abs(sourceX - targetX) < 150;
+                    const sourceIsLeft = sourceX < targetX;
+                    const sourceIsAbove = sourceY < targetY;
                     
                     let newSourceHandle, newTargetHandle;
 
-                    if (edge.data.sourceCol) {
-                        newSourceHandle = sourceIsLeft ? `${edge.data.sourceCol}-right-source` : `${edge.data.sourceCol}-left-source`;
-                    } else {
-                        newSourceHandle = sourceIsAbove ? 'table-bottom-source' : 'table-top-source';
-                    }
+                    if (isVerticallyAligned) {
+                        if (edge.data.sourceCol) {
+                            newSourceHandle = `${edge.data.sourceCol}-right-source`;
+                        } else {
+                            newSourceHandle = sourceIsAbove ? 'table-bottom-source' : 'table-top-source';
+                        }
 
-                    if (edge.data.targetCol) {
-                        newTargetHandle = sourceIsLeft ? `${edge.data.targetCol}-left-target` : `${edge.data.targetCol}-right-target`;
+                        if (edge.data.targetCol) {
+                            newTargetHandle = `${edge.data.targetCol}-right-target`;
+                        } else {
+                            newTargetHandle = sourceIsAbove ? 'table-top-target' : 'table-bottom-target';
+                        }
                     } else {
-                        newTargetHandle = sourceIsAbove ? 'table-top-target' : 'table-bottom-target';
+                        if (edge.data.sourceCol) {
+                            newSourceHandle = sourceIsLeft ? `${edge.data.sourceCol}-right-source` : `${edge.data.sourceCol}-left-source`;
+                        } else {
+                            newSourceHandle = sourceIsAbove ? 'table-bottom-source' : 'table-top-source';
+                        }
+
+                        if (edge.data.targetCol) {
+                            newTargetHandle = sourceIsLeft ? `${edge.data.targetCol}-left-target` : `${edge.data.targetCol}-right-target`;
+                        } else {
+                            newTargetHandle = sourceIsAbove ? 'table-top-target' : 'table-bottom-target';
+                        }
                     }
                     
                     if (edge.sourceHandle !== newSourceHandle || edge.targetHandle !== newTargetHandle) {
@@ -224,9 +246,7 @@ export const DatabaseSchema = observer((props: ComponentProps<DatabaseSchemaProp
         setEdges((eds) => addEdge(newEdge, eds));
     }, [setEdges]);
 
-// 4. THE WRITE-BACK EVENT
     const onNodeDragStop = React.useCallback((event: React.MouseEvent, node: Node) => {
-        // 1. Find the index safely
         const safeTables = extractDeep(props.props.tables) || [];
         const tableIndex = safeTables.findIndex((t: any) => String(t.id) === node.id);
         
@@ -234,12 +254,9 @@ export const DatabaseSchema = observer((props: ComponentProps<DatabaseSchemaProp
             const newX = Math.round(node.position.x);
             const newY = Math.round(node.position.y);
             
-            // 2. THE FIX: Tell the Perspective Gateway to update the property tree!
             if (props.store && props.store.props) {
-                // This writes exactly to the specific table's position object in the Designer
                 props.store.props.write(`tables[${tableIndex}].position`, { x: newX, y: newY });
             } else {
-                // Fallback (Local memory only)
                 const targetTable = props.props.tables[tableIndex];
                 if (targetTable.position) {
                     targetTable.position!.x = newX;
@@ -247,9 +264,8 @@ export const DatabaseSchema = observer((props: ComponentProps<DatabaseSchemaProp
                 }
             }
         }
-    }, [props.props.tables, props.store]); // <-- Added props.store to dependencies
+    }, [props.props.tables, props.store]);
 
-    
     return (
         <div {...props.emit()} className="db-schema-root">
             <ReactFlow 

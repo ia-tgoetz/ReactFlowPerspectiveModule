@@ -4,6 +4,7 @@ import com.inductiveautomation.ignition.common.jsonschema.JsonSchema;
 import com.inductiveautomation.perspective.common.api.BrowserResource;
 import com.inductiveautomation.perspective.common.api.ComponentDescriptor;
 import com.inductiveautomation.perspective.common.api.ComponentDescriptorImpl;
+import com.inductiveautomation.perspective.common.api.ComponentEventDescriptor;
 
 import java.util.Set;
 
@@ -34,6 +35,16 @@ public class DatabaseSchemaMeta {
             .setDefaultMetaName("dbSchema")
             // 2. MAKE SURE BOTH JS AND CSS ARE REGISTERED HERE:
             .setResources(Set.of(JS_RESOURCE, CSS_RESOURCE))
+            
+            // 3. REGISTER THE CUSTOM EVENT HERE
+            .setEvents(Set.of(
+                new ComponentEventDescriptor(
+                    "onRowClick", 
+                    "Fired when a user clicks on a specific column row in a table.", 
+                    null // <-- Simply pass null! No complex schema needed.
+                )
+            ))
+            
             .setSchema(JsonSchema.parse(DatabaseSchemaMeta.class.getResourceAsStream("/databaseschema.props.json")))
             .build();
 }
