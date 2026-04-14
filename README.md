@@ -63,3 +63,7 @@ To build this module from the source code, you need Java, Node.js, and Gradle in
     ```bash
     ./gradlew clean build```
 5. The compiled `.modl` file will be located in the `build/` directory.
+
+
+
+Is there a way to set my requiredIgnitionVersion.set("8.3.0") so it works on both 8.1 and 8.3

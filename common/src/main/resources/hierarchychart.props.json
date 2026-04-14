@@ -1,0 +1,66 @@
+{
+  "type": "object",
+  "properties": {
+    "style": {
+      "description": "Standard Perspective style object applied to the component.",
+      "$ref": "urn:ignition-schema:schemas/style-properties.schema.json"
+    },
+    "layoutDirection": {
+      "type": "string",
+      "description": "Default connection sides (TB = Top/Bottom, LR = Left/Right).",
+      "default": "TB",
+      "enum": ["TB", "LR"]
+    },
+    "lineType": {
+      "type": "string",
+      "description": "The style of the connecting lines.",
+      "default": "smoothstep",
+      "enum": ["default", "straight", "step", "smoothstep", "bezier"]
+    },
+    "nodes": {
+      "type": "array",
+      "description": "The steps or parts in your hierarchical process.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "variant": {
+            "type": "string",
+            "default": "pending",
+            "enum": ["complete", "in_progress", "pending", "error"]
+          },
+          "parents": {
+            "type": "array",
+            "description": "List of parent nodes and their specific connection handles.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "sourceHandle": { "type": "string", "default": "auto" },
+                "targetHandle": { "type": "string", "default": "auto" }
+              }
+            },
+            "default": []
+          },
+          "position": {
+            "type": "object",
+            "properties": {
+              "x": { "type": "number" },
+              "y": { "type": "number" }
+            }
+          },
+          "style": {
+            "description": "Custom styling for this specific node.",
+            "$ref": "urn:ignition-schema:schemas/style-properties.schema.json"
+          }
+        }
+      },
+      "default": [
+        { "id": "raw_materials", "name": "Raw Materials", "variant": "complete", "parents": [] },
+        { "id": "machining", "name": "Machining Line", "variant": "in_progress", "parents": [{ "id": "raw_materials", "sourceHandle": "auto", "targetHandle": "auto" }] },
+        { "id": "qa", "name": "Quality Assurance", "variant": "pending", "parents": [{ "id": "machining", "sourceHandle": "auto", "targetHandle": "auto" }] }
+      ]
+    }
+  }
+}

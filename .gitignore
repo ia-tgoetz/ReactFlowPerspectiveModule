@@ -1,7 +1,7 @@
 
 ### Java
 *.class
-
+.vscode
 # Package Files #
 #*.jar
 #*.war
@@ -278,7 +278,7 @@ web/packages/designer/yarn-error.log
 
 
 Ignition-Build/
-
+/private/
 private/
 sign.props
 gateway/src/main/resources/mounted/RadComponents.css

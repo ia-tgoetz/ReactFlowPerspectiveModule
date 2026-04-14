@@ -9,6 +9,7 @@ import 'reactflow/dist/style.css';
 import './DatabaseSchema.css'; 
 
 export interface DatabaseSchemaProps {
+    style?: any; // ⭐ Added style
     tables: Array<{ id: string, name: string, columns: string[], headerStyle?: any, rowStyle?: any, position?: { x: number, y: number } }>;
     relationships: Array<{ source: string, sourceColumn: string, target: string, targetColumn: string, type: string, lineType?: string, lineColor?: string, lineWidth?: number, style?: any }>;
 }
@@ -107,7 +108,6 @@ export const DatabaseSchema = observer((props: ComponentProps<DatabaseSchemaProp
                     headerStyle: Object.keys(finalHeaderStyle).length > 0 ? finalHeaderStyle : undefined, 
                     rowStyle: Object.keys(finalRowStyle).length > 0 ? finalRowStyle : undefined,
                     
-                    // The correctly typed Perspective Event Emitter
                     onRowClick: (columnName: string) => {
                         if (props.componentEvents) {
                             props.componentEvents.fireComponentEvent('onRowClick', { tableId: table.id, column: columnName });
@@ -267,7 +267,8 @@ export const DatabaseSchema = observer((props: ComponentProps<DatabaseSchemaProp
     }, [props.props.tables, props.store]);
 
     return (
-        <div {...props.emit()} className="db-schema-root">
+        // ⭐ emit() merges the Designer's Custom Style Object & Custom Classes with your base root class!
+        <div {...props.emit({ classes: ['db-schema-root'] })}>
             <ReactFlow 
                 nodes={nodes} 
                 edges={edges} 

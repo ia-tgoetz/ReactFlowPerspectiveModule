@@ -35,7 +35,7 @@ function copyToResources() {
 
 const config = {
     entry: {
-        [LibName]:  path.join(__dirname, "./typescript/databaseschema-client.ts")
+        [LibName]:  path.join(__dirname, "./typescript/perspective-client.ts")
     },
     output: {
         library: [LibName],
