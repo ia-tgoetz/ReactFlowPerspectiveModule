@@ -1,2 +1,3 @@
-export * from './components/DatabaseSchema';
-export * from './databaseschema-client';
+export * from './components/DatabaseSchema/DatabaseSchema';
+export * from './components/HierarchyChart/HierarchyChart';
+export * from './perspective-client';

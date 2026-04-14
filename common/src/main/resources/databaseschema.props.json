@@ -1,6 +1,10 @@
 {
   "type": "object",
   "properties": {
+    "style": {
+      "description": "Standard Perspective style object applied to the component.",
+      "$ref": "urn:ignition-schema:schemas/style-properties.schema.json"
+    },
     "tables": {
       "type": "array",
       "items": {

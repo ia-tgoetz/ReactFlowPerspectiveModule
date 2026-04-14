@@ -17,10 +17,10 @@ ignitionModule {
     fileName.set("DatabaseSchema") // <-- Updated filename
 
     // module xml configuration
-    name.set("Database Schema Component") // <-- Updated display name
-    id.set("com.wargoetz.databaseschema") // <-- Updated module ID
+    name.set("WARGoetz Visualization Components") // <-- Updated display name
+    id.set("com.wargoetz.reactFlow") // <-- Updated module ID
     moduleVersion.set("${project.version}")
-    moduleDescription.set("A Perspective component for visualizing SQL Historian database schemas.") // <-- Updated description
+    moduleDescription.set("A Group of React Flow Based Perspective Components For Visualizing") // <-- Updated description
     requiredIgnitionVersion.set("8.3.0")
     license.set("license.html")
 
@@ -50,7 +50,7 @@ ignitionModule {
             "com.wargoetz.schema.designer.DesignerHook" to "D"  // Class Path -> Scope
         )
     )
-    skipModlSigning.set(true)
+    skipModlSigning.set(true) // Skip signing for development builds.  Remember to sign before production release!
 }
 
 val deepClean by tasks.registering {
