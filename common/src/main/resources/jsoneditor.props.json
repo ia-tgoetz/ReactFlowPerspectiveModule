@@ -21,7 +21,6 @@
         },
         "customTheme": {
             "type": "object",
-            "description": "Override standard themes with custom CSS colors.",
             "properties": {
                 "backgroundColor": { "type": "string" },
                 "keyColor": { "type": "string" },
@@ -32,13 +31,8 @@
             },
             "default": {}
         },
-        "editable": {
-            "type": "boolean",
-            "description": "Allow users to modify the JSON in the browser.",
-            "default": true
-        },
+        "editable": { "type": "boolean", "default": true },
         "style": {
-            "description": "Custom styling for the editor container.",
             "$ref": "urn:ignition-schema:schemas/style-properties.schema.json"
         }
     }

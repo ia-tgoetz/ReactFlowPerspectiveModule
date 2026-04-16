@@ -1,7 +1,12 @@
 import { ComponentMeta, ComponentRegistry } from '@inductiveautomation/perspective-client';
 import { DatabaseSchema } from './components/DatabaseSchema/DatabaseSchema';
 import { HierarchyChart } from './components/HierarchyChart/HierarchyChart';
-import { JsonEditor } from './components/JsonEditor/JsonEditor'; // <-- ADDED
+import { JsonEditor } from './components/JsonEditor/JsonEditor';
+
+// --- CRITICAL ADDITION ---
+// You MUST export the components so the Designer bundle can import them 
+// via the '@wargoetz/databaseschema-client' external mapping.
+export { DatabaseSchema, HierarchyChart, JsonEditor };
 
 // --- DATABASE SCHEMA ---
 export class DatabaseSchemaMeta implements ComponentMeta {
@@ -44,11 +49,10 @@ export class HierarchyChartMeta implements ComponentMeta {
     }
 }
 
-// --- JSON EDITOR --- (NEW)
+// --- JSON EDITOR ---
 export class JsonEditorMeta implements ComponentMeta {
     getComponentType(): string {
-        // This ID must match your COMPONENT_ID in Java
-        return 'com.wargoetz.jsoneditor'; 
+        return 'com.wargoetz.reactflow.jsoneditor'; 
     }
     getViewComponent(): any {
         return JsonEditor as any;
@@ -60,7 +64,10 @@ export class JsonEditorMeta implements ComponentMeta {
         return {
             data: tree.read('data'),
             theme: tree.read('theme', 'monokai'),
-            editable: tree.read('editable', true)
+            // CRITICAL ADDITIONS: Without these, the TSX won't receive your custom colors or styles!
+            customTheme: tree.read('customTheme'), 
+            editable: tree.read('editable', true),
+            style: tree.read('style') 
         };
     }
 }
@@ -70,9 +77,9 @@ const registry = ComponentRegistry as any;
 if (registry.registerComponent) {
     registry.registerComponent(new DatabaseSchemaMeta());
     registry.registerComponent(new HierarchyChartMeta());
-    registry.registerComponent(new JsonEditorMeta()); // <-- ADDED
+    registry.registerComponent(new JsonEditorMeta());
 } else {
     registry.register(new DatabaseSchemaMeta());
     registry.register(new HierarchyChartMeta());
-    registry.register(new JsonEditorMeta()); // <-- ADDED
+    registry.register(new JsonEditorMeta());
 }

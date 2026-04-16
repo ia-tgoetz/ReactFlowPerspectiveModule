@@ -11,16 +11,24 @@ public class HierarchyChartMeta {
     public static final String COMPONENT_ID = "com.wargoetz.reactflow.hierarchychart";
     public static final String MODULE_ID = "com.wargoetz.reactflow";
 
-    // Create its own resources instead of sharing
+    // Forces the client bundle to load first 
     public static final BrowserResource JS_RESOURCE = new BrowserResource(
-        "hierarchychart-js", // Unique ID for this component
-        "/res/" + MODULE_ID + "/HierarchyChartClient.js", 
+        "hierarchychart-0-shared-js", 
+        "/res/" + MODULE_ID + "/WARGoetzComponents.js", 
         BrowserResource.ResourceType.JS
     );
 
+    // Forces the designer bundle to load second
+    public static final BrowserResource DESIGNER_JS_RESOURCE = new BrowserResource(
+        "hierarchychart-1-designer-js", 
+        "/res/" + MODULE_ID + "/WARGoetzDesigner.js", 
+        BrowserResource.ResourceType.JS
+    );
+
+    // Loads the CSS last
     public static final BrowserResource CSS_RESOURCE = new BrowserResource(
-        "hierarchychart-css", // Unique ID for this component
-        "/res/" + MODULE_ID + "/HierarchyChartClient.css",
+        "hierarchychart-2-shared-css", 
+        "/res/" + MODULE_ID + "/WARGoetzComponents.css",
         BrowserResource.ResourceType.CSS
     );
 
@@ -31,7 +39,7 @@ public class HierarchyChartMeta {
             .setName("Hierarchy Chart")
             .addPaletteEntry("", "Hierarchy Chart", "Visualizes hierarchical process flows.", null, null)
             .setDefaultMetaName("HierarchyChart")
-            .setResources(Set.of(JS_RESOURCE, CSS_RESOURCE)) // Uses local resources
+            .setResources(Set.of(JS_RESOURCE, DESIGNER_JS_RESOURCE, CSS_RESOURCE)) 
             .setSchema(JsonSchema.parse(HierarchyChartMeta.class.getResourceAsStream("/hierarchychart.props.json")))
             .build();
 }
