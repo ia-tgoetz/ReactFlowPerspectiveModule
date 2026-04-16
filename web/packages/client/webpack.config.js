@@ -4,7 +4,7 @@ const webpack = require('webpack'),
     MiniCssExtractPlugin = require("mini-css-extract-plugin"),
     AfterBuildPlugin = require('@fiverr/afterbuild-webpack-plugin');
 
-const LibName = "DatabaseSchemaClient";
+const LibName = "WARGoetzComponents";
 
 function copyToResources() {
     const generatedResourcesDir = path.resolve(__dirname, '../..', 'build/generated-resources/mounted/');

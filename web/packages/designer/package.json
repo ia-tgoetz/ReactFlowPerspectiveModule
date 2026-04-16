@@ -13,8 +13,8 @@
         "deepClean": "yarn run clean && rimraf node_modules __coverage__"
     },
     "dependencies": {
-        "@inductiveautomation/perspective-client": "^2.1.16",
-        "@inductiveautomation/perspective-designer": "^2.1.16",
+        "@inductiveautomation/perspective-client": "2.1.33",
+        "@inductiveautomation/perspective-designer": "2.1.33",
         "@wargoetz/reactflow-client": "2.0.0",
         "bind-decorator": "^1.0.11",
         "mobx": "5.15.1",
