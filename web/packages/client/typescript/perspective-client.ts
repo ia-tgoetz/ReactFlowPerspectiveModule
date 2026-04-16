@@ -1,6 +1,7 @@
 import { ComponentMeta, ComponentRegistry } from '@inductiveautomation/perspective-client';
 import { DatabaseSchema } from './components/DatabaseSchema/DatabaseSchema';
 import { HierarchyChart } from './components/HierarchyChart/HierarchyChart';
+import { JsonEditor } from './components/JsonEditor/JsonEditor'; // <-- ADDED
 
 // --- DATABASE SCHEMA ---
 export class DatabaseSchemaMeta implements ComponentMeta {
@@ -43,12 +44,35 @@ export class HierarchyChartMeta implements ComponentMeta {
     }
 }
 
+// --- JSON EDITOR --- (NEW)
+export class JsonEditorMeta implements ComponentMeta {
+    getComponentType(): string {
+        // This ID must match your COMPONENT_ID in Java
+        return 'com.wargoetz.jsoneditor'; 
+    }
+    getViewComponent(): any {
+        return JsonEditor as any;
+    }
+    getDefaultSize(): any {
+        return { width: 400, height: 400 };
+    }
+    getPropsReducer(tree: any): any {
+        return {
+            data: tree.read('data'),
+            theme: tree.read('theme', 'monokai'),
+            editable: tree.read('editable', true)
+        };
+    }
+}
+
 // --- REGISTRATION ---
 const registry = ComponentRegistry as any;
 if (registry.registerComponent) {
     registry.registerComponent(new DatabaseSchemaMeta());
     registry.registerComponent(new HierarchyChartMeta());
+    registry.registerComponent(new JsonEditorMeta()); // <-- ADDED
 } else {
     registry.register(new DatabaseSchemaMeta());
     registry.register(new HierarchyChartMeta());
+    registry.register(new JsonEditorMeta()); // <-- ADDED
 }

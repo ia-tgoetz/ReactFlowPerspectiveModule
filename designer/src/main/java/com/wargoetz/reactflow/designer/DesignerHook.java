@@ -7,6 +7,7 @@ import com.inductiveautomation.perspective.designer.DesignerComponentRegistry;
 import com.inductiveautomation.perspective.designer.api.PerspectiveDesignerInterface;
 import com.wargoetz.reactflow.common.DatabaseSchemaMeta;
 import com.wargoetz.reactflow.common.HierarchyChartMeta;
+import com.wargoetz.reactflow.common.JsonEditorMeta; // <-- ADDED
 
 public class DesignerHook extends AbstractDesignerModuleHook {
 
@@ -20,6 +21,7 @@ public class DesignerHook extends AbstractDesignerModuleHook {
 
         registry.registerComponent(DatabaseSchemaMeta.DESCRIPTOR);
         registry.registerComponent(HierarchyChartMeta.DESCRIPTOR);
+        registry.registerComponent(JsonEditorMeta.DESCRIPTOR); // <-- ADDED
     }
 
     @Override
@@ -27,5 +29,6 @@ public class DesignerHook extends AbstractDesignerModuleHook {
         PerspectiveDesignerInterface perspective = PerspectiveDesignerInterface.get(context);
         perspective.getDesignerComponentRegistry().removeComponent(DatabaseSchemaMeta.COMPONENT_ID);
         perspective.getDesignerComponentRegistry().removeComponent(HierarchyChartMeta.COMPONENT_ID);
+        perspective.getDesignerComponentRegistry().removeComponent(JsonEditorMeta.COMPONENT_ID); // <-- ADDED
     }
 }

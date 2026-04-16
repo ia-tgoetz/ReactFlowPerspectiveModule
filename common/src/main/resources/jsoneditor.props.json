@@ -1,0 +1,38 @@
+{
+    "type": "object",
+    "properties": {
+        "data": {
+            "type": "object",
+            "description": "The JSON object to display or edit.",
+            "default": {}
+        },
+        "theme": {
+            "type": "string",
+            "description": "Select a standard built-in theme.",
+            "enum": ["monokai", "ocean", "rgh", "apathy", "brewer", "greenscreen"],
+            "default": "monokai"
+        },
+        "customTheme": {
+            "type": "object",
+            "description": "Override standard themes with custom CSS colors.",
+            "properties": {
+                "backgroundColor": { "type": "string" },
+                "keyColor": { "type": "string" },
+                "stringColor": { "type": "string" },
+                "numberColor": { "type": "string" },
+                "booleanColor": { "type": "string" },
+                "bracketColor": { "type": "string" }
+            },
+            "default": {}
+        },
+        "editable": {
+            "type": "boolean",
+            "description": "Allow users to modify the JSON in the browser.",
+            "default": true
+        },
+        "style": {
+            "description": "Custom styling for the editor container.",
+            "$ref": "urn:ignition-schema:schemas/style-properties.schema.json"
+        }
+    }
+}
