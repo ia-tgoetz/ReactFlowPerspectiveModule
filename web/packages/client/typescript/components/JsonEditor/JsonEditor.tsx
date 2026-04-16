@@ -78,7 +78,7 @@ export const JsonEditor = observer((props: ComponentProps<JsonEditorProps>) => {
                 displayDataTypes={false}
                 displayObjectSize={true}
                 enableClipboard={true}
-                style={{ backgroundColor: 'transparent', padding: '10px' }}
+                style={{padding: '10px' }}
             />
         </div>
     );

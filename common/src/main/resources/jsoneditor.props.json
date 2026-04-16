@@ -9,7 +9,14 @@
         "theme": {
             "type": "string",
             "description": "Select a standard built-in theme.",
-            "enum": ["monokai", "ocean", "rgh", "apathy", "brewer", "greenscreen"],
+            "enum": [
+                "apathy", "async", "blackboard", "brewer", "bright", "chalk", 
+                "codeschool", "colors", "eighties", "embers", "flat", "google", 
+                "grayscale", "greenscreen", "hopscotch", "isotope", "marrakesh", 
+                "mocha", "monokai", "ocean", "paraiso", "pop", "railscasts", 
+                "rgh", "shapeshifter", "solarized", "summerfruit", "tomorrow", 
+                "tube", "twilight"
+            ],
             "default": "monokai"
         },
         "customTheme": {
