@@ -1,7 +1,7 @@
 {
-  "name": "web-example",
+  "name": "reactflow-web-workspace",
   "version": "1.0.0",
-  "description": "example web package to distribute to nexus npm",
+  "description": "Web workspace for React Flow Perspective components",
   "main": "dist/index.js",
   "author": "perry arellano-jones",
   "license": "MIT",

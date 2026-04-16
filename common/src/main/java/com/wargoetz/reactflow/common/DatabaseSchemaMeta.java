@@ -1,4 +1,4 @@
-package com.wargoetz.schema.common;
+package com.wargoetz.reactflow.common;
 
 import com.inductiveautomation.ignition.common.jsonschema.JsonSchema;
 import com.inductiveautomation.perspective.common.api.BrowserResource;
@@ -9,23 +9,19 @@ import com.inductiveautomation.perspective.common.api.ComponentEventDescriptor;
 import java.util.Set;
 
 public class DatabaseSchemaMeta {
+    // Synchronize to all lowercase "reactflow"
+    public static final String COMPONENT_ID = "com.wargoetz.reactflow.databaseschema"; 
+    public static final String MODULE_ID = "com.wargoetz.reactflow"; 
 
-    //1. Matches your perspective-client.ts
-    public static final String COMPONENT_ID = "com.wargoetz.reactFlow.databaseschema"; 
-    
-    //2. Matches your build.gradle.kts
-    public static final String MODULE_ID = "com.wargoetz.reactFlow"; 
-
-    //3. The "/res/" paths MUST use the new MODULE_ID to find the Webpack files!
     public static final BrowserResource JS_RESOURCE = new BrowserResource(
-        "databaseschema-client-js",
-        "/res/" + MODULE_ID + "/DatabaseSchemaClient.js", // Updated to inject the new MODULE_ID
+        "databaseschema-js", 
+        "/res/" + MODULE_ID + "/DatabaseSchemaClient.js", 
         BrowserResource.ResourceType.JS
     );
     
     public static final BrowserResource CSS_RESOURCE = new BrowserResource(
-        "databaseschema-client-css",
-        "/res/" + MODULE_ID + "/DatabaseSchemaClient.css", // Updated to inject the new MODULE_ID
+        "databaseschema-css",
+        "/res/" + MODULE_ID + "/DatabaseSchemaClient.css", 
         BrowserResource.ResourceType.CSS
     );
 

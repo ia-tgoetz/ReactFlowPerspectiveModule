@@ -9,18 +9,18 @@ plugins {
 
 allprojects {
     version = "2.0.0" // <-- Change this from 2.0.0 to force the Designer to download the new files!
-    group = "com.wargoetz.schema"
+    group = "com.wargoetz.reactflow" // <-- UPDATED
 }
 
 ignitionModule {
     // name of the .modl file to build
-    fileName.set("DatabaseSchema") // <-- Updated filename
+    fileName.set("ReactFlow") // <-- UPDATED
 
     // module xml configuration
-    name.set("WARGoetz Visualization Components") // <-- Updated display name
-    id.set("com.wargoetz.reactFlow") // <-- Updated module ID
+    name.set("WARGoetz Visualization Components")
+    id.set("com.wargoetz.reactflow") // <-- UPDATED (all lowercase)
     moduleVersion.set("${project.version}")
-    moduleDescription.set("A Group of React Flow Based Perspective Components For Visualizing") // <-- Updated description
+    moduleDescription.set("A Group of React Flow Based Perspective Components For Visualizing")
     requiredIgnitionVersion.set("8.3.0")
     license.set("license.html")
 
@@ -43,11 +43,10 @@ ignitionModule {
 
     // 'hook classes' are the things that Ignition loads and runs when your module is installed.  This map tells
     // Ignition which classes should be loaded in a given scope.
-// 'hook classes' are the things that Ignition loads and runs when your module is installed.
     hooks.putAll(
         mapOf(
-            "com.wargoetz.schema.gateway.GatewayHook" to "G", // Class Path -> Scope
-            "com.wargoetz.schema.designer.DesignerHook" to "D"  // Class Path -> Scope
+            "com.wargoetz.reactflow.gateway.GatewayHook" to "G", // <-- UPDATED
+            "com.wargoetz.reactflow.designer.DesignerHook" to "D"  // <-- UPDATED
         )
     )
     skipModlSigning.set(true) // Skip signing for development builds.  Remember to sign before production release!
