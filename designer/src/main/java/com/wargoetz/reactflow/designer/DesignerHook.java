@@ -1,12 +1,12 @@
-package com.wargoetz.schema.designer;
+package com.wargoetz.reactflow.designer;
 
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.designer.model.AbstractDesignerModuleHook;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.perspective.designer.DesignerComponentRegistry;
 import com.inductiveautomation.perspective.designer.api.PerspectiveDesignerInterface;
-import com.wargoetz.schema.common.DatabaseSchemaMeta;
-import com.wargoetz.schema.common.HierarchyChartMeta;
+import com.wargoetz.reactflow.common.DatabaseSchemaMeta;
+import com.wargoetz.reactflow.common.HierarchyChartMeta;
 
 public class DesignerHook extends AbstractDesignerModuleHook {
 

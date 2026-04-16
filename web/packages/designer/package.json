@@ -1,9 +1,9 @@
 {
-    "name": "@wargoetz/databaseschema-designer",
+    "name": "@wargoetz/reactflow-designer",
     "version": "2.0.0",
-    "description": "SQL Historian Database Schema designer component",
+    "description": "React Flow visualization designer components",
     "main": "dist/index.js",
-    "typings": "dist/typings/databaseschema-designer.d.ts",
+    "typings": "dist/typings/reactflow-designer.d.ts",
     "license": "MIT",
     "scripts": {
         "build": "yarn run clean && webpack --mode development",
@@ -15,7 +15,7 @@
     "dependencies": {
         "@inductiveautomation/perspective-client": "^2.1.16",
         "@inductiveautomation/perspective-designer": "^2.1.16",
-        "@wargoetz/databaseschema-client": "2.0.0",
+        "@wargoetz/reactflow-client": "2.0.0",
         "bind-decorator": "^1.0.11",
         "mobx": "5.15.1",
         "react": "^16.8.4",

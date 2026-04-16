@@ -1,7 +1,7 @@
 {
-    "name": "@wargoetz/databaseschema-client",
+    "name": "@wargoetz/reactflow-client",
     "version": "2.0.0",
-    "description": "SQL Historian Database Schema client component",
+    "description": "React Flow visualization client components",
     "main": "dist/index.js",
     "typings": "dist/typings/index.d.ts",
     "license": "UNLICENSED",

@@ -1,4 +1,4 @@
-package com.wargoetz.schema.gateway;
+package com.wargoetz.reactflow.gateway;
 
 import java.util.Optional;
 
@@ -6,8 +6,8 @@ import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.gateway.model.AbstractGatewayModuleHook;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
 import com.inductiveautomation.perspective.gateway.api.PerspectiveContext;
-import com.wargoetz.schema.common.DatabaseSchemaMeta;
-import com.wargoetz.schema.common.HierarchyChartMeta;
+import com.wargoetz.reactflow.common.DatabaseSchemaMeta;
+import com.wargoetz.reactflow.common.HierarchyChartMeta;
 
 public class GatewayHook extends AbstractGatewayModuleHook {
 

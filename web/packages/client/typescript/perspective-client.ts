@@ -5,7 +5,7 @@ import { HierarchyChart } from './components/HierarchyChart/HierarchyChart';
 // --- DATABASE SCHEMA ---
 export class DatabaseSchemaMeta implements ComponentMeta {
     getComponentType(): string {
-        return 'com.wargoetz.reactFlow.databaseschema'; 
+        return 'com.wargoetz.reactflow.databaseschema'; 
     }
     getViewComponent(): any {
         return DatabaseSchema as any;
@@ -25,7 +25,7 @@ export class DatabaseSchemaMeta implements ComponentMeta {
 // --- HIERARCHY CHART ---
 export class HierarchyChartMeta implements ComponentMeta {
     getComponentType(): string {
-        return 'com.wargoetz.reactFlow.hierarchychart'; 
+        return 'com.wargoetz.reactflow.hierarchychart'; 
     }
     getViewComponent(): any {
         return HierarchyChart as any;
