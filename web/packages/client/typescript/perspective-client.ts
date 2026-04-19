@@ -3,9 +3,6 @@ import { DatabaseSchema } from './components/DatabaseSchema/DatabaseSchema';
 import { HierarchyChart } from './components/HierarchyChart/HierarchyChart';
 import { JsonEditor } from './components/JsonEditor/JsonEditor';
 
-// --- CRITICAL ADDITION ---
-// You MUST export the components so the Designer bundle can import them 
-// via the '@wargoetz/databaseschema-client' external mapping.
 export { DatabaseSchema, HierarchyChart, JsonEditor };
 
 // --- DATABASE SCHEMA ---
