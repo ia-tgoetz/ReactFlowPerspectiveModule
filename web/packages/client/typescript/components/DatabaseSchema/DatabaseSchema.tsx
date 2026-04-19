@@ -3,13 +3,11 @@ import { ComponentProps } from '@inductiveautomation/perspective-client';
 import { observer } from 'mobx-react';
 // @ts-ignore
 import ReactFlow, { Background, Controls, Node, Edge, Handle, Position, useNodesState, useEdgesState, addEdge, Connection, ConnectionMode, MarkerType } from 'reactflow';
-// @ts-ignore
-import 'reactflow/dist/style.css';
-
+import 'reactflow/dist/style.css'; 
 import './DatabaseSchema.css'; 
 
 export interface DatabaseSchemaProps {
-    style?: any; // ⭐ Added style
+    style?: any; 
     tables: Array<{ id: string, name: string, columns: string[], headerStyle?: any, rowStyle?: any, position?: { x: number, y: number } }>;
     relationships: Array<{ source: string, sourceColumn: string, target: string, targetColumn: string, type: string, lineType?: string, lineColor?: string, lineWidth?: number, style?: any }>;
 }
@@ -19,7 +17,6 @@ const isPrimaryKey = (colName: string) => {
     return lower === 'id' || lower.endsWith('id');
 };
 
-// 1. THE BULLETPROOF IGNITION EXTRACTOR
 const extractDeep = (obj: any): any => {
     if (obj === null || obj === undefined) return undefined;
     if (typeof obj !== 'object') return obj;
@@ -43,10 +40,8 @@ const getStyle = (styleObj: any) => {
 const TableNode = ({ data }: any) => {
     return (
         <div className="db-schema-node" style={data.rowStyle}>
-            
             <Handle type="target" position={Position.Top} id="table-top-target" style={{ width: '10px', height: '10px', background: '#555', top: '-5px', zIndex: -1 }} />
             <Handle type="source" position={Position.Top} id="table-top-source" style={{ width: '10px', height: '10px', background: '#555', top: '-5px', zIndex: 1 }} />
-            
             <Handle type="target" position={Position.Bottom} id="table-bottom-target" style={{ width: '10px', height: '10px', background: '#555', bottom: '-5px', zIndex: -1 }} />
             <Handle type="source" position={Position.Bottom} id="table-bottom-source" style={{ width: '10px', height: '10px', background: '#555', bottom: '-5px', zIndex: 1 }} />
 
@@ -64,11 +59,9 @@ const TableNode = ({ data }: any) => {
                     >
                         <Handle type="target" position={Position.Left} id={`${col}-left-target`} style={{ left: '-14px', width: '8px', height: '8px', zIndex: -1 }} />
                         <Handle type="source" position={Position.Left} id={`${col}-left-source`} style={{ left: '-14px', width: '8px', height: '8px', zIndex: 1 }} />
-                        
                         <span style={{ marginLeft: '10px' }}>
                             {isPrimaryKey(col) ? '🔑 ' : '📄 '} {col}
                         </span>
-                        
                         <Handle type="target" position={Position.Right} id={`${col}-right-target`} style={{ right: '-14px', width: '8px', height: '8px', zIndex: -1 }} />
                         <Handle type="source" position={Position.Right} id={`${col}-right-source`} style={{ right: '-14px', width: '8px', height: '8px', zIndex: 1 }} />
                     </div>
@@ -95,7 +88,6 @@ export const DatabaseSchema = observer((props: ComponentProps<DatabaseSchemaProp
         const mappedNodes: Node[] = plainTables.map((table: any, index: number) => {
             const finalHeaderStyle = getStyle(table.headerStyle);
             const finalRowStyle = getStyle(table.rowStyle);
-
             const posX = table.position?.x !== undefined ? table.position.x : (index % 3) * 350;
             const posY = table.position?.y !== undefined ? table.position.y : Math.floor(index / 3) * 300;
 
@@ -107,7 +99,6 @@ export const DatabaseSchema = observer((props: ComponentProps<DatabaseSchemaProp
                     columns: table.columns || [], 
                     headerStyle: Object.keys(finalHeaderStyle).length > 0 ? finalHeaderStyle : undefined, 
                     rowStyle: Object.keys(finalRowStyle).length > 0 ? finalRowStyle : undefined,
-                    
                     onRowClick: (columnName: string) => {
                         if (props.componentEvents) {
                             props.componentEvents.fireComponentEvent('onRowClick', { tableId: table.id, column: columnName });
@@ -121,33 +112,18 @@ export const DatabaseSchema = observer((props: ComponentProps<DatabaseSchemaProp
         const mappedEdges: Edge[] = plainRels.map((rel: any, index: number) => {
             const hasSourceCol = !!rel.sourceColumn;
             const hasTargetCol = !!rel.targetColumn;
-
             const edgeColor = rel.lineColor || 'var(--callToAction)';
             const inlineEdgeStyle: any = { ...getStyle(rel.style), stroke: edgeColor };
             if (rel.lineWidth) inlineEdgeStyle.strokeWidth = rel.lineWidth;
 
-            let markerStart;
-            let markerEnd;
+            let markerStart, markerEnd;
             let isAnimated = false;
 
             switch (rel.type) {
-                case 'one-to-many':
-                    markerEnd = { type: MarkerType.ArrowClosed, color: edgeColor };
-                    isAnimated = true;
-                    break;
-                case 'many-to-one':
-                    markerStart = { type: MarkerType.ArrowClosed, color: edgeColor };
-                    isAnimated = true;
-                    break;
-                case 'one-to-one':
-                    markerStart = { type: MarkerType.ArrowClosed, color: edgeColor };
-                    markerEnd = { type: MarkerType.ArrowClosed, color: edgeColor };
-                    isAnimated = false;
-                    break;
-                case 'none':
-                default:
-                    isAnimated = false;
-                    break;
+                case 'one-to-many': markerEnd = { type: MarkerType.ArrowClosed, color: edgeColor }; isAnimated = true; break;
+                case 'many-to-one': markerStart = { type: MarkerType.ArrowClosed, color: edgeColor }; isAnimated = true; break;
+                case 'one-to-one': markerStart = { type: MarkerType.ArrowClosed, color: edgeColor }; markerEnd = { type: MarkerType.ArrowClosed, color: edgeColor }; isAnimated = false; break;
+                case 'none': default: isAnimated = false; break;
             }
 
             return {
@@ -183,37 +159,17 @@ export const DatabaseSchema = observer((props: ComponentProps<DatabaseSchemaProp
                     const targetX = targetNode.position.x;
                     const sourceY = sourceNode.position.y;
                     const targetY = targetNode.position.y;
-                    
                     const isVerticallyAligned = Math.abs(sourceX - targetX) < 150;
                     const sourceIsLeft = sourceX < targetX;
                     const sourceIsAbove = sourceY < targetY;
-                    
                     let newSourceHandle, newTargetHandle;
 
                     if (isVerticallyAligned) {
-                        if (edge.data.sourceCol) {
-                            newSourceHandle = `${edge.data.sourceCol}-right-source`;
-                        } else {
-                            newSourceHandle = sourceIsAbove ? 'table-bottom-source' : 'table-top-source';
-                        }
-
-                        if (edge.data.targetCol) {
-                            newTargetHandle = `${edge.data.targetCol}-right-target`;
-                        } else {
-                            newTargetHandle = sourceIsAbove ? 'table-top-target' : 'table-bottom-target';
-                        }
+                        newSourceHandle = edge.data.sourceCol ? `${edge.data.sourceCol}-right-source` : (sourceIsAbove ? 'table-bottom-source' : 'table-top-source');
+                        newTargetHandle = edge.data.targetCol ? `${edge.data.targetCol}-right-target` : (sourceIsAbove ? 'table-top-target' : 'table-bottom-target');
                     } else {
-                        if (edge.data.sourceCol) {
-                            newSourceHandle = sourceIsLeft ? `${edge.data.sourceCol}-right-source` : `${edge.data.sourceCol}-left-source`;
-                        } else {
-                            newSourceHandle = sourceIsAbove ? 'table-bottom-source' : 'table-top-source';
-                        }
-
-                        if (edge.data.targetCol) {
-                            newTargetHandle = sourceIsLeft ? `${edge.data.targetCol}-left-target` : `${edge.data.targetCol}-right-target`;
-                        } else {
-                            newTargetHandle = sourceIsAbove ? 'table-top-target' : 'table-bottom-target';
-                        }
+                        newSourceHandle = edge.data.sourceCol ? (sourceIsLeft ? `${edge.data.sourceCol}-right-source` : `${edge.data.sourceCol}-left-source`) : (sourceIsAbove ? 'table-bottom-source' : 'table-top-source');
+                        newTargetHandle = edge.data.targetCol ? (sourceIsLeft ? `${edge.data.targetCol}-left-target` : `${edge.data.targetCol}-right-target`) : (sourceIsAbove ? 'table-top-target' : 'table-bottom-target');
                     }
                     
                     if (edge.sourceHandle !== newSourceHandle || edge.targetHandle !== newTargetHandle) {
@@ -232,13 +188,9 @@ export const DatabaseSchema = observer((props: ComponentProps<DatabaseSchemaProp
             if (!handleId || handleId.startsWith('table-')) return '';
             return handleId.replace(/-left-source$|-right-source$|-left-target$|-right-target$/, '');
         };
-
-        const baseSource = parseHandle(params.sourceHandle);
-        const baseTarget = parseHandle(params.targetHandle);
-        
         const newEdge = { 
             ...params, 
-            data: { sourceCol: baseSource, targetCol: baseTarget, lineType: 'default' },
+            data: { sourceCol: parseHandle(params.sourceHandle), targetCol: parseHandle(params.targetHandle), lineType: 'default' },
             type: 'default', 
             animated: true, 
             className: 'db-schema-edge'
@@ -249,39 +201,15 @@ export const DatabaseSchema = observer((props: ComponentProps<DatabaseSchemaProp
     const onNodeDragStop = React.useCallback((event: React.MouseEvent, node: Node) => {
         const safeTables = extractDeep(props.props.tables) || [];
         const tableIndex = safeTables.findIndex((t: any) => String(t.id) === node.id);
-        
-        if (tableIndex !== -1) {
-            const newX = Math.round(node.position.x);
-            const newY = Math.round(node.position.y);
-            
-            if (props.store && props.store.props) {
-                props.store.props.write(`tables[${tableIndex}].position`, { x: newX, y: newY });
-            } else {
-                const targetTable = props.props.tables[tableIndex];
-                if (targetTable.position) {
-                    targetTable.position!.x = newX;
-                    targetTable.position!.y = newY;
-                }
-            }
+        if (tableIndex !== -1 && props.store?.props) {
+            props.store.props.write(`tables[${tableIndex}].position`, { x: Math.round(node.position.x), y: Math.round(node.position.y) });
         }
     }, [props.props.tables, props.store]);
 
     return (
-        // ⭐ emit() merges the Designer's Custom Style Object & Custom Classes with your base root class!
         <div {...props.emit({ classes: ['db-schema-root'] })}>
-            <ReactFlow 
-                nodes={nodes} 
-                edges={edges} 
-                nodeTypes={nodeTypes} 
-                onNodesChange={onNodesChange} 
-                onEdgesChange={onEdgesChange} 
-                onConnect={onConnect}
-                onNodeDragStop={onNodeDragStop}
-                connectionMode={ConnectionMode.Loose}
-                fitView
-            >
-                <Background />
-                <Controls />
+            <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} onConnect={onConnect} onNodeDragStop={onNodeDragStop} connectionMode={ConnectionMode.Loose} fitView>
+                <Background /><Controls />
             </ReactFlow>
         </div>
     );

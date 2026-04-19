@@ -1,29 +1,7 @@
-import React from 'react';
-import { ComponentDesignDelegate, InteractionRegistry } from '@inductiveautomation/perspective-designer';
-import { DatabaseSchema, HierarchyChart, JsonEditor } from '@wargoetz/reactflow-client';
+import { InteractionRegistry } from '@inductiveautomation/perspective-designer';
 
-// 1. Delegate for Database Schema
-const dbSchemaDelegate: ComponentDesignDelegate = {
-    type: 'com.wargoetz.reactflow.databaseschema',
-    // Pass the raw reference directly. NO arrow functions, NO JSX.
-    designerComponent: DatabaseSchema as any 
-};
+// You only define ComponentDesignDelegates here if you are building custom 
+// bounding boxes, resize handles, or deep designer-only overlays. 
+// For standard rendering, Ignition falls back to the Client component automatically!
 
-// 2. Delegate for Hierarchy Chart
-const hierarchyChartDelegate: ComponentDesignDelegate = {
-    type: 'com.wargoetz.reactflow.hierarchychart',
-    // Pass the raw reference directly. NO arrow functions, NO JSX.
-    designerComponent: HierarchyChart as any 
-};
-
-// 3. Delegate for JSON Editor
-const jsonEditorDelegate: ComponentDesignDelegate = {
-    type: 'com.wargoetz.jsoneditor',
-    // Pass the raw reference directly. NO arrow functions, NO JSX.
-    designerComponent: JsonEditor as any 
-};
-
-// 4. Register all of them
-InteractionRegistry.registerInteractionDelegates(dbSchemaDelegate);
-InteractionRegistry.registerInteractionDelegates(hierarchyChartDelegate);
-InteractionRegistry.registerInteractionDelegates(jsonEditorDelegate);
+// Leave this file intentionally blank of component registrations.
