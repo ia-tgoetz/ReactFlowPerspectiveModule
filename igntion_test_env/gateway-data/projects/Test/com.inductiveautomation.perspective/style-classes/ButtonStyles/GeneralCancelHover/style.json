@@ -1,0 +1,22 @@
+{
+  "base": {
+    "style": {
+      "margin": "2px",
+      "padding": "2px"
+    }
+  },
+  "variants": [
+    {
+      "pseudo": "hover",
+      "style": {
+        "backgroundColor": "var(--neutral-80)"
+      }
+    },
+    {
+      "pseudo": "disabled",
+      "style": {
+        "backgroundColor": "var(--neutral-50)"
+      }
+    }
+  ]
+}

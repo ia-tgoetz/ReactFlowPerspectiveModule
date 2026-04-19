@@ -1,0 +1,230 @@
+{
+  "custom": {},
+  "params": {
+    "datatype": "",
+    "key": "",
+    "value": ""
+  },
+  "propConfig": {
+    "params.datatype": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.key": {
+      "paramDirection": "inout",
+      "persistent": true
+    },
+    "params.value": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 39,
+      "width": 637
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "key"
+        },
+        "position": {
+          "basis": "200px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.key"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "placeholder": "Attribute Name...",
+          "style": {
+            "margin": "2px"
+          }
+        },
+        "type": "ia.input.text-field"
+      },
+      {
+        "meta": {
+          "name": "Label"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "style": {
+            "margin": "2px"
+          },
+          "text": ":"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "meta": {
+          "name": "text"
+        },
+        "position": {
+          "basis": "200px",
+          "shrink": 0
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "{../Dropdown.props.value}\u003dNull || {../Dropdown.props.value}\u003d{this.meta.name}"
+              },
+              "type": "expr"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.value"
+              },
+              "overlayOptOut": true,
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "placeholder": "Attribute Text...",
+          "style": {
+            "margin": "2px"
+          }
+        },
+        "type": "ia.input.text-field"
+      },
+      {
+        "meta": {
+          "name": "dateTime"
+        },
+        "position": {
+          "basis": "200px"
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "{../Dropdown.props.value}\u003d{this.meta.name}"
+              },
+              "type": "expr"
+            }
+          },
+          "props.value": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.value"
+              },
+              "overlayOptOut": true,
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "formattedValue": "Apr 7, 2026 12:00 AM",
+          "inputProps": {
+            "style": {
+              "textAlign": "left"
+            }
+          },
+          "placeholder": "Attribute date...",
+          "style": {
+            "margin": "2px"
+          }
+        },
+        "type": "ia.input.date-time-input"
+      },
+      {
+        "meta": {
+          "name": "numeric"
+        },
+        "position": {
+          "basis": "200px"
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "config": {
+                "expression": "{../Dropdown.props.value}\u003d{this.meta.name}"
+              },
+              "type": "expr"
+            }
+          },
+          "props.value": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.value"
+              },
+              "overlayOptOut": true,
+              "type": "property"
+            }
+          }
+        },
+        "props": {
+          "align": "left",
+          "containerStyle": {
+            "margin": "2px"
+          },
+          "placeholder": "Attribute Value..."
+        },
+        "type": "ia.input.numeric-entry-field"
+      },
+      {
+        "meta": {
+          "name": "Dropdown"
+        },
+        "position": {
+          "basis": "125px",
+          "grow": 1
+        },
+        "props": {
+          "options": [
+            {
+              "label": "Numeric",
+              "value": "numeric"
+            },
+            {
+              "label": "Text",
+              "value": "text"
+            },
+            {
+              "label": "Date/Time",
+              "value": "dateTime"
+            }
+          ],
+          "placeholder": {
+            "text": "Datatype..."
+          },
+          "showClearIcon": true,
+          "style": {
+            "margin": "2px"
+          },
+          "value": null
+        },
+        "type": "ia.input.dropdown"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "style": {
+        "margin": "4px"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

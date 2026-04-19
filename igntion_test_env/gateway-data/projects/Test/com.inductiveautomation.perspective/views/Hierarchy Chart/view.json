@@ -1,0 +1,77 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {},
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "HierarchyChart"
+        },
+        "position": {
+          "basis": "600px"
+        },
+        "props": {
+          "nodes": [
+            {
+              "id": "raw_materials",
+              "name": "Raw Materials",
+              "parents": [
+                {
+                  "id": "machining",
+                  "sourceHandle": "left-source",
+                  "targetHandle": "left-target"
+                }
+              ],
+              "position": {
+                "x": 31,
+                "y": -12
+              },
+              "variant": "complete"
+            },
+            {
+              "id": "machining",
+              "name": "Machining Line",
+              "parents": [
+                {
+                  "id": "raw_materials",
+                  "sourceHandle": "auto",
+                  "targetHandle": "auto"
+                }
+              ],
+              "position": {
+                "x": 80,
+                "y": 141
+              },
+              "variant": "in_progress"
+            },
+            {
+              "id": "qa",
+              "name": "Quality Assurance",
+              "parents": [
+                {
+                  "id": "machining",
+                  "sourceHandle": "auto",
+                  "targetHandle": "auto"
+                }
+              ],
+              "position": {
+                "x": 42,
+                "y": 272
+              },
+              "variant": "pending"
+            }
+          ]
+        },
+        "type": "com.wargoetz.reactflow.hierarchychart"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

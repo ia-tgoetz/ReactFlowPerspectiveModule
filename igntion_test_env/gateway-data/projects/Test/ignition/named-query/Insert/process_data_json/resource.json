@@ -1,0 +1,60 @@
+{
+  "scope": "DG",
+  "version": 2,
+  "restricted": false,
+  "overridable": true,
+  "files": [
+    "query.sql"
+  ],
+  "attributes": {
+    "useMaxReturnSize": false,
+    "autoBatchEnabled": false,
+    "fallbackValue": "",
+    "maxReturnSize": 100,
+    "cacheUnit": "SEC",
+    "type": "UpdateQuery",
+    "enabled": true,
+    "cacheAmount": 1,
+    "cacheEnabled": false,
+    "database": "",
+    "fallbackEnabled": false,
+    "lastModificationSignature": "0a5daac11771ea0c8d00fdeb74576418d693dd05524892ab053cc694af78b84a",
+    "permissions": [
+      {
+        "zone": "",
+        "role": ""
+      }
+    ],
+    "lastModification": {
+      "actor": "admin",
+      "timestamp": "2026-04-08T01:09:00Z"
+    },
+    "parameters": [
+      {
+        "type": "Parameter",
+        "identifier": "containerUuid",
+        "sqlType": 7
+      },
+      {
+        "type": "Parameter",
+        "identifier": "formId",
+        "sqlType": 2
+      },
+      {
+        "type": "Parameter",
+        "identifier": "woNumber",
+        "sqlType": 7
+      },
+      {
+        "type": "Parameter",
+        "identifier": "payloadJson",
+        "sqlType": 7
+      },
+      {
+        "type": "Parameter",
+        "identifier": "submittedBy",
+        "sqlType": 7
+      }
+    ]
+  }
+}

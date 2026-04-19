@@ -1,0 +1,43 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {},
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "dbSchema"
+        },
+        "position": {
+          "basis": "600px"
+        },
+        "type": "com.wargoetz.reactflow.databaseschema"
+      },
+      {
+        "meta": {
+          "name": "HierarchyChart"
+        },
+        "position": {
+          "basis": "600px"
+        },
+        "type": "com.wargoetz.reactflow.hierarchychart"
+      },
+      {
+        "meta": {
+          "name": "jsonEditor"
+        },
+        "position": {
+          "basis": "400px"
+        },
+        "type": "com.wargoetz.jsoneditor"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

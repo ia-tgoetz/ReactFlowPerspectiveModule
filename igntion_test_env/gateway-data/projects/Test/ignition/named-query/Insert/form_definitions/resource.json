@@ -1,0 +1,60 @@
+{
+  "scope": "DG",
+  "version": 2,
+  "restricted": false,
+  "overridable": true,
+  "files": [
+    "query.sql"
+  ],
+  "attributes": {
+    "useMaxReturnSize": false,
+    "autoBatchEnabled": false,
+    "fallbackValue": "",
+    "maxReturnSize": 100,
+    "cacheUnit": "SEC",
+    "type": "UpdateQuery",
+    "enabled": true,
+    "cacheAmount": 1,
+    "cacheEnabled": false,
+    "database": "",
+    "fallbackEnabled": false,
+    "lastModificationSignature": "a74a52f2e69728837454896ae5d117ce99821ee255caabde85543fcbeb9591bf",
+    "permissions": [
+      {
+        "zone": "",
+        "role": ""
+      }
+    ],
+    "lastModification": {
+      "actor": "admin",
+      "timestamp": "2026-04-08T01:09:31Z"
+    },
+    "parameters": [
+      {
+        "type": "Parameter",
+        "identifier": "formName",
+        "sqlType": 7
+      },
+      {
+        "type": "Parameter",
+        "identifier": "description",
+        "sqlType": 7
+      },
+      {
+        "type": "Parameter",
+        "identifier": "schemaJson",
+        "sqlType": 7
+      },
+      {
+        "type": "Parameter",
+        "identifier": "version",
+        "sqlType": 7
+      },
+      {
+        "type": "Parameter",
+        "identifier": "isActive",
+        "sqlType": 6
+      }
+    ]
+  }
+}

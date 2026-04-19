@@ -1,0 +1,50 @@
+{
+  "scope": "DG",
+  "version": 2,
+  "restricted": false,
+  "overridable": true,
+  "files": [
+    "query.sql"
+  ],
+  "attributes": {
+    "useMaxReturnSize": false,
+    "autoBatchEnabled": false,
+    "fallbackValue": "",
+    "maxReturnSize": 100,
+    "cacheUnit": "SEC",
+    "type": "UpdateQuery",
+    "enabled": true,
+    "cacheAmount": 1,
+    "cacheEnabled": false,
+    "database": "",
+    "fallbackEnabled": false,
+    "lastModificationSignature": "b89104f3865f3b30e1e683505cfed9f9a7ae0b0cd9ab4724fe83874319fabf3b",
+    "permissions": [
+      {
+        "zone": "",
+        "role": ""
+      }
+    ],
+    "lastModification": {
+      "actor": "admin",
+      "timestamp": "2026-04-08T00:54:13Z"
+    },
+    "parameters": [
+      {
+        "type": "Parameter",
+        "identifier": "customerPartNumber",
+        "sqlType": 7
+      },
+      {
+        "type": "Parameter",
+        "identifier": "drawingNumber",
+        "sqlType": 7
+      },
+      {
+        "type": "Parameter",
+        "identifier": "specsJson",
+        "sqlType": 7
+      }
+    ]
+  }
+}

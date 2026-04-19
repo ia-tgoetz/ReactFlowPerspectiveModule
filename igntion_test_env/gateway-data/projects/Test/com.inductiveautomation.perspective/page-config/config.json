@@ -1,0 +1,15 @@
+{
+  "pages": {
+    "/": {
+      "title": "",
+      "viewPath": "Hierarchy Chart"
+    },
+    "/form": {
+      "title": "",
+      "viewPath": "AdminViews/Form_AddDefinedTypes"
+    }
+  },
+  "sharedDocks": {
+    "cornerPriority": "top-bottom"
+  }
+}

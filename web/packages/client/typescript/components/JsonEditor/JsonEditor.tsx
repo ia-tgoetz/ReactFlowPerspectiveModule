@@ -22,7 +22,6 @@ export const JsonEditor = observer((props: ComponentProps<JsonEditorProps>) => {
     const { data, theme, customTheme, editable, style } = props.props;
 
     const getActiveTheme = () => {
-        // Explicitly check properties. This tells MobX to watch these specific fields.
         const hasCustom = customTheme && (
             customTheme.backgroundColor || 
             customTheme.keyColor || 
@@ -32,7 +31,6 @@ export const JsonEditor = observer((props: ComponentProps<JsonEditorProps>) => {
             customTheme.bracketColor
         );
 
-        // Fallback if no custom fields are populated
         if (!hasCustom) {
             return theme || 'monokai';
         }
@@ -44,8 +42,6 @@ export const JsonEditor = observer((props: ComponentProps<JsonEditorProps>) => {
             base0B: customTheme.stringColor || '#a6e22e',       
             base09: customTheme.numberColor || '#ae81ff',       
             base0E: customTheme.booleanColor || '#fd971f',      
-            
-            // Standard base-16 fillers
             base08: '#f92672', base0A: '#f4bf75', base0C: '#a1efe4', base0F: '#cc6633',
             base01: '#383830', base02: '#49483e', base03: '#75715e',
             base04: '#a59f85', base05: '#f8f8f2', base06: '#f5f4f1'
@@ -60,14 +56,17 @@ export const JsonEditor = observer((props: ComponentProps<JsonEditorProps>) => {
         }
     };
 
+    // 1. Capture Ignition's emitted properties (which includes the layout engine styles!)
+    const emitProps = props.emit({ classes: ['ia_jsonEditor', 'perspective-component'] });
+
     return (
         <div 
-            {...props.emit({ classes: ['ia_jsonEditor', 'perspective-component'] })} 
+            {...emitProps} 
             style={{ 
-                height: '100%', 
-                width: '100%', 
-                overflow: 'auto',
-                ...style // This is the "Style" prop from your screenshot
+                ...emitProps.style,      // CRITICAL: Inject Ignition's sizing (basis, grow, width, etc.)
+                boxSizing: 'border-box', // Ensure margins don't break the bounding box
+                overflow: 'auto',        // Ensure big JSON objects scroll inside the box
+                ...style                 // Inject the user's custom 'style' property from the Designer
             }}
         >
             <ReactJson 
@@ -79,8 +78,6 @@ export const JsonEditor = observer((props: ComponentProps<JsonEditorProps>) => {
                 displayDataTypes={false}
                 displayObjectSize={true}
                 enableClipboard={true}
-                // We keep internal bg transparent so the Theme's base00 
-                // or the Ignition Style background shows through.
                 style={{padding: '10px' }} 
             />
         </div>

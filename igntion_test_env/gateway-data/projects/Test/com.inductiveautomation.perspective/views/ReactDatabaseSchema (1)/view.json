@@ -1,0 +1,505 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "width": 1147
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "DropdownDatabase"
+            },
+            "position": {
+              "basis": "36px",
+              "grow": 1
+            },
+            "propConfig": {
+              "props.options": {
+                "binding": {
+                  "config": {
+                    "expression": "1"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\t# Convert raw dataset to PyDataSet for easy looping\n\tdata \u003d system.dataset.toPyDataSet(system.db.getConnections())\n\toptions \u003d []\n\tfor row in data:\n\t    # Only include \u0027Valid\u0027 connections if desired\n#\t    if row[\"Status\"] \u003d\u003d \"Valid\":\n#\t        options.append({\n#\t            \"value\": row[\"Name\"],\n#\t            \"label\": row[\"Name\"]\n#\t        })\n\t\tisDisabled\u003dTrue\n\t\tif row[\"Status\"] \u003d\u003d \"Valid\":\n\t\t\tisDisabled\u003dFalse\n\t\toptions.append({\n\t\t    \"value\": row[\"Name\"],\n\t\t    \"label\": row[\"Name\"],\n\t\t    \"isDisabled\": isDisabled\n\t\t})\n\treturn options",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "expr"
+                }
+              },
+              "props.placeholder.text": {
+                "binding": {
+                  "config": {
+                    "expression": " \"Select History Provider (\"+len({this.props.options}) + \" available)...\""
+                  },
+                  "type": "expr"
+                }
+              }
+            },
+            "props": {
+              "placeholder": {},
+              "showClearIcon": true,
+              "style": {
+                "margin": "2px"
+              },
+              "value": "mesIgnition"
+            },
+            "type": "ia.input.dropdown"
+          },
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\tself.parent.parent.getChild(\"dbSchema\").props.tables\u003dself.parent.custom.schema.tables\n\tself.parent.parent.getChild(\"dbSchema\").props.relationships\u003dself.parent.custom.schema.relationships"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Icon"
+            },
+            "position": {
+              "basis": "30px",
+              "shrink": 0
+            },
+            "props": {
+              "path": "material/send",
+              "style": {
+                "margin": "4px"
+              }
+            },
+            "type": "ia.display.icon"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "propConfig": {
+          "custom.schema": {
+            "binding": {
+              "config": {
+                "path": "./DropdownDatabase.props.value"
+              },
+              "transforms": [
+                {
+                  "code": "\tif value is None:\n\t\treturn {\n\t\t\t  \"relationships\": [],\n\t\t\t  \"tables\": []\n\t\t\t}\n\treturn self.getDatabaseSchema(value)",
+                  "type": "script"
+                }
+              ],
+              "type": "property"
+            }
+          }
+        },
+        "scripts": {
+          "customMethods": [
+            {
+              "name": "getDatabaseSchema",
+              "params": [
+                "dbConnectionName",
+                "schemaFilter\u003d\u0027public\u0027",
+                "excludePartitions\u003dTrue"
+              ],
+              "script": "\t\"\"\"\n\tThree-Tier Schema Extractor: \n\t1. True Foreign Keys\n\t2. Standard Ignition Tables (Historian, Alarm Journal, DB User Source)\n\t3. Heuristic Guessing Engine\n\t\n\tArgs:\n\t\tdbConnectionName (str): The name of the Ignition database connection.\n\t\tschemaFilter (str): The schema to query (defaults to \u0027public\u0027 for PostgreSQL).\n\t\texcludePartitions (bool): If True, hides dynamically generated Ignition Historian data tables.\n\t\"\"\"\n\t\n\t# 1. QUERY THE TABLES AND COLUMNS\n\ttableQuery \u003d \"\"\"\n\t\tSELECT table_name, column_name\n\t\tFROM information_schema.columns\n\t\tWHERE table_schema \u003d ?\n\t\"\"\"\n\t\n\t# Inject the filter if the user wants to hide the partition tables\n\tif excludePartitions:\n\t\ttableQuery +\u003d \"\"\" \n\t\t\tAND table_name NOT LIKE \u0027sqlt_data_%\u0027 \n\t\t\tAND table_name NOT LIKE \u0027sqlth_%_data_%\u0027\n\t\t\"\"\"\n\t\t\n\ttableData \u003d system.db.runPrepQuery(tableQuery, [schemaFilter], dbConnectionName)\n\n\ttablesDict \u003d {}\n\tfor row in tableData:\n\t\tt_name \u003d row[\"table_name\"]\n\t\tc_name \u003d row[\"column_name\"]\n\t\t\n\t\tif t_name not in tablesDict:\n\t\t\ttablesDict[t_name] \u003d {\n\t\t\t\t\"id\": t_name, \"name\": t_name, \"columns\": [],\n\t\t\t\t\"headerStyle\": {}, \"rowStyle\": {}\n\t\t\t}\n\t\ttablesDict[t_name][\"columns\"].append(c_name)\n\n\ttablesList \u003d tablesDict.values()\n\trelationshipsList \u003d []\n\t\n\thandled_rels \u003d set() \n\n\t# \u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\n\t# TIER 1: TRUE FOREIGN KEYS (Solid Green)\n\t# \u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\n\tfkQuery \u003d \"\"\"\n\t\tSELECT \n\t\t\ttc.table_name AS source_table, kcu.column_name AS source_column, \n\t\t\tccu.table_name AS target_table, ccu.column_name AS target_column \n\t\tFROM information_schema.table_constraints AS tc \n\t\tJOIN information_schema.key_column_usage AS kcu \n\t\t  ON tc.constraint_name \u003d kcu.constraint_name AND tc.table_schema \u003d kcu.table_schema \n\t\tJOIN information_schema.constraint_column_usage AS ccu \n\t\t  ON ccu.constraint_name \u003d tc.constraint_name AND ccu.table_schema \u003d tc.table_schema \n\t\tWHERE tc.constraint_type \u003d \u0027FOREIGN KEY\u0027 AND tc.table_schema \u003d ?\n\t\"\"\"\n\tfkData \u003d system.db.runPrepQuery(fkQuery, [schemaFilter], dbConnectionName)\n\n\tfor row in fkData:\n\t\tsrc \u003d row[\"source_table\"]\n\t\tcol \u003d row[\"source_column\"]\n\t\ttgt \u003d row[\"target_table\"]\n\t\t\n\t\tif src in tablesDict and tgt in tablesDict:\n\t\t\trelationshipsList.append({\n\t\t\t\t\"source\": src, \"sourceColumn\": col, \"target\": tgt, \"targetColumn\": row[\"target_column\"],\n\t\t\t\t\"type\": \"many-to-one\", \"lineType\": \"default\",\n\t\t\t\t\"lineColor\": \"var(--success)\", \n\t\t\t\t\"style\": {\"strokeDasharray\": \"0\"} \n\t\t\t})\n\t\t\thandled_rels.add((src, col))\n\n\t# \u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\n\t# TIER 2: STANDARD IGNITION TABLES (Dashed Blue)\n\t# \u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\n\tignition_universal_map \u003d {\n\t\t# Tag Historian\n\t\t\"drvid\": \"sqlth_drv\", \n\t\t\"tagid\": \"sqlth_te\",\n\t\t\"scid\": \"sqlth_scinfo\", \n\t\t\"pname\": \"sqlth_partitions\",\n\t\t# Database User Source\n\t\t\"user_id\": \"users\",\n\t\t\"role_id\": \"roles\"\n\t}\n\n\tignition_explicit_map \u003d {\n\t\t# Alarm Journal\n\t\t\"alarm_event_data\": {\"id\": \"alarm_events\"}\n\t}\n\n\tfor t_name, t_data in tablesDict.items():\n\t\tfor col in t_data[\"columns\"]:\n\t\t\tif (t_name, col) in handled_rels:\n\t\t\t\tcontinue \n\t\t\t\t\n\t\t\ttgt \u003d None\n\t\t\ttgt_col \u003d \"id\"\n\t\t\trel_type \u003d \"many-to-one\"\n\t\t\t\n\t\t\tif t_name in ignition_explicit_map and col in ignition_explicit_map[t_name]:\n\t\t\t\ttgt \u003d ignition_explicit_map[t_name][col]\n\t\t\t\ttgt_col \u003d \"id\"\n\t\t\t\trel_type \u003d \"one-to-many\"\n\t\t\t\t\n\t\t\telif col in ignition_universal_map:\n\t\t\t\ttgt \u003d ignition_universal_map[col]\n\t\t\t\ttgt_col \u003d \"id\" if col !\u003d \"pname\" else \"\"\n\t\t\t\trel_type \u003d \"many-to-one\" if col !\u003d \"pname\" else \"one-to-many\"\n\t\t\t\t\n\t\t\tif tgt and tgt in tablesDict and t_name !\u003d tgt:\n\t\t\t\trelationshipsList.append({\n\t\t\t\t\t\"source\": t_name, \"sourceColumn\": col, \"target\": tgt, \"targetColumn\": tgt_col,\n\t\t\t\t\t\"type\": rel_type, \"lineType\": \"default\",\n\t\t\t\t\t\"lineColor\": \"var(--callToAction)\", \n\t\t\t\t\t\"style\": {\"strokeDasharray\": \"5, 5\"} \n\t\t\t\t})\n\t\t\t\thandled_rels.add((t_name, col))\n\n\t# \u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\n\t# TIER 3: GUESSING ENGINE (Dotted Orange)\n\t# \u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\n\tfor t_name, t_data in tablesDict.items():\n\t\tfor col in t_data[\"columns\"]:\n\t\t\tif (t_name, col) in handled_rels:\n\t\t\t\tcontinue \n\t\t\t\t\n\t\t\tcol_lower \u003d col.lower()\n\t\t\t\n\t\t\tif col_lower !\u003d \u0027id\u0027 and (col_lower.endswith(\u0027_id\u0027) or col_lower.endswith(\u0027id\u0027)):\n\t\t\t\t\n\t\t\t\tguessed_target \u003d col_lower.replace(\u0027_id\u0027, \u0027\u0027).replace(\u0027id\u0027, \u0027\u0027)\n\t\t\t\t\n\t\t\t\tactual_target \u003d None\n\t\t\t\tif guessed_target in tablesDict:\n\t\t\t\t\tactual_target \u003d guessed_target\n\t\t\t\telif guessed_target + \"s\" in tablesDict:\n\t\t\t\t\tactual_target \u003d guessed_target + \"s\"\n\t\t\t\telif guessed_target + \"es\" in tablesDict:\n\t\t\t\t\tactual_target \u003d guessed_target + \"es\"\n\t\t\t\t\t\n\t\t\t\tif actual_target and actual_target !\u003d t_name:\n\t\t\t\t\trelationshipsList.append({\n\t\t\t\t\t\t\"source\": t_name, \"sourceColumn\": col, \"target\": actual_target, \"targetColumn\": \"id\",\n\t\t\t\t\t\t\"type\": \"many-to-one\", \"lineType\": \"default\",\n\t\t\t\t\t\t\"lineColor\": \"var(--warning)\", \n\t\t\t\t\t\t\"style\": {\"strokeDasharray\": \"2, 2\"} \n\t\t\t\t\t})\n\t\t\t\t\thandled_rels.add((t_name, col))\n\n\t# RETURN THE FINAL PAYLOAD\n\treturn {\n\t\t\"tables\": tablesList,\n\t\t\"relationships\": relationshipsList\n\t}"
+            }
+          ],
+          "extensionFunctions": null,
+          "messageHandlers": []
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "dbSchema"
+        },
+        "position": {
+          "basis": "600px",
+          "grow": 1
+        },
+        "props": {
+          "relationships": [
+            {
+              "lineColor": "var(--success)",
+              "lineType": "default",
+              "source": "Modules",
+              "sourceColumn": "category_id_fk",
+              "style": {
+                "strokeDasharray": "0"
+              },
+              "target": "ModuleCategories",
+              "targetColumn": "category_id",
+              "type": "many-to-one"
+            },
+            {
+              "lineColor": "var(--success)",
+              "lineType": "default",
+              "source": "PricingProfiles",
+              "sourceColumn": "module_fk",
+              "style": {
+                "strokeDasharray": "0"
+              },
+              "target": "Modules",
+              "targetColumn": "module_id",
+              "type": "many-to-one"
+            },
+            {
+              "lineColor": "var(--success)",
+              "lineType": "default",
+              "source": "ModulePrices",
+              "sourceColumn": "price_profile_fk",
+              "style": {
+                "strokeDasharray": "0"
+              },
+              "target": "pricingProfiles",
+              "targetColumn": "price_profile_id",
+              "type": "many-to-one"
+            },
+            {
+              "lineColor": "var(--success)",
+              "lineType": "default",
+              "source": "ModuleFeatures",
+              "sourceColumn": "edition_fk",
+              "style": {
+                "strokeDasharray": "0"
+              },
+              "target": "ModuleVersions",
+              "targetColumn": "version_id",
+              "type": "many-to-one"
+            },
+            {
+              "lineColor": "var(--success)",
+              "lineType": "default",
+              "source": "SuiteComposition",
+              "sourceColumn": "component_module_id_fk",
+              "style": {
+                "strokeDasharray": "0"
+              },
+              "target": "Modules",
+              "targetColumn": "module_id",
+              "type": "many-to-one"
+            },
+            {
+              "lineColor": "var(--success)",
+              "lineType": "default",
+              "source": "SuiteComposition",
+              "sourceColumn": "suite_version_fk",
+              "style": {
+                "strokeDasharray": "0"
+              },
+              "target": "ModuleVersions",
+              "targetColumn": "version_id",
+              "type": "many-to-one"
+            },
+            {
+              "lineColor": "var(--success)",
+              "lineType": "default",
+              "source": "ModuleDependencies",
+              "sourceColumn": "required_module_id_fk",
+              "style": {
+                "strokeDasharray": "0"
+              },
+              "target": "Modules",
+              "targetColumn": "module_id",
+              "type": "many-to-one"
+            },
+            {
+              "lineColor": "var(--success)",
+              "lineType": "default",
+              "source": "ModuleDependencies",
+              "sourceColumn": "dependent_version_fk",
+              "style": {
+                "strokeDasharray": "0"
+              },
+              "target": "ModuleVersions",
+              "targetColumn": "version_id",
+              "type": "many-to-one"
+            },
+            {
+              "lineColor": "var(--success)",
+              "lineType": "default",
+              "source": "ModuleVersions",
+              "sourceColumn": "deprecated_major_fk",
+              "style": {
+                "strokeDasharray": "0"
+              },
+              "target": "MajorVersions",
+              "targetColumn": "major_id",
+              "type": "many-to-one"
+            },
+            {
+              "lineColor": "var(--success)",
+              "lineType": "default",
+              "source": "ModuleVersions",
+              "sourceColumn": "introduced_major_fk",
+              "style": {
+                "strokeDasharray": "0"
+              },
+              "target": "MajorVersions",
+              "targetColumn": "major_id",
+              "type": "many-to-one"
+            },
+            {
+              "lineColor": "var(--success)",
+              "lineType": "default",
+              "source": "ModuleVersions",
+              "sourceColumn": "pricing_profile_fk",
+              "style": {
+                "strokeDasharray": "0"
+              },
+              "target": "PricingProfiles",
+              "targetColumn": "price_profile_id",
+              "type": "many-to-one"
+            },
+            {
+              "lineColor": "var(--success)",
+              "lineType": "default",
+              "source": "ModuleVersions",
+              "sourceColumn": "module_fk",
+              "style": {
+                "strokeDasharray": "0"
+              },
+              "target": "Modules",
+              "targetColumn": "module_id",
+              "type": "many-to-one"
+            }
+          ],
+          "tables": [
+            {
+              "columns": [
+                "category_id",
+                "name",
+                "updated_at",
+                "end_time",
+                "blocksize",
+                "flags"
+              ],
+              "headerStyle": {},
+              "id": "ModuleCategories",
+              "name": "ModuleCategories",
+              "position": {
+                "x": -1181,
+                "y": 447
+              },
+              "rowStyle": {}
+            },
+            {
+              "columns": [
+                "module_id",
+                "manufacturer",
+                "name",
+                "base_link",
+                "base_image_b64",
+                "is_suite",
+                "category_id_fk",
+                "category_sort_order",
+                "updated_at"
+              ],
+              "headerStyle": {},
+              "id": "Modules",
+              "name": "Modules",
+              "position": {
+                "x": -913,
+                "y": 404
+              },
+              "rowStyle": {}
+            },
+            {
+              "columns": [
+                "price_id",
+                "price_profile_fk",
+                "edition",
+                "license_tier",
+                "price_usd",
+                "sort_order",
+                "updated_at"
+              ],
+              "headerStyle": {},
+              "id": "ModulePrices",
+              "name": "ModulePrices",
+              "position": {
+                "x": 80,
+                "y": 540
+              },
+              "rowStyle": {}
+            },
+            {
+              "columns": [
+                "dependency_id",
+                "dependent_version_fk",
+                "required_module_id_fk",
+                "updated_at"
+              ],
+              "headerStyle": {},
+              "id": "ModuleDependencies",
+              "name": "ModuleDependencies",
+              "position": {
+                "x": -371,
+                "y": -50
+              },
+              "rowStyle": {}
+            },
+            {
+              "columns": [
+                "Code",
+                "Name",
+                "Usd_rate",
+                "numberFormat",
+                "symbolPrefix",
+                "symbolPostfix",
+                "Updated",
+                "fix_usd_rate"
+              ],
+              "headerStyle": {},
+              "id": "Currencies",
+              "name": "Currencies",
+              "position": {
+                "x": -307,
+                "y": 739
+              },
+              "rowStyle": {}
+            },
+            {
+              "columns": [
+                "major_id",
+                "version_string",
+                "updated_at"
+              ],
+              "headerStyle": {},
+              "id": "MajorVersions",
+              "name": "MajorVersions",
+              "position": {
+                "x": 686,
+                "y": 317
+              },
+              "rowStyle": {}
+            },
+            {
+              "columns": [
+                "version_id",
+                "module_fk",
+                "pricing_profile_fk",
+                "introduced_major_fk",
+                "introduced_minor",
+                "deprecated_major_fk",
+                "deprecated_minor",
+                "edition",
+                "description",
+                "image_override_b64",
+                "default_selection",
+                "is_selected",
+                "selection_enabled",
+                "tooltip",
+                "updated_at"
+              ],
+              "headerStyle": {},
+              "id": "ModuleVersions",
+              "name": "ModuleVersions",
+              "position": {
+                "x": 350,
+                "y": 123
+              },
+              "rowStyle": {}
+            },
+            {
+              "columns": [
+                "price_profile_id",
+                "module_fk",
+                "profile_name",
+                "updated_at"
+              ],
+              "headerStyle": {},
+              "id": "PricingProfiles",
+              "name": "PricingProfiles",
+              "position": {
+                "x": -303,
+                "y": 467
+              },
+              "rowStyle": {}
+            },
+            {
+              "columns": [
+                "suite_composition_id",
+                "suite_version_fk",
+                "component_module_id_fk",
+                "selection_data",
+                "updated_at"
+              ],
+              "headerStyle": {},
+              "id": "SuiteComposition",
+              "name": "SuiteComposition",
+              "position": {
+                "x": -365,
+                "y": 131
+              },
+              "rowStyle": {}
+            },
+            {
+              "columns": [
+                "feature_id",
+                "edition_fk",
+                "feature_type",
+                "feature_list_json",
+                "updated_at"
+              ],
+              "headerStyle": {},
+              "id": "ModuleFeatures",
+              "name": "ModuleFeatures",
+              "position": {
+                "x": -364,
+                "y": -258
+              },
+              "rowStyle": {}
+            },
+            {
+              "columns": [
+                "plan_key",
+                "display_name",
+                "multiplier",
+                "description",
+                "sort_order",
+                "has_email_support",
+                "has_phone_support",
+                "has_priority_queue",
+                "upgrade_multiplier",
+                "updated_at"
+              ],
+              "headerStyle": {},
+              "id": "SupportPlans",
+              "name": "SupportPlans",
+              "position": {
+                "x": 34,
+                "y": 816
+              },
+              "rowStyle": {}
+            }
+          ]
+        },
+        "type": "com.wargoetz.reactflow.databaseschema"
+      },
+      {
+        "meta": {
+          "name": "jsonEditor"
+        },
+        "position": {
+          "basis": "400px"
+        },
+        "type": "com.wargoetz.jsoneditor"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

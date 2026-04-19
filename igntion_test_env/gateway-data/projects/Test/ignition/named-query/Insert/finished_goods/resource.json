@@ -1,0 +1,50 @@
+{
+  "scope": "DG",
+  "version": 2,
+  "restricted": false,
+  "overridable": true,
+  "files": [
+    "query.sql"
+  ],
+  "attributes": {
+    "useMaxReturnSize": false,
+    "autoBatchEnabled": false,
+    "fallbackValue": "",
+    "maxReturnSize": 100,
+    "cacheUnit": "SEC",
+    "type": "UpdateQuery",
+    "enabled": true,
+    "cacheAmount": 1,
+    "cacheEnabled": false,
+    "database": "",
+    "fallbackEnabled": false,
+    "lastModificationSignature": "db43013f42ae942f9b8a7987ad1f8db94a25488fe17aeea4ad6e4b438ebcdc60",
+    "permissions": [
+      {
+        "zone": "",
+        "role": ""
+      }
+    ],
+    "lastModification": {
+      "actor": "admin",
+      "timestamp": "2026-04-08T01:03:12Z"
+    },
+    "parameters": [
+      {
+        "type": "Parameter",
+        "identifier": "partId",
+        "sqlType": 7
+      },
+      {
+        "type": "Parameter",
+        "identifier": "woNumber",
+        "sqlType": 7
+      },
+      {
+        "type": "Parameter",
+        "identifier": "qtyReady",
+        "sqlType": 4
+      }
+    ]
+  }
+}

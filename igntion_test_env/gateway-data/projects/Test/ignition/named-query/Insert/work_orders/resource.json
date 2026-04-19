@@ -1,0 +1,50 @@
+{
+  "scope": "DG",
+  "version": 2,
+  "restricted": false,
+  "overridable": true,
+  "files": [
+    "query.sql"
+  ],
+  "attributes": {
+    "useMaxReturnSize": false,
+    "autoBatchEnabled": false,
+    "fallbackValue": "",
+    "maxReturnSize": 100,
+    "cacheUnit": "SEC",
+    "type": "UpdateQuery",
+    "enabled": true,
+    "cacheAmount": 1,
+    "cacheEnabled": false,
+    "database": "",
+    "fallbackEnabled": false,
+    "lastModificationSignature": "48f66db98aed9f82b6effb0e85a10342b988a12e77cbb781cc53a75dd4d7b09e",
+    "permissions": [
+      {
+        "zone": "",
+        "role": ""
+      }
+    ],
+    "lastModification": {
+      "actor": "admin",
+      "timestamp": "2026-04-08T01:00:39Z"
+    },
+    "parameters": [
+      {
+        "type": "Parameter",
+        "identifier": "internalPoId",
+        "sqlType": 7
+      },
+      {
+        "type": "Parameter",
+        "identifier": "partId",
+        "sqlType": 7
+      },
+      {
+        "type": "Parameter",
+        "identifier": "targetQty",
+        "sqlType": 4
+      }
+    ]
+  }
+}
