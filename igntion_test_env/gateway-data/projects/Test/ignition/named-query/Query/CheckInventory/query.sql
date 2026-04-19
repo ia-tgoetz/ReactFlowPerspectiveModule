@@ -1,0 +1,1 @@
+SELECT SUM(qty_on_hand) FROM finished_goods WHERE part_id = :part

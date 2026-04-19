@@ -1,0 +1,60 @@
+{
+  "scope": "DG",
+  "version": 2,
+  "restricted": false,
+  "overridable": true,
+  "files": [
+    "query.sql"
+  ],
+  "attributes": {
+    "useMaxReturnSize": false,
+    "autoBatchEnabled": false,
+    "fallbackValue": "",
+    "maxReturnSize": 100,
+    "cacheUnit": "SEC",
+    "type": "Query",
+    "enabled": true,
+    "cacheAmount": 1,
+    "cacheEnabled": false,
+    "database": "",
+    "fallbackEnabled": false,
+    "lastModificationSignature": "6350e2fdaec877ea24f3170281270e6ec36f36f7e1c17ccfd9b5878875f3fd57",
+    "permissions": [
+      {
+        "zone": "",
+        "role": ""
+      }
+    ],
+    "lastModification": {
+      "actor": "admin",
+      "timestamp": "2026-04-09T13:52:08Z"
+    },
+    "parameters": [
+      {
+        "type": "Parameter",
+        "identifier": "description",
+        "sqlType": 7
+      },
+      {
+        "type": "Parameter",
+        "identifier": "is_active",
+        "sqlType": 6
+      },
+      {
+        "type": "Parameter",
+        "identifier": "tool_attributes_json",
+        "sqlType": 7
+      },
+      {
+        "type": "Parameter",
+        "identifier": "tool_type",
+        "sqlType": 7
+      },
+      {
+        "type": "Parameter",
+        "identifier": "tool_name",
+        "sqlType": 7
+      }
+    ]
+  }
+}

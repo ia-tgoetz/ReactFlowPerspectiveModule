@@ -1,0 +1,27 @@
+{
+  "custom": {},
+  "params": {
+    "table": "process_data_json",
+    "workOrder": "value"
+  },
+  "propConfig": {
+    "params.table": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.workOrder": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {},
+  "root": {
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

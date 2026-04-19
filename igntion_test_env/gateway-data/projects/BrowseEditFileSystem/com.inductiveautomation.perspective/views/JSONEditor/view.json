@@ -1,0 +1,62 @@
+{
+  "custom": {},
+  "params": {
+    "fontSize": "11px",
+    "json": "value"
+  },
+  "propConfig": {
+    "params.fontSize": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.json": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {},
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "TextArea"
+        },
+        "position": {
+          "basis": "160px",
+          "grow": 1
+        },
+        "propConfig": {
+          "props.style.fontSize": {
+            "binding": {
+              "config": {
+                "path": "view.params.fontSize"
+              },
+              "type": "property"
+            }
+          },
+          "props.text": {
+            "binding": {
+              "config": {
+                "bidirectional": true,
+                "path": "view.params.json"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "type": "ia.input.text-area"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "backgroundColor": "--neutral-20",
+        "margin": "4px"
+      }
+    },
+    "type": "ia.container.flex"
+  }
+}

@@ -1,0 +1,331 @@
+{
+  "custom": {
+    "base": [
+      {
+        "description": "",
+        "equipment_type": "Press",
+        "is_active": true
+      },
+      {
+        "description": "",
+        "equipment_type": "Furnace",
+        "is_active": true
+      },
+      {
+        "description": "",
+        "equipment_type": "Spray Dryer",
+        "is_active": true
+      }
+    ],
+    "baseTable": {
+      "headerStyle": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "rowStyle": {}
+    },
+    "baseTableID": "equipment_types",
+    "fullTables": [
+      {
+        "columns": [
+          "Furnace",
+          "Press",
+          "Spray Dryer"
+        ],
+        "headerStyle": {},
+        "id": "equipment_type",
+        "name": "Equipment",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "rowStyle": {}
+      },
+      {
+        "columns": [
+          "1: ► equipment_name",
+          "1: ► is_active",
+          ": ► description",
+          "1775760121796: ► created_at",
+          "Furnace: ► equipment_type",
+          "{}: ► equipment_attributes_json",
+          "EQ-103: ► equipment_id"
+        ],
+        "headerStyle": {},
+        "id": "EQ-103",
+        "name": "1",
+        "position": {
+          "x": 380,
+          "y": -500
+        },
+        "rowStyle": {}
+      },
+      {
+        "columns": [
+          "Press 1: ► equipment_name",
+          "1: ► is_active",
+          ": ► description",
+          "1775760103316: ► created_at",
+          "Press: ► equipment_type",
+          "{}: ► equipment_attributes_json",
+          "EQ-100: ► equipment_id"
+        ],
+        "headerStyle": {},
+        "id": "EQ-100",
+        "name": "Press 1",
+        "position": {
+          "x": 380,
+          "y": -250
+        },
+        "rowStyle": {}
+      },
+      {
+        "columns": [
+          "Press 2: ► equipment_name",
+          "1: ► is_active",
+          ": ► description",
+          "1775760110164: ► created_at",
+          "Press: ► equipment_type",
+          "{}: ► equipment_attributes_json",
+          "EQ-101: ► equipment_id"
+        ],
+        "headerStyle": {},
+        "id": "EQ-101",
+        "name": "Press 2",
+        "position": {
+          "x": 380,
+          "y": 0
+        },
+        "rowStyle": {}
+      },
+      {
+        "columns": [
+          "SP1: ► equipment_name",
+          "1: ► is_active",
+          ": ► description",
+          "1775760115930: ► created_at",
+          "Spray Dryer: ► equipment_type",
+          "{}: ► equipment_attributes_json",
+          "EQ-102: ► equipment_id"
+        ],
+        "headerStyle": {},
+        "id": "EQ-102",
+        "name": "SP1",
+        "position": {
+          "x": 380,
+          "y": 250
+        },
+        "rowStyle": {}
+      }
+    ],
+    "sub": [
+      {
+        "created_at": 1775760103316,
+        "description": "",
+        "equipment_attributes_json": "{}",
+        "equipment_id": "EQ-100",
+        "equipment_name": "Press 1",
+        "equipment_type": "Press",
+        "is_active": true
+      },
+      {
+        "created_at": 1775760110164,
+        "description": "",
+        "equipment_attributes_json": "{}",
+        "equipment_id": "EQ-101",
+        "equipment_name": "Press 2",
+        "equipment_type": "Press",
+        "is_active": true
+      },
+      {
+        "created_at": 1775760115930,
+        "description": "",
+        "equipment_attributes_json": "{}",
+        "equipment_id": "EQ-102",
+        "equipment_name": "SP1",
+        "equipment_type": "Spray Dryer",
+        "is_active": true
+      },
+      {
+        "created_at": 1775760121796,
+        "description": "",
+        "equipment_attributes_json": "{}",
+        "equipment_id": "EQ-103",
+        "equipment_name": "1",
+        "equipment_type": "Furnace",
+        "is_active": true
+      }
+    ]
+  },
+  "params": {
+    "baseType": "equipment",
+    "sub": "equipment"
+  },
+  "propConfig": {
+    "custom.base": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "tableName": "{view.custom.baseTableID}"
+          },
+          "queryPath": "Query/getFullTable",
+          "returnFormat": "json"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.baseTable": {
+      "persistent": true
+    },
+    "custom.baseTable.columns": {
+      "binding": {
+        "config": {
+          "struct": {
+            "baseQuery": "{view.custom.base}",
+            "baseType": "{view.params.baseType}"
+          },
+          "waitOnAll": true
+        },
+        "transforms": [
+          {
+            "code": "\tcolumns\u003d[]\n\tfor col in value[\u0027baseQuery\u0027]:\n\t\tcolumns.append(col[\u0027{}_type\u0027.format(value[\u0027baseType\u0027])])\n\treturn sorted(columns)",
+            "type": "script"
+          }
+        ],
+        "type": "expr-struct"
+      }
+    },
+    "custom.baseTable.id": {
+      "binding": {
+        "config": {
+          "expression": "{view.params.baseType}+\"_type\""
+        },
+        "type": "expr"
+      }
+    },
+    "custom.baseTable.name": {
+      "binding": {
+        "config": {
+          "path": "view.params.sub"
+        },
+        "transforms": [
+          {
+            "code": "\treturn value.capitalize()",
+            "type": "script"
+          }
+        ],
+        "type": "property"
+      }
+    },
+    "custom.baseTableID": {
+      "binding": {
+        "config": {
+          "expression": "{view.params.baseType}+\"_types\""
+        },
+        "type": "expr"
+      },
+      "persistent": true
+    },
+    "custom.fullTables": {
+      "binding": {
+        "config": {
+          "struct": {
+            "base": "{view.custom.baseTable}",
+            "sub": "{view.custom.subTablesAndRelationships.subTables}"
+          },
+          "waitOnAll": true
+        },
+        "transforms": [
+          {
+            "code": "\tsub\u003dvalue[\u0027sub\u0027]\n\tsub.insert(0, system.util.jsonDecode(system.util.jsonEncode(value[\u0027base\u0027])))\n\treturn sub",
+            "type": "script"
+          }
+        ],
+        "type": "expr-struct"
+      },
+      "persistent": true
+    },
+    "custom.sub": {
+      "binding": {
+        "config": {
+          "parameters": {
+            "tableName": "{view.params.sub}"
+          },
+          "queryPath": "Query/getFullTable",
+          "returnFormat": "json"
+        },
+        "type": "query"
+      },
+      "persistent": true
+    },
+    "custom.subTablesAndRelationships": {
+      "binding": {
+        "config": {
+          "struct": {
+            "base": "{view.custom.base}",
+            "baseTableID": "{view.custom.baseTable.id}",
+            "baseType": "{view.params.baseType}",
+            "sub": "{view.custom.sub}"
+          },
+          "waitOnAll": true
+        },
+        "transforms": [
+          {
+            "code": "\tfullDict\u003d{\"subTables\": [], \"relationships\": []}\n\tsubTables\u003dsystem.util.jsonDecode(system.util.jsonEncode(value[\u0027sub\u0027]))\n\tBASETYPE\u003dvalue[\u0027baseType\u0027]\n\tsubTables.sort(key\u003dlambda x: x[\u0027{}_type\u0027.format(BASETYPE)])\n\tbaseTableID\u003dvalue[\u0027baseTableID\u0027]\n\tcolFormat\u003du\"{1}: ► {0}\"\n\tsize\u003d250\n\tcount\u003dlen(value[\u0027sub\u0027])\n\ttotalSize\u003dcount*size\n\tstartPosition\u003d-float(totalSize)/2\n\t\n\t\n\tdef tableStructure(definedType):\n#\t\tcolumns \u003d definedType.values()#[\"%s: %s\" % (value, key) for key, value in definedType.items()]\n\t\tcolumns\u003d[colFormat.format(k, v) for k, v in definedType.iteritems()]\n\t\ty\u003dstartPosition\n\t\tstructure\u003d{\n\t\t  \"id\": definedType[\u0027{}_id\u0027.format(BASETYPE)],\n\t\t  \"name\": definedType[\u0027{}_name\u0027.format(BASETYPE)],\n\t\t  \"columns\": columns,\n\t\t  \"headerStyle\": {},\n\t\t  \"rowStyle\": {},\n\t\t  \"position\": {\n\t\t    \"x\": 380,\n\t\t    \"y\": y\n\t\t  }\n\t\t}\n\t\t\n\t\treturn structure\n\n\tdef relationship(definedType):\n\t\treturn {\n\t\t  \"source\": baseTableID,\n\t\t  \"sourceColumn\": definedType[\u0027{}_type\u0027.format(BASETYPE)],\n\t\t  \"target\": definedType[\u0027{}_id\u0027.format(BASETYPE)],\n\t\t  \"targetColumn\": colFormat.format(\u0027{}_type\u0027.format(BASETYPE),definedType[\u0027{}_type\u0027.format(BASETYPE)]),\n\t\t  \"type\": \"one-to-many\",\n\t\t  \"lineType\": \"default\",\n\t\t  \"lineColor\": \"pink\",\n\t\t  \"style\":{\n\t\t\t  \"classes\": \"\",\n\t\t\t  \"stroke-dasharray\": \"none\",\n\t\t\t  \"stroke-width\": \"2px\"\n\t\t\t}\n\t\t}\n\n\n\t\n\tbase\u003d\u0027{}_type\u0027.format(BASETYPE)\n\tbaseTypes\u003d[unit[base] for unit in value[\u0027base\u0027]]\n\t\n\t\n\tfor col in subTables:\n#\t\treturn col\n\t\tstructure\u003dsystem.util.jsonDecode(system.util.jsonEncode(tableStructure(col)))\n\t\trelate\u003dsystem.util.jsonDecode(system.util.jsonEncode(relationship(col)))\n\t\tfullDict[\u0027subTables\u0027].append(structure)\n\t\tfullDict[\u0027relationships\u0027].append(relate)\n\t\tstartPosition+\u003dsize\n\n\t\n\n\t\n\treturn fullDict",
+            "type": "script"
+          }
+        ],
+        "type": "expr-struct"
+      }
+    },
+    "params.baseType": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.sub": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {},
+  "root": {
+    "children": [
+      {
+        "meta": {
+          "name": "dbSchema"
+        },
+        "position": {
+          "basis": "775px"
+        },
+        "propConfig": {
+          "props.relationships": {
+            "binding": {
+              "config": {
+                "path": "view.custom.subTablesAndRelationships.relationships"
+              },
+              "type": "property"
+            }
+          },
+          "props.tables": {
+            "binding": {
+              "config": {
+                "path": "view.custom.fullTables"
+              },
+              "type": "property"
+            }
+          }
+        },
+        "type": "wargoetz.display.databaseschema"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

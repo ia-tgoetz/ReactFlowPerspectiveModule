@@ -1,0 +1,11 @@
+# Extend the base Inductive Automation Ignition image
+FROM inductiveautomation/ignition:8.1.51
+
+# Switch to root user
+USER root
+
+# Install Git
+RUN apt-get update && apt-get install -y git && apt-get clean
+
+# Switch back to the default Ignition user
+USER 1000

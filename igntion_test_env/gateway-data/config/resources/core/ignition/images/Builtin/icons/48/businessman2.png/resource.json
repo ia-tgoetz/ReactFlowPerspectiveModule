@@ -1,0 +1,20 @@
+{
+  "scope": "A",
+  "version": 1,
+  "restricted": false,
+  "overridable": true,
+  "files": [
+    "businessman2.png"
+  ],
+  "attributes": {
+    "width": 48,
+    "format": "PNG",
+    "lastModification": {
+      "actor": "import",
+      "timestamp": "2026-04-17T16:37:06Z"
+    },
+    "size": 1947,
+    "lastModificationSignature": "df7f357b95ee4a59c62dd279fd04aa5812c5adbfec691921f952801140cb7cf1",
+    "height": 48
+  }
+}

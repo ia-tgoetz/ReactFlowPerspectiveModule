@@ -1,0 +1,191 @@
+{
+  "custom": {},
+  "params": {
+    "inputGroups": [
+      {
+        "groupName": "",
+        "inputAttributes": [
+          {
+            "key": "NewValue",
+            "value": "NewTestValue"
+          }
+        ],
+        "outputAttributes": [
+          {
+            "key": "NewValue",
+            "value": "NewTestValue"
+          }
+        ]
+      }
+    ],
+    "outputGroups": [
+      {
+        "groupName": "",
+        "inputAttributes": [
+          {
+            "key": "NewValue",
+            "value": "NewTestValue"
+          }
+        ],
+        "outputAttributes": [
+          {
+            "key": "NewValue",
+            "value": "NewTestValue"
+          }
+        ]
+      }
+    ]
+  },
+  "propConfig": {
+    "params.inputGroups": {
+      "binding": {
+        "config": {
+          "path": "/root/GroupList.props.instances"
+        },
+        "type": "property"
+      },
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.outputGroups": {
+      "paramDirection": "output",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "height": 843,
+      "width": 674
+    }
+  },
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "config": {
+                    "script": "\tself.parent.parent.getChild(\"GroupList\").props.instances.append({\n\t\t  \"inputAttributes\": [{\n\t\t\t  \"value\": \"\",\n\t\t\t  \"key\": \"\"\n\t\t\t}],\n\t\t  \"outputAttributes\": []\n\t\t})"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Add Group"
+            },
+            "props": {
+              "image": {
+                "icon": {
+                  "path": "material/add_circle"
+                }
+              },
+              "style": {
+                "classes": "ButtonStyles/GeneralHover"
+              },
+              "text": "Add Group"
+            },
+            "type": "ia.input.button"
+          },
+          {
+            "events": {
+              "dom": {
+                "onClick": {
+                  "config": {
+                    "script": "\tinstances\u003dsystem.util.jsonDecode(system.util.jsonEncode(self.parent.parent.getChild(\"GroupList\").props.instances))\n\tcleaned\u003dself.view.getChild(\"root\").cleanGroups(instances)\n\tself.parent.parent.getChild(\"GroupList\").props.instances\u003dcleaned"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "Refresh"
+            },
+            "position": {
+              "basis": "30px"
+            },
+            "props": {
+              "path": "material/refresh",
+              "style": {
+                "classes": "ButtonStyles/IconHover"
+              }
+            },
+            "type": "ia.display.icon"
+          }
+        ],
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "basis": "35px",
+          "shrink": 0
+        },
+        "props": {
+          "justify": "space-between"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "GroupList"
+        },
+        "position": {
+          "shrink": 0
+        },
+        "props": {
+          "direction": "column",
+          "elementPosition": {
+            "basis": "auto",
+            "grow": 0,
+            "shrink": 0
+          },
+          "instances": [
+            {
+              "groupName": "",
+              "inputAttributes": [
+                {
+                  "key": "NewValue",
+                  "value": "NewTestValue"
+                }
+              ],
+              "outputAttributes": [
+                {
+                  "key": "NewValue",
+                  "value": "NewTestValue"
+                }
+              ]
+            }
+          ],
+          "path": "Templates/Attributes",
+          "useDefaultViewHeight": false,
+          "useDefaultViewWidth": false
+        },
+        "type": "ia.display.flex-repeater"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "cleanGroups",
+          "params": [
+            "instances"
+          ],
+          "script": "\tif not instances:\n\t\treturn []\n\treturn [inst for inst in instances if inst.get(\u0027groupName\u0027) !\u003d \"\"]"
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": []
+    },
+    "type": "ia.container.flex"
+  }
+}

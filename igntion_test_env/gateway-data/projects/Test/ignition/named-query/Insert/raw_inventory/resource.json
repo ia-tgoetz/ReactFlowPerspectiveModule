@@ -1,0 +1,55 @@
+{
+  "scope": "DG",
+  "version": 2,
+  "restricted": false,
+  "overridable": true,
+  "files": [
+    "query.sql"
+  ],
+  "attributes": {
+    "useMaxReturnSize": false,
+    "autoBatchEnabled": false,
+    "fallbackValue": "",
+    "maxReturnSize": 100,
+    "cacheUnit": "SEC",
+    "type": "UpdateQuery",
+    "enabled": true,
+    "cacheAmount": 1,
+    "cacheEnabled": false,
+    "database": "",
+    "fallbackEnabled": false,
+    "lastModificationSignature": "133c4293e467fbb3441568d3aaf9f6ef1587d7707f0d8ae5aca74a4b26e34618",
+    "permissions": [
+      {
+        "zone": "",
+        "role": ""
+      }
+    ],
+    "lastModification": {
+      "actor": "admin",
+      "timestamp": "2026-04-08T01:07:10Z"
+    },
+    "parameters": [
+      {
+        "type": "Parameter",
+        "identifier": "vendorLotNumber",
+        "sqlType": 7
+      },
+      {
+        "type": "Parameter",
+        "identifier": "materialId",
+        "sqlType": 7
+      },
+      {
+        "type": "Parameter",
+        "identifier": "attributesJson",
+        "sqlType": 7
+      },
+      {
+        "type": "Parameter",
+        "identifier": "qtyOnHand",
+        "sqlType": 4
+      }
+    ]
+  }
+}

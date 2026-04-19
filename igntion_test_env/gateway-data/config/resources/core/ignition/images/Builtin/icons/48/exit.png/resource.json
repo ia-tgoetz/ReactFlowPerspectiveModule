@@ -1,0 +1,20 @@
+{
+  "scope": "A",
+  "version": 1,
+  "restricted": false,
+  "overridable": true,
+  "files": [
+    "exit.png"
+  ],
+  "attributes": {
+    "width": 48,
+    "format": "PNG",
+    "lastModification": {
+      "actor": "import",
+      "timestamp": "2026-04-17T16:37:06Z"
+    },
+    "size": 1279,
+    "lastModificationSignature": "11b2bb88630afae172a0434cf70c4492d7b60c888a2ad68db2193e315dc03374",
+    "height": 48
+  }
+}
