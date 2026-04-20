@@ -7,7 +7,7 @@
   "allowUserAdmin": false,
   "createProjectPermissions": {
     "securityLevels": [],
-    "type": "AllOf"
+    "type": "AnyOf"
   },
   "designerAuthStrategy": "CLASSIC",
   "designerAuthTokenInactivityTimeout": 10,
