@@ -13,6 +13,7 @@
           "tooltip": { "type": "string" },
           "svg": { "type": "string" },
           "supportedConnections": { "type": "array", "items": { "type": "string" } },
+          "swappableWith": { "type": "array", "items": { "type": "string" }, "description": "Palette IDs this node can swap into." },
           "configs": { "type": "object", "default": {} },
           "defaultConfigs": { "type": "object", "description": "Configs assigned when dropped.", "default": {} },
           "style": { "$ref": "urn:ignition-schema:schemas/style-properties.schema.json" }
@@ -25,7 +26,17 @@
           "label": "Standard Gateway",
           "tooltip": "Standard Gateway",
           "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--standard, #F58A4B)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">SG</text></svg>",
+          "swappableWith": ["edge-iiot", "edge-panel", "cloud"],
           "supportedConnections": ["gateway-network", "db", "mqtt", "rest", "client", "standard", "device-driver", "opc-ua", "opc-com", "mongodb", "kafka"]
+        },
+        {
+          "id": "edge-iiot",
+          "category": "Gateways",
+          "label": "Edge IIOT Gateway",
+          "tooltip": "Edge IIOT Gateway",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--cirrusLink, #8b5cf6)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">IOT</text></svg>",
+          "swappableWith": ["standard", "edge-panel", "cloud"],
+          "supportedConnections": ["gateway-network", "mqtt", "rest", "standard", "device-driver", "opc-ua", "opc-com"]
         },
         {
           "id": "edge-panel",
@@ -33,6 +44,7 @@
           "label": "Edge Panel Gateway",
           "tooltip": "Edge Panel Gateway",
           "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--panel, #00ACAC)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">EP</text></svg>",
+          "swappableWith": ["standard", "edge-iiot", "cloud"],
           "supportedConnections": ["gateway-network", "mqtt", "rest", "client", "standard", "device-driver", "opc-ua", "opc-com"]
         },
         {
@@ -41,6 +53,7 @@
           "label": "Cloud Gateway",
           "tooltip": "Cloud Gateway",
           "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--cloud, #5b21b6)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">CG</text></svg>",
+          "swappableWith": ["standard", "edge-iiot", "edge-panel"],
           "supportedConnections": ["gateway-network", "db", "mqtt", "rest", "client", "standard", "mongodb", "kafka"]
         },
         {
@@ -82,14 +95,6 @@
           "tooltip": "OPC-UA Server",
           "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"#FFE7BA\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"#333\" text-anchor=\"middle\" font-family=\"sans-serif\">OPC</text></svg>",
           "supportedConnections": ["opc-ua", "opc-com"]
-        },
-        {
-          "id": "IIOT",
-          "category": "Edge",
-          "label": "IIOT",
-          "tooltip": "IIOT",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--cirrusLink, #8b5cf6)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">IOT</text></svg>",
-          "supportedConnections": ["mqtt", "rest"]
         },
         {
           "id": "Client",
@@ -274,39 +279,43 @@
     },
     "nodes": {
       "type": "object",
-      "additionalProperties": {
-        "type": "object",
-        "properties": {
-          "paletteId": { "type": "string" },
-          "label": { "type": "string" },
-          "tooltip": { "type": "string" },
-          "svg": { "type": "string" },
-          "x": { "type": "number" },
-          "y": { "type": "number" },
-          "hideHandles": { "type": "boolean", "description": "Overrides global hideHandles if set." },
-          "configs": { "type": "object" },
-          "supportedConnections": { "type": "array", "items": { "type": "string" } },
-          "style": { "$ref": "urn:ignition-schema:schemas/style-properties.schema.json" }
+      "patternProperties": {
+        ".*": {
+          "type": "object",
+          "properties": {
+            "paletteId": { "type": "string" },
+            "label": { "type": "string" },
+            "tooltip": { "type": "string" },
+            "svg": { "type": "string" },
+            "x": { "type": "number" },
+            "y": { "type": "number" },
+            "hideHandles": { "type": "boolean", "description": "Overrides global hideHandles if set." },
+            "configs": { "type": "object" },
+            "supportedConnections": { "type": "array", "items": { "type": "string" } },
+            "style": { "$ref": "urn:ignition-schema:schemas/style-properties.schema.json" }
+          }
         }
       },
       "default": {}
     },
     "edges": {
       "type": "object",
-      "additionalProperties": {
-        "type": "object",
-        "properties": {
-          "source": { "type": "string" },
-          "target": { "type": "string" },
-          "sourceHandle": { "type": "string" },
-          "targetHandle": { "type": "string" },
-          "connectionType": { "type": "string" },
-          "lineType": { "type": "string" },
-          "dashed": { "type": "boolean", "default": false },
-          "arrow": { "type": "boolean", "default": true },
-          "showLabel": { "type": "boolean", "default": false },
-          "offsetX": { "type": "number", "default": 0, "description": "X offset for the edge handle." },
-          "offsetY": { "type": "number", "default": 0, "description": "Y offset for the edge handle." }
+      "patternProperties": {
+        ".*": {
+          "type": "object",
+          "properties": {
+            "source": { "type": "string" },
+            "target": { "type": "string" },
+            "sourceHandle": { "type": "string" },
+            "targetHandle": { "type": "string" },
+            "connectionType": { "type": "string" },
+            "lineType": { "type": "string" },
+            "dashed": { "type": "boolean", "default": false },
+            "arrow": { "type": "boolean", "default": true },
+            "showLabel": { "type": "boolean", "default": false },
+            "offsetX": { "type": "number", "default": 0 },
+            "offsetY": { "type": "number", "default": 0 }
+          }
         }
       },
       "default": {}

@@ -7,11 +7,10 @@ import 'reactflow/dist/style.css';
 import { Sidebar, PaletteItem } from './Sidebar';
 import { ArchitectureNode } from './ArchitectureNode';
 
-// 1. Custom Edge Component with EdgeLabelRenderer for HTML background
 const CustomEdge = ({ sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, data, markerEnd, style, label }: any) => {
     const offsetX = Number(data?.offsetX) || 0;
     const offsetY = Number(data?.offsetY) || 0;
-    const showLabel = data?.showLabel !== false;
+    const showLabel = data?.showLabel === true;
 
     let edgePath = ''; let labelX = 0; let labelY = 0;
 
@@ -38,14 +37,14 @@ const CustomEdge = ({ sourceX, sourceY, targetX, targetY, sourcePosition, target
                         style={{
                             position: 'absolute',
                             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-                            backgroundColor: 'var(--neutral-10)', // Background color of the label
-                            padding: '2px 8px', // Padding around the text
-                            borderRadius: '4px', // Rounded corners
-                            border: `1px solid var(--neutral-40)`, // Subtle border
+                            backgroundColor: 'var(--neutral-10)', 
+                            padding: '2px 8px', 
+                            borderRadius: '4px', 
+                            border: `1px solid var(--neutral-40)`, 
                             fontSize: '12px',
                             fontWeight: 'bold',
-                            color: style?.stroke || 'var(--neutral-90)', // Text color matches the line
-                            pointerEvents: 'none', // Critical: Lets clicks pass through to the edge line itself
+                            color: style?.stroke || 'var(--neutral-90)', 
+                            pointerEvents: 'none', 
                         }}
                         className="nodrag nopan"
                     >
@@ -70,7 +69,7 @@ const mapIgnitionToReactFlowNodes = (ignitionNodes: any, handleGearClick: (id: s
 
 const mapIgnitionToReactFlowEdges = (ignitionEdges: any, connectionTypes: any, selectedId: string | null) => {
     if (!ignitionEdges) return [];
-    return Object.entries(ignitionEdges).filter(([id, edgeData]: any) => edgeData !== null && edgeData !== undefined).map(([id, edgeData]: any) => { const typeConfig = connectionTypes[edgeData.connectionType] || {}; const isSelected = id === selectedId; const strokeStyle: any = { stroke: typeConfig.color || '#888', strokeWidth: isSelected ? 5 : 3 }; if (edgeData.dashed) strokeStyle.strokeDasharray = '8 5'; const arrowMarker = edgeData.arrow !== false ? { type: MarkerType.ArrowClosed, width: 20, height: 20, color: strokeStyle.stroke } : undefined; return { id, ...edgeData, type: 'custom', data: { lineType: edgeData.lineType || 'smoothstep', offsetX: edgeData.offsetX || 0, offsetY: edgeData.offsetY || 0, showLabel: edgeData.showLabel !== false }, label: typeConfig.label || edgeData.connectionType || '', style: strokeStyle, markerEnd: arrowMarker, interactionWidth: 20, updatable: true }; });
+    return Object.entries(ignitionEdges).filter(([id, edgeData]: any) => edgeData !== null && edgeData !== undefined).map(([id, edgeData]: any) => { const typeConfig = connectionTypes[edgeData.connectionType] || {}; const isSelected = id === selectedId; const strokeStyle: any = { stroke: typeConfig.color || '#888', strokeWidth: isSelected ? 5 : 3 }; if (edgeData.dashed) strokeStyle.strokeDasharray = '8 5'; const arrowMarker = edgeData.arrow !== false ? { type: MarkerType.ArrowClosed, width: 12, height: 12, color: strokeStyle.stroke } : undefined; return { id, ...edgeData, type: 'custom', data: { lineType: edgeData.lineType || 'smoothstep', offsetX: edgeData.offsetX || 0, offsetY: edgeData.offsetY || 0, showLabel: edgeData.showLabel === true }, label: typeConfig.label || edgeData.connectionType || '', style: strokeStyle, markerEnd: arrowMarker, interactionWidth: 20, updatable: true }; });
 };
 
 export interface ArchitectureBuilderProps {
@@ -87,7 +86,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
   
   const [contextMenu, setContextMenu] = React.useState<{ id: string, top: number, left: number, type: 'node' | 'edge' | 'pane', clientX?: number, clientY?: number } | null>(null);
-  const [activeSubMenu, setActiveSubMenu] = React.useState<'lineType' | 'connectionType' | null>(null);
+  const [activeSubMenu, setActiveSubMenu] = React.useState<'lineType' | 'connectionType' | 'swapNode' | null>(null); 
   
   const draggedItemRef = React.useRef<PaletteItem | null>(null);
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
@@ -201,7 +200,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
                   lineType: 'smoothstep', 
                   dashed: false, 
                   arrow: typeDef.arrow !== false, 
-                  showLabel: true, 
+                  showLabel: false,
                   connectionType: selectedType,
                   offsetX: 0,
                   offsetY: 0
@@ -290,10 +289,29 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       setActiveSubMenu(null);
   }, []);
 
+
   const handleContextMenuAction = (action: string) => {
       if (!contextMenu) return;
+      
       const isNode = contextMenu.type === 'node';
+      const isEdge = contextMenu.type === 'edge';
+      
+      // Calculate PaletteId for Event Payload
+      let currentPaletteId = 'pane';
+      if (isNode) currentPaletteId = rawNodesDict[contextMenu.id]?.paletteId;
+      if (isEdge) currentPaletteId = rawEdgesDict[contextMenu.id]?.connectionType;
 
+      // <-- ADDED: ALWAYS fire event up to Ignition before processing native React actions
+      if (props.componentEvents) {
+          props.componentEvents.fireComponentEvent('onContextMenuAction', { 
+              id: contextMenu.id, 
+              paletteId: currentPaletteId, 
+              type: contextMenu.type, 
+              action: action 
+          });
+      }
+
+      // Process standard React logic (Copy/Paste/Delete/Toggle)
       if (action === 'copy' && isNode) {
           clipboardRef.current = rawNodesDict[contextMenu.id];
           closeContextMenu(); return;
@@ -341,29 +359,95 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
           closeContextMenu(); return;
       }
 
-      if (action === 'toggleArrow' && !isNode) {
+      if (action === 'toggleArrow' && isEdge) {
           if (props.store?.props) { const nextEdges = { ...rawEdgesDict }; if (nextEdges[contextMenu.id]) { nextEdges[contextMenu.id].arrow = nextEdges[contextMenu.id].arrow === false ? true : false; props.store.props.write('edges', nextEdges); } }
           closeContextMenu(); return;
       }
 
-      if (action === 'toggleLabel' && !isNode) {
-          if (props.store?.props) { const nextEdges = { ...rawEdgesDict }; if (nextEdges[contextMenu.id]) { nextEdges[contextMenu.id].showLabel = nextEdges[contextMenu.id].showLabel === false ? true : false; props.store.props.write('edges', nextEdges); } }
+      if (action === 'toggleLabel' && isEdge) {
+          if (props.store?.props) { const nextEdges = { ...rawEdgesDict }; if (nextEdges[contextMenu.id]) { nextEdges[contextMenu.id].showLabel = nextEdges[contextMenu.id].showLabel !== true; props.store.props.write('edges', nextEdges); } }
           closeContextMenu(); return;
       }
+      
+      closeContextMenu();
+  };
 
-      const paletteId = isNode ? rawNodesDict[contextMenu.id]?.paletteId : rawEdgesDict[contextMenu.id]?.connectionType;
-      if (props.componentEvents) props.componentEvents.fireComponentEvent('onContextMenuAction', { id: contextMenu.id, paletteId, type: contextMenu.type, action });
+  const handleNodeSwap = (newPaletteId: string) => {
+      if (!contextMenu || contextMenu.type !== 'node') return;
+      const newItem = paletteItems.find((p: any) => p.id === newPaletteId);
+      if (!newItem) return;
+
+      // <-- ADDED: Explicitly fire Event for Node Swap, passing the NEW paletteId as the action value
+      if (props.componentEvents) {
+          props.componentEvents.fireComponentEvent('onContextMenuAction', { 
+              id: contextMenu.id, 
+              paletteId: rawNodesDict[contextMenu.id]?.paletteId, 
+              type: contextMenu.type, 
+              action: `swapNode:${newPaletteId}` 
+          });
+      }
+
+      if (props.store?.props) {
+          const nextNodes = { ...rawNodesDict };
+          const existingNode = nextNodes[contextMenu.id];
+          
+          nextNodes[contextMenu.id] = {
+              ...existingNode,
+              paletteId: newItem.id,
+              label: newItem.label,
+              svg: newItem.svg,
+              tooltip: newItem.tooltip,
+              supportedConnections: newItem.supportedConnections || []
+          };
+          
+          const nextEdges = { ...rawEdgesDict };
+          let edgesChanged = false;
+
+          Object.keys(nextEdges).forEach(edgeId => {
+              const e = nextEdges[edgeId];
+              if (e.source === contextMenu.id || e.target === contextMenu.id) {
+                  const isSource = e.source === contextMenu.id;
+                  const otherNodeId = isSource ? e.target : e.source;
+                  const otherNode = nextNodes[otherNodeId];
+                  
+                  if (otherNode) {
+                      const newSupported = newItem.supportedConnections || [];
+                      const otherSupported = otherNode.supportedConnections || [];
+                      
+                      if (!newSupported.includes(e.connectionType) || !otherSupported.includes(e.connectionType)) {
+                          delete nextEdges[edgeId];
+                          edgesChanged = true;
+                      }
+                  }
+              }
+          });
+
+          props.store.props.write('nodes', nextNodes);
+          if (edgesChanged) props.store.props.write('edges', nextEdges);
+      }
       closeContextMenu();
   };
 
   const handleLineTypeChange = (newLineType: string) => {
       if (!contextMenu || contextMenu.type !== 'edge') return;
+      
+      // <-- ADDED: Explicitly fire Event for Line Type
+      if (props.componentEvents) {
+          props.componentEvents.fireComponentEvent('onContextMenuAction', { id: contextMenu.id, paletteId: rawEdgesDict[contextMenu.id]?.connectionType, type: contextMenu.type, action: `lineType:${newLineType}` });
+      }
+
       if (props.store?.props) { const nextEdges = { ...rawEdgesDict }; if (nextEdges[contextMenu.id]) { nextEdges[contextMenu.id].lineType = newLineType; props.store.props.write('edges', nextEdges); } }
       closeContextMenu();
   };
 
   const handleConnectionTypeChange = (newConnectionType: string) => {
       if (!contextMenu || contextMenu.type !== 'edge') return;
+      
+      // <-- ADDED: Explicitly fire Event for Connection Type
+      if (props.componentEvents) {
+          props.componentEvents.fireComponentEvent('onContextMenuAction', { id: contextMenu.id, paletteId: rawEdgesDict[contextMenu.id]?.connectionType, type: contextMenu.type, action: `connectionType:${newConnectionType}` });
+      }
+
       if (props.store?.props) { const nextEdges = { ...rawEdgesDict }; if (nextEdges[contextMenu.id]) { const typeDef = connectionTypes[newConnectionType] || {}; nextEdges[contextMenu.id].connectionType = newConnectionType; nextEdges[contextMenu.id].arrow = typeDef.arrow !== false; props.store.props.write('edges', nextEdges); } }
       closeContextMenu();
   };
@@ -394,6 +478,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
   const onPaneClick = React.useCallback(() => { setSelectedId(null); closeContextMenu(); }, [closeContextMenu]);
 
   let availableConnections: string[] = []; let currentLineType = 'smoothstep'; let currentConnectionType = '';
+  let validSwapItems: any[] = []; 
   
   if (contextMenu && contextMenu.type === 'edge') {
       const edge = rawEdgesDict[contextMenu.id];
@@ -401,6 +486,16 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
           currentLineType = edge.lineType || 'smoothstep'; currentConnectionType = edge.connectionType;
           availableConnections = getValidIntersection(edge.source, edge.target, contextMenu.id);
           if (!availableConnections.includes(currentConnectionType)) availableConnections.push(currentConnectionType);
+      }
+  }
+
+  if (contextMenu && contextMenu.type === 'node') {
+      const node = rawNodesDict[contextMenu.id];
+      if (node) {
+          const currentPaletteItem = paletteItems.find((p: any) => p.id === node.paletteId);
+          if (currentPaletteItem && currentPaletteItem.swappableWith) {
+              validSwapItems = paletteItems.filter((p: any) => currentPaletteItem.swappableWith.includes(p.id));
+          }
       }
   }
 
@@ -444,7 +539,31 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
                         <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('adjust')}>⚙️ Adjust</div>
                         
                         {contextMenu.type === 'node' && ( 
-                            <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('copy')}>📋 Copy</div> 
+                            <>
+                                <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('copy')}>📋 Copy</div> 
+                                
+                                {validSwapItems.length > 0 && (
+                                    <div style={{ position: 'relative' }} onMouseEnter={() => setActiveSubMenu('swapNode')}>
+                                        <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', justifyContent: 'space-between', backgroundColor: activeSubMenu === 'swapNode' ? 'var(--neutral-30)' : 'transparent' }}> 
+                                            <span>🔄 Swap Node</span><span>▶</span> 
+                                        </div>
+                                        {activeSubMenu === 'swapNode' && (
+                                            <div style={{ position: 'absolute', top: '-4px', left: '100%', marginLeft: '4px', backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '4px', minWidth: '150px' }}>
+                                                {validSwapItems.map(targetItem => (
+                                                    <div 
+                                                        key={targetItem.id} 
+                                                        style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', alignItems: 'center' }} 
+                                                        onClick={() => handleNodeSwap(targetItem.id)}
+                                                    >
+                                                        <div style={{ width: '16px', height: '16px', marginRight: '6px', display: 'flex', alignItems: 'center' }} dangerouslySetInnerHTML={{ __html: targetItem.svg }} />
+                                                        <span>{targetItem.label}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </>
                         )}
 
                         {contextMenu.type === 'edge' && (
@@ -454,7 +573,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
                                 </div>
                                 
                                 <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('toggleLabel')}> 
-                                    {rawEdgesDict[contextMenu.id]?.showLabel !== false ? '👁️ Hide Label' : '👁️ Show Label'} 
+                                    {rawEdgesDict[contextMenu.id]?.showLabel === true ? '👁️ Hide Label' : '👁️ Show Label'} 
                                 </div>
                                 
                                 <div style={{ borderTop: '1px solid var(--neutral-40)', margin: '4px 0' }} />
