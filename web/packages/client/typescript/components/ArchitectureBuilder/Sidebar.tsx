@@ -8,7 +8,7 @@ export interface PaletteItem {
     svg: string;
     supportedConnections?: string[];
     configs?: any;
-    defaultConfigs?: any; // <-- ADD THIS
+    defaultConfigs?: any;
     style?: any;
 }
 
@@ -22,13 +22,21 @@ export interface SidebarProps {
 export const Sidebar = ({ paletteItems, isOpen, toggleSidebar, onDragStartItem }: SidebarProps) => {
     const [collapsedCategories, setCollapsedCategories] = useState<Record<string, boolean>>({});
 
-    const groupedItems = useMemo(() => {
-        return paletteItems.reduce((groups: Record<string, PaletteItem[]>, item: PaletteItem) => {
-            const category = item.category || 'General';
-            if (!groups[category]) groups[category] = [];
-            groups[category].push(item);
-            return groups;
-        }, {});
+    // <-- CHANGED: Separate the "container" item from the standard grouped categories
+    const { containerItems, groupedItems } = useMemo(() => {
+        const containers: PaletteItem[] = [];
+        const groups: Record<string, PaletteItem[]> = {};
+
+        paletteItems.forEach(item => {
+            if (item.id === 'container') {
+                containers.push(item);
+            } else {
+                const category = item.category || 'General';
+                if (!groups[category]) groups[category] = [];
+                groups[category].push(item);
+            }
+        });
+        return { containerItems: containers, groupedItems: groups };
     }, [paletteItems]);
 
     const toggleCategory = (category: string) => {
@@ -36,7 +44,6 @@ export const Sidebar = ({ paletteItems, isOpen, toggleSidebar, onDragStartItem }
     };
 
     const onDragStart = (event: React.DragEvent<HTMLDivElement>, item: PaletteItem) => {
-        // Tell the parent component what we are dragging via React State instead of HTML5 data payloads!
         onDragStartItem(item);
         event.dataTransfer.effectAllowed = 'move';
     };
@@ -47,6 +54,23 @@ export const Sidebar = ({ paletteItems, isOpen, toggleSidebar, onDragStartItem }
                 <div style={{ padding: '15px', whiteSpace: 'nowrap' }}>
                     <h3 style={{ marginTop: 0, color: 'var(--neutral-90)' }}>Palette</h3>
                     
+                    {/* <-- ADDED: Dedicated pinned section at the top for Area Containers --> */}
+                    {containerItems.length > 0 && (
+                        <div style={{ marginBottom: '20px', paddingBottom: '15px', borderBottom: '1px solid var(--neutral-40)' }}>
+                            {containerItems.map((item) => (
+                                <div 
+                                    key={item.id} 
+                                    draggable 
+                                    onDragStart={(e) => onDragStart(e, item)} 
+                                    style={{ border: '1px dashed var(--neutral-50)', backgroundColor: 'var(--neutral-30)', padding: '10px', marginBottom: '8px', cursor: 'grab', display: 'flex', alignItems: 'center', borderRadius: '4px', fontWeight: 'bold' }}
+                                >
+                                    <div style={{ width: '20px', height: '20px', marginRight: '10px' }} dangerouslySetInnerHTML={{ __html: item.svg }} />
+                                    <span style={{ color: 'var(--neutral-90)', fontSize: '14px' }}>{item.label}</span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
                     {Object.entries(groupedItems).map(([category, items]) => {
                         const isCollapsed = collapsedCategories[category];
                         return (
