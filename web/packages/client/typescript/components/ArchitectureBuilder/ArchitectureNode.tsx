@@ -29,17 +29,16 @@ export const ArchitectureNode = ({ id, data, selected }: NodeProps<ArchitectureN
         ...(data.style || {}) 
     };
 
-    // 1. Safely evaluate both booleans
     const localHide = data.hideHandles === true || String(data.hideHandles).toLowerCase() === 'true';
     const globalHide = data.globalHideHandles === true || String(data.globalHideHandles).toLowerCase() === 'true';
 
-    // 2. THE FIX: If local is explicitly true, hide it. Otherwise, fallback to the global state.
     const isHidden = localHide ? true : globalHide;
 
     const handleOpacity = isHidden ? 0 : 1;
     const handlePointerEvents = isHidden ? 'none' : 'auto';
 
-    const handlePositions = [20, 40, 60, 80];
+    // 5 evenly spaced handles per side
+    const handlePositions = [16.66, 33.33, 50, 66.66, 83.33];
     const handleStyle = { 
         width: '8px', height: '8px', 
         background: 'var(--neutral-60)', border: 'none',
