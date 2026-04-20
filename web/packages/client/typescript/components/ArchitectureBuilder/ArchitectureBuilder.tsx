@@ -2,12 +2,64 @@ import * as React from 'react';
 import { ComponentProps } from '@inductiveautomation/perspective-client';
 import { observer } from 'mobx-react';
 // @ts-ignore
-import ReactFlow, { ReactFlowProvider, Background, Controls, ConnectionMode, Edge, Connection, applyNodeChanges, NodeChange, MarkerType } from 'reactflow';
+import ReactFlow, { ReactFlowProvider, Background, Controls, ConnectionMode, Edge, Connection, applyNodeChanges, NodeChange, MarkerType, BaseEdge, getSmoothStepPath, getBezierPath, getStraightPath } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { Sidebar, PaletteItem } from './Sidebar';
 import { ArchitectureNode } from './ArchitectureNode';
 
+// 1. Custom Edge Component to handle offsetX and offsetY on the middle segment
+const CustomEdge = ({ sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, data, markerEnd, style, label }: any) => {
+    const offsetX = Number(data?.offsetX) || 0;
+    const offsetY = Number(data?.offsetY) || 0;
+    const showLabel = data?.showLabel !== false; // <-- ADDED: Default to true if undefined
+
+    let edgePath = '';
+    let labelX = 0;
+    let labelY = 0;
+
+    // Only apply offsets to stepped lines
+    if (data?.lineType === 'step' || data?.lineType === 'smoothstep' || !data?.lineType) {
+        
+        // Calculate the natural center of the routing path
+        const defaultCenterX = (sourceX + targetX) / 2;
+        const defaultCenterY = (sourceY + targetY) / 2;
+
+        [edgePath, labelX, labelY] = getSmoothStepPath({ 
+            sourceX, 
+            sourceY, 
+            targetX, 
+            targetY, 
+            sourcePosition, 
+            targetPosition, 
+            borderRadius: data?.lineType === 'step' ? 0 : 15, // 15 is React Flow's default smooth curve
+            // Apply the offsets ONLY to the middle routing segments, keeping ends attached
+            centerX: defaultCenterX + offsetX,
+            centerY: defaultCenterY + offsetY
+        });
+        
+    } else if (data?.lineType === 'straight') {
+        // Straight lines ignore offsets
+        [edgePath, labelX, labelY] = getStraightPath({ sourceX, sourceY, targetX, targetY });
+    } else if (data?.lineType === 'default') { 
+        // Bezier curves ignore offsets
+        [edgePath, labelX, labelY] = getBezierPath({ sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition });
+    }
+
+    return (
+        <>
+            <BaseEdge path={edgePath} markerEnd={markerEnd} style={{...style, fill: 'none'}} />
+            {/* <-- ADDED: showLabel condition here */}
+            {label && showLabel && (
+                <text x={labelX} y={labelY} style={{ fill: style?.stroke || 'var(--neutral-90)', fontSize: 12, fontWeight: 'bold' }} textAnchor="middle" dominantBaseline="central">
+                    {label}
+                </text>
+            )}
+        </>
+    );
+};
+
 const nodeTypes = { architecture: ArchitectureNode };
+const edgeTypes = { custom: CustomEdge };
 
 const generateShortId = () => 'I' + Math.random().toString(16).substring(2, 10);
 
@@ -61,10 +113,6 @@ const mapIgnitionToReactFlowEdges = (ignitionEdges: any, connectionTypes: any, s
             
             if (edgeData.dashed) strokeStyle.strokeDasharray = '8 5'; 
 
-            let flowType = edgeData.lineType || 'smoothstep';
-            if (flowType === 'bezier') flowType = 'default';
-
-            // Feature: Render Directional Arrow
             const arrowMarker = edgeData.arrow !== false ? {
                 type: MarkerType.ArrowClosed,
                 width: 20,
@@ -74,12 +122,16 @@ const mapIgnitionToReactFlowEdges = (ignitionEdges: any, connectionTypes: any, s
 
             return {
                 id, ...edgeData,
-                type: flowType,
+                type: 'custom', 
+                data: { 
+                    lineType: edgeData.lineType || 'smoothstep', 
+                    offsetX: edgeData.offsetX || 0, 
+                    offsetY: edgeData.offsetY || 0,
+                    showLabel: edgeData.showLabel !== false // <-- ADDED: Send showLabel to CustomEdge
+                },
                 label: typeConfig.label || edgeData.connectionType || '',
                 style: strokeStyle,
                 markerEnd: arrowMarker,
-                labelBgStyle: { fill: 'var(--neutral-10)' }, 
-                labelStyle: { fill: isSelected ? 'var(--callToAction)' : 'var(--neutral-90)', fontWeight: 'bold' },
                 interactionWidth: 20,
                 updatable: true
             };
@@ -145,11 +197,9 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
 
       let intersection = sourceNode.supportedConnections.filter((c: string) => targetNode.supportedConnections.includes(c));
 
-      // Feature: Cardinality Check (Multiple: false)
       intersection = intersection.filter((connType: string) => {
           const typeDef = connectionTypes[connType];
           if (typeDef && typeDef.multiple === false) {
-              // Check if an edge of this type already exists between these two nodes
               const edgeExists = Object.values(rawEdgesDict).some((e: any) =>
                   (e.source === sourceId && e.target === targetId && e.connectionType === connType) ||
                   (e.source === targetId && e.target === sourceId && e.connectionType === connType) 
@@ -171,6 +221,9 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       const validTypes = getValidIntersection(connectionParams.source, connectionParams.target);
       if (validTypes.length === 0) return;
       
+      const selectedType = validTypes[0];
+      const typeDef = connectionTypes[selectedType] || {};
+
       if (props.store?.props) {
           props.store.props.write('edges', {
               ...rawEdgesDict, 
@@ -178,12 +231,15 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
                   ...connectionParams, 
                   lineType: 'smoothstep', 
                   dashed: false, 
-                  arrow: true, // Default to true
-                  connectionType: validTypes[0] 
+                  arrow: typeDef.arrow !== false, 
+                  showLabel: true, // <-- ADDED: Default new edges to show label
+                  connectionType: selectedType,
+                  offsetX: 0,
+                  offsetY: 0
               }
           });
       }
-  }, [props.store, rawEdgesDict, getValidIntersection]);
+  }, [props.store, rawEdgesDict, getValidIntersection, connectionTypes]);
 
   const onEdgeUpdate = React.useCallback((oldEdge: Edge, newConnection: Connection) => {
       if (!newConnection.source || !newConnection.target) return;
@@ -195,17 +251,26 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
           const nextEdges = { ...rawEdgesDict };
           const oldData = nextEdges[oldEdge.id];
           
+          const newConnType = validTypes.includes(oldData.connectionType) ? oldData.connectionType : validTypes[0];
+          
+          let newArrowState = oldData.arrow;
+          if (newConnType !== oldData.connectionType) {
+              const typeDef = connectionTypes[newConnType] || {};
+              newArrowState = typeDef.arrow !== false; 
+          }
+
           nextEdges[oldEdge.id] = {
               ...oldData,
               source: newConnection.source,
               target: newConnection.target,
               sourceHandle: newConnection.sourceHandle,
               targetHandle: newConnection.targetHandle,
-              connectionType: validTypes.includes(oldData.connectionType) ? oldData.connectionType : validTypes[0]
+              connectionType: newConnType,
+              arrow: newArrowState
           };
           props.store.props.write('edges', nextEdges);
       }
-  }, [props.store, rawEdgesDict, getValidIntersection]);
+  }, [props.store, rawEdgesDict, getValidIntersection, connectionTypes]);
 
   const onNodesDelete = React.useCallback((deleted: any[]) => {
       if (!props.store?.props) return;
@@ -256,12 +321,24 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       if (!contextMenu) return;
       const isNode = contextMenu.type === 'node';
 
-      // Feature: Toggle arrow direction directly from context menu
       if (action === 'toggleArrow' && !isNode) {
           if (props.store?.props) {
               const nextEdges = { ...rawEdgesDict };
               if (nextEdges[contextMenu.id]) {
                   nextEdges[contextMenu.id].arrow = nextEdges[contextMenu.id].arrow === false ? true : false;
+                  props.store.props.write('edges', nextEdges);
+              }
+          }
+          closeContextMenu();
+          return;
+      }
+
+      // <-- ADDED: Context menu action to toggle the label boolean
+      if (action === 'toggleLabel' && !isNode) {
+          if (props.store?.props) {
+              const nextEdges = { ...rawEdgesDict };
+              if (nextEdges[contextMenu.id]) {
+                  nextEdges[contextMenu.id].showLabel = nextEdges[contextMenu.id].showLabel === false ? true : false;
                   props.store.props.write('edges', nextEdges);
               }
           }
@@ -294,7 +371,9 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       if (props.store?.props) {
           const nextEdges = { ...rawEdgesDict };
           if (nextEdges[contextMenu.id]) {
+              const typeDef = connectionTypes[newConnectionType] || {};
               nextEdges[contextMenu.id].connectionType = newConnectionType;
+              nextEdges[contextMenu.id].arrow = typeDef.arrow !== false;
               props.store.props.write('edges', nextEdges);
           }
       }
@@ -385,9 +464,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       if (edge) {
           currentLineType = edge.lineType || 'smoothstep';
           currentConnectionType = edge.connectionType;
-          // When changing connection type via menu, recalculate valid intersection
           availableConnections = getValidIntersection(edge.source, edge.target);
-          // Make sure the currently assigned type is always visible in the list to avoid confusion
           if (!availableConnections.includes(currentConnectionType)) availableConnections.push(currentConnectionType);
       }
   }
@@ -404,13 +481,25 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       <div style={{ flexGrow: 1, height: '100%', position: 'relative', overflow: 'hidden' }} ref={reactFlowWrapper}>
         <ReactFlowProvider>
           <ReactFlow 
-            nodes={localNodes} edges={flowEdges} nodeTypes={nodeTypes} 
-            isValidConnection={isValidConnection} onInit={setReactFlowInstance} 
-            onDrop={onDrop} onDragOver={onDragOver} onConnect={onConnect} onEdgeUpdate={onEdgeUpdate}
-            onNodesChange={onNodesChange} onNodeDragStop={onNodeDragStop} 
-            onNodeClick={onNodeClick} onEdgeClick={onEdgeClick}
-            onNodesDelete={onNodesDelete} onEdgesDelete={onEdgesDelete}
-            onNodeContextMenu={onNodeContextMenu} onEdgeContextMenu={onEdgeContextMenu} onPaneClick={onPaneClick}
+            nodes={localNodes} 
+            edges={flowEdges} 
+            nodeTypes={nodeTypes} 
+            edgeTypes={edgeTypes} 
+            isValidConnection={isValidConnection} 
+            onInit={setReactFlowInstance} 
+            onDrop={onDrop} 
+            onDragOver={onDragOver} 
+            onConnect={onConnect} 
+            onEdgeUpdate={onEdgeUpdate}
+            onNodesChange={onNodesChange} 
+            onNodeDragStop={onNodeDragStop} 
+            onNodeClick={onNodeClick} 
+            onEdgeClick={onEdgeClick}
+            onNodesDelete={onNodesDelete} 
+            onEdgesDelete={onEdgesDelete}
+            onNodeContextMenu={onNodeContextMenu} 
+            onEdgeContextMenu={onEdgeContextMenu} 
+            onPaneClick={onPaneClick}
             connectionMode={ConnectionMode.Loose} 
             snapToGrid={snapEnabled}
             snapGrid={snapGrid}
@@ -434,6 +523,10 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
                         <div style={{ padding: '8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('toggleArrow')}>
                             {rawEdgesDict[contextMenu.id]?.arrow !== false ? '❌ Remove Arrow' : '➡️ Add Arrow'}
                         </div>
+                        {/* <-- ADDED: Toggle Label UI Button */}
+                        <div style={{ padding: '8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('toggleLabel')}>
+                            {rawEdgesDict[contextMenu.id]?.showLabel !== false ? '👁️ Hide Label' : '👁️ Show Label'}
+                        </div>
                         <div style={{ borderTop: '1px solid var(--neutral-40)', margin: '4px 0' }} />
                         <div 
                             style={{ padding: '8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', justifyContent: 'space-between', backgroundColor: activeSubMenu === 'lineType' ? 'var(--neutral-30)' : 'transparent' }}
@@ -452,9 +545,10 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
 
                 <div style={{ padding: '8px', cursor: 'pointer', color: 'var(--error)', borderTop: '1px solid var(--neutral-40)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('delete')}>🗑️ Delete</div>
 
+                {/* <-- Adjusted 'top' values below to account for the new height of the Context Menu --> */}
                 {activeSubMenu === 'lineType' && (
                     <div style={{
-                        position: 'absolute', top: '105px', left: '100%', marginLeft: '2px',
+                        position: 'absolute', top: '141px', left: '100%', marginLeft: '2px',
                         backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)',
                         borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '5px', minWidth: '130px'
                     }}>
@@ -467,7 +561,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
 
                 {activeSubMenu === 'connectionType' && (
                     <div style={{
-                        position: 'absolute', top: '140px', left: '100%', marginLeft: '2px',
+                        position: 'absolute', top: '176px', left: '100%', marginLeft: '2px',
                         backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)',
                         borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '5px', minWidth: '150px'
                     }}>

@@ -197,67 +197,78 @@
           "label": "Gateway Network",
           "color": "var(--ignition-orange)",
           "docs": "https://docs.inductiveautomation.com/docs/8.1/platform/gateway-network",
-          "multiple": false
+          "multiple": false,
+          "arrow": true
         },
         "mqtt": {
           "label": "MQTT",
           "color": "var(--cirrusLink)",
           "docs": "https://docs.chariot.io/display/CLD80/Cirrus+Link+Ignition+Modules",
-          "multiple": true
+          "multiple": true,
+          "arrow": false
         },
         "device-driver": {
           "label": "Device Driver",
           "color": "var(--seq-3)",
           "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/opc-ua/opc-ua-drivers",
-          "multiple": true
+          "multiple": true,
+          "arrow": false
         },
         "opc-ua": {
           "label": "OPC-UA",
           "color": "#FFE7BA",
           "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/opc-ua",
-          "multiple": true
+          "multiple": true,
+          "arrow": false
         },
         "opc-com": {
           "label": "OPC-COM",
           "color": "#FFE7BA",
           "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/opc-ua/third-party-opc-servers/opc-com",
-          "multiple": true
+          "multiple": true,
+          "arrow": false
         },
         "kafka": {
           "label": "Kafka",
           "color": "#00ACAC",
           "docs": "https://docs.inductiveautomation.com/docs/8.3/ignition-modules/cloud-connector-modules/kafka",
-          "multiple": true
+          "multiple": true,
+          "arrow": false
         },
         "db": {
           "label": "DB",
           "color": "#34A853",
           "docs": "https://docs.inductiveautomation.com/docs/8.1/platform/database-connections",
-          "multiple": true
+          "multiple": true,
+          "arrow": false
         },
         "client": {
           "label": "Client",
           "color": "var(--neutral-60)",
           "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/perspective/perspective-sessions",
-          "multiple": false
+          "multiple": false,
+          "arrow": false
         },
         "standard": {
           "label": "Standard",
           "color": "var(--neutral-100)",
           "docs": "https://docs.inductiveautomation.com/docs/8.1/platform/gateway/status/connections",
-          "multiple": true
+          "multiple": true,
+          "arrow": false
         },
         "mongodb": {
           "label": "MongoDB",
           "color": "green",
           "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/cloud-connector-modules/mongodb",
-          "multiple": true
+          "multiple": true,
+          "arrow": false
         },
         "rest": {
           "label": "REST API",
           "color": "#f59e0b",
           "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/webdev",
-          "multiple": true
+          "multiple": true,
+          "arrow": true
         }
       }
     },
@@ -291,7 +302,11 @@
           "targetHandle": { "type": "string" },
           "connectionType": { "type": "string" },
           "lineType": { "type": "string" },
-          "dashed": { "type": "boolean", "default": false }
+          "dashed": { "type": "boolean", "default": false },
+          "arrow": { "type": "boolean", "default": true },
+          "showLabel": { "type": "boolean", "default": false },
+          "offsetX": { "type": "number", "default": 0, "description": "X offset for the edge handle." },
+          "offsetY": { "type": "number", "default": 0, "description": "Y offset for the edge handle." }
         }
       },
       "default": {}
