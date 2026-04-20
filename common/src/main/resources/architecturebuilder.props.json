@@ -1,0 +1,93 @@
+{
+  "type": "object",
+  "properties": {
+
+    "paletteItems": {
+      "type": "array",
+      "description": "The list of items available in the drag-and-drop sidebar.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "category": { "type": "string" },
+          "label": { "type": "string" },
+          "tooltip": { "type": "string" },
+          "svg": { "type": "string" },
+          "supportedConnections": { "type": "array", "items": { "type": "string" } },
+          "configs": { "type": "object", "default": {} },
+          "defaultConfigs": { "type": "object", "description": "Configs assigned when dropped.", "default": {} },
+          "style": { "$ref": "urn:ignition-schema:schemas/style-properties.schema.json" }
+        }
+      },
+      "default": [
+        {
+          "id": "gateway",
+          "category": "Standard",
+          "label": "Ignition Gateway",
+          "tooltip": "Ignition Gateway",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"#F58A4B\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"10\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">IG</text></svg>",
+          "supportedConnections": ["gateway-db"],
+          "defaultConfigs": { "version": "8.3" }
+        }
+      ]
+    },
+    "connectionTypes": {
+      "type": "object",
+      "default": {}
+    },
+    "nodes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "paletteId": { "type": "string" },
+          "label": { "type": "string" },
+          "tooltip": { "type": "string" },
+          "svg": { "type": "string" },
+          "x": { "type": "number" },
+          "y": { "type": "number" },
+          "hideHandles": { "type": "boolean", "description": "Overrides global hideHandles if set." },
+          "configs": { "type": "object" },
+          "supportedConnections": { "type": "array", "items": { "type": "string" } },
+          "style": { "$ref": "urn:ignition-schema:schemas/style-properties.schema.json" }
+        }
+      },
+      "default": {}
+    },
+    "edges": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "source": { "type": "string" },
+          "target": { "type": "string" },
+          "sourceHandle": { "type": "string" },
+          "targetHandle": { "type": "string" },
+          "connectionType": { "type": "string" },
+          "lineType": { "type": "string" },
+          "dashed": { "type": "boolean", "default": false }
+        }
+      },
+      "default": {}
+    },
+    "snapEnabled": {
+      "type": "boolean",
+      "description": "Enable snapping to grid when moving components.",
+      "default": true
+    },
+    "snapPixels": {
+      "type": "number",
+      "description": "The size of the snap grid in pixels.",
+      "default": 15
+    },
+    "hideHandles": {
+      "type": "boolean",
+      "description": "Globally hide all connection handles.",
+      "default": false
+    },
+    "style": {
+      "description": "Standard Perspective style object applied to the component.",
+      "$ref": "urn:ignition-schema:schemas/style-properties.schema.json"
+    }
+  }
+}

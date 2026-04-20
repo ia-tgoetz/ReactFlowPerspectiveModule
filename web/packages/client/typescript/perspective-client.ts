@@ -2,8 +2,10 @@ import { ComponentMeta, ComponentRegistry } from '@inductiveautomation/perspecti
 import { DatabaseSchema } from './components/DatabaseSchema/DatabaseSchema';
 import { HierarchyChart } from './components/HierarchyChart/HierarchyChart';
 import { JsonEditor } from './components/JsonEditor/JsonEditor';
+import { ArchitectureBuilder } from './components/ArchitectureBuilder/ArchitectureBuilder'; // <-- 1. IMPORT
 
-export { DatabaseSchema, HierarchyChart, JsonEditor };
+// 2. EXPORT (Crucial for Webpack!)
+export { DatabaseSchema, HierarchyChart, JsonEditor, ArchitectureBuilder };
 
 // --- DATABASE SCHEMA ---
 export class DatabaseSchemaMeta implements ComponentMeta {
@@ -61,10 +63,31 @@ export class JsonEditorMeta implements ComponentMeta {
         return {
             data: tree.read('data'),
             theme: tree.read('theme', 'monokai'),
-            // CRITICAL ADDITIONS: Without these, the TSX won't receive your custom colors or styles!
             customTheme: tree.read('customTheme'), 
             editable: tree.read('editable', true),
             style: tree.read('style') 
+        };
+    }
+}
+
+// --- ARCHITECTURE BUILDER (NEW) ---
+export class ArchitectureBuilderMeta implements ComponentMeta {
+    getComponentType(): string {
+        return 'com.wargoetz.reactflow.architecturebuilder'; 
+    }
+    getViewComponent(): any {
+        return ArchitectureBuilder as any;
+    }
+    getDefaultSize(): any {
+        return { width: 800, height: 600 };
+    }
+    getPropsReducer(tree: any): any {
+        return {
+            style: tree.read('style'),
+            connectionTypes: tree.read('connectionTypes'),
+            paletteItems: tree.read('paletteItems'),
+            nodes: tree.read('nodes'),
+            edges: tree.read('edges')
         };
     }
 }
@@ -75,8 +98,10 @@ if (registry.registerComponent) {
     registry.registerComponent(new DatabaseSchemaMeta());
     registry.registerComponent(new HierarchyChartMeta());
     registry.registerComponent(new JsonEditorMeta());
+    registry.registerComponent(new ArchitectureBuilderMeta()); // <-- 3. REGISTER
 } else {
     registry.register(new DatabaseSchemaMeta());
     registry.register(new HierarchyChartMeta());
     registry.register(new JsonEditorMeta());
+    registry.register(new ArchitectureBuilderMeta()); // <-- 3. REGISTER
 }

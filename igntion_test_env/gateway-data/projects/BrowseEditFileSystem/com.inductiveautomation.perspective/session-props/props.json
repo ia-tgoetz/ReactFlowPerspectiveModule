@@ -68,6 +68,7 @@
     "geolocation": {},
     "locale": "en-US",
     "offline": {},
+    "theme": "dark",
     "timeZoneId": "America/New_York"
   }
 }

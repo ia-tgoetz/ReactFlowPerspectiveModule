@@ -1,35 +1,131 @@
 {
   "custom": {},
   "params": {},
-  "props": {},
+  "props": {
+    "defaultSize": {
+      "width": 848
+    }
+  },
   "root": {
     "children": [
       {
         "meta": {
-          "name": "jsonEditor_1"
+          "name": "TextArea"
         },
         "position": {
+          "basis": "160px",
           "shrink": 0
         },
-        "type": "com.wargoetz.reactflow.jsoneditor"
+        "props": {
+          "text": {
+            "action": "config",
+            "id": "key",
+            "paletteId": "gateway",
+            "type": "node"
+          }
+        },
+        "type": "ia.input.text-area"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Checkbox"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.selected": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": ".../ArchitectureBuilder.props.hideHandles"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "marginLeft": "16px"
+              },
+              "text": "hideHandles"
+            },
+            "type": "ia.input.checkbox"
+          },
+          {
+            "meta": {
+              "name": "Checkbox_0"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.selected": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": ".../ArchitectureBuilder.props.snapEnabled"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "marginLeft": "16px"
+              },
+              "text": "snapping"
+            },
+            "type": "ia.input.checkbox"
+          },
+          {
+            "meta": {
+              "name": "NumericEntryField"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "propConfig": {
+              "props.value": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": ".../ArchitectureBuilder.props.snapPixels"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "spinner": {
+                "enabled": false
+              },
+              "style": {
+                "marginLeft": "16px"
+              }
+            },
+            "type": "ia.input.numeric-entry-field"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "type": "ia.container.flex"
       },
       {
         "meta": {
-          "name": "dbSchema"
+          "name": "ArchitectureBuilder"
         },
         "position": {
           "basis": "600px"
         },
-        "type": "com.wargoetz.reactflow.databaseschema"
-      },
-      {
-        "meta": {
-          "name": "HierarchyChart"
+        "props": {
+          "snapEnabled": false,
+          "snapPixels": 30
         },
-        "position": {
-          "basis": "600px"
-        },
-        "type": "com.wargoetz.reactflow.hierarchychart"
+        "type": "com.wargoetz.reactflow.architecturebuilder"
       }
     ],
     "meta": {
