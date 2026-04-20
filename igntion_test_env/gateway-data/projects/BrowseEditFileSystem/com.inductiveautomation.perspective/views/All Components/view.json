@@ -13,14 +13,14 @@
           "name": "TextArea"
         },
         "position": {
-          "basis": "160px",
+          "basis": "44px",
           "shrink": 0
         },
         "props": {
           "text": {
-            "action": "config",
-            "id": "key",
-            "paletteId": "gateway",
+            "action": "delete",
+            "id": "I279547d4",
+            "paletteId": "Note",
             "type": "node"
           }
         },
@@ -115,6 +115,38 @@
         "type": "ia.container.flex"
       },
       {
+        "events": {
+          "component": {
+            "onContextMenuAction": {
+              "config": {
+                "script": "\tself.getSibling(\"TextArea\").props.text\u003devent"
+              },
+              "scope": "G",
+              "type": "script"
+            },
+            "onEdgeClick": {
+              "config": {
+                "script": "\tself.getSibling(\"TextArea\").props.text\u003devent"
+              },
+              "scope": "G",
+              "type": "script"
+            },
+            "onGearClick": {
+              "config": {
+                "script": "\tself.getSibling(\"TextArea\").props.text\u003devent"
+              },
+              "scope": "G",
+              "type": "script"
+            },
+            "onNodeClick": {
+              "config": {
+                "script": "\tself.getSibling(\"TextArea\").props.text\u003devent"
+              },
+              "scope": "G",
+              "type": "script"
+            }
+          }
+        },
         "meta": {
           "name": "ArchitectureBuilder"
         },
@@ -122,8 +154,165 @@
           "basis": "600px"
         },
         "props": {
-          "snapEnabled": false,
-          "snapPixels": 30
+          "edges": {
+            "I8555bf64": {
+              "connectionType": "db",
+              "dashed": false,
+              "lineType": "smoothstep",
+              "source": "I5072cb13",
+              "sourceHandle": "b20",
+              "target": "Ib6d673c9",
+              "targetHandle": "r40"
+            },
+            "I86de9d15": {
+              "connectionType": "gateway-network",
+              "dashed": false,
+              "lineType": "smoothstep",
+              "source": "I5072cb13",
+              "sourceHandle": "b80",
+              "target": "I3a389b5b",
+              "targetHandle": "t40"
+            },
+            "I88476a30": {
+              "connectionType": "mongodb",
+              "dashed": false,
+              "lineType": "smoothstep",
+              "source": "I5072cb13",
+              "sourceHandle": "b40",
+              "target": "Ifa7b22fb",
+              "targetHandle": "l40"
+            },
+            "If0ff9dde": {
+              "connectionType": "gateway-db",
+              "dashed": false,
+              "lineType": "smoothstep",
+              "source": "Ib610d505",
+              "sourceHandle": "r60",
+              "target": "I0811d4f6",
+              "targetHandle": "l80"
+            },
+            "If8f81c69": {
+              "connectionType": "gateway-db",
+              "dashed": false,
+              "lineType": "smoothstep",
+              "source": "Ib610d505",
+              "sourceHandle": "r40",
+              "target": "I0811d4f6",
+              "targetHandle": "l40"
+            }
+          },
+          "hideHandles": true,
+          "nodes": {
+            "I279547d4": {
+              "configs": {},
+              "hideHandles": false,
+              "label": "Note",
+              "paletteId": "Note",
+              "style": {
+                "classes": ""
+              },
+              "supportedConnections": [],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--neutral-50, #6b7280)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eNTE\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Note",
+              "x": 45,
+              "y": 195
+            },
+            "I3a389b5b": {
+              "configs": {},
+              "hideHandles": false,
+              "label": "Edge Panel Gateway",
+              "paletteId": "edge-panel",
+              "style": {
+                "classes": ""
+              },
+              "supportedConnections": [
+                "gateway-network",
+                "mqtt",
+                "rest",
+                "client",
+                "standard",
+                "device-driver",
+                "opc-ua",
+                "opc-com"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--panel, #00ACAC)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eEP\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Edge Panel Gateway",
+              "x": 375,
+              "y": 285
+            },
+            "I5072cb13": {
+              "configs": {},
+              "hideHandles": false,
+              "label": "Standard Gateway",
+              "paletteId": "standard",
+              "style": {
+                "classes": ""
+              },
+              "supportedConnections": [
+                "gateway-network",
+                "db",
+                "mqtt",
+                "rest",
+                "client",
+                "standard",
+                "device-driver",
+                "opc-ua",
+                "opc-com",
+                "mongodb",
+                "kafka"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--standard, #F58A4B)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eSG\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Standard Gateway",
+              "x": 165,
+              "y": 75
+            },
+            "Ib2df847c": {
+              "configs": {},
+              "hideHandles": false,
+              "label": "Label",
+              "paletteId": "Label",
+              "style": {
+                "classes": ""
+              },
+              "supportedConnections": [],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--neutral-50, #6b7280)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eLBL\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Label",
+              "x": -45,
+              "y": 75
+            },
+            "Ib6d673c9": {
+              "configs": {},
+              "hideHandles": false,
+              "label": "Database",
+              "paletteId": "Database",
+              "style": {
+                "classes": ""
+              },
+              "supportedConnections": [
+                "db"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"#34A853\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eDB\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Database",
+              "x": 30,
+              "y": 345
+            },
+            "Ifa7b22fb": {
+              "configs": {},
+              "hideHandles": false,
+              "label": "MongoDB",
+              "paletteId": "MongoDB",
+              "style": {
+                "classes": ""
+              },
+              "supportedConnections": [
+                "mongodb"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"green\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eMDB\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "MongoDB",
+              "x": 270,
+              "y": 435
+            }
+          }
         },
         "type": "com.wargoetz.reactflow.architecturebuilder"
       }

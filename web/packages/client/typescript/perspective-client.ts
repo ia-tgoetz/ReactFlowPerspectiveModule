@@ -83,11 +83,17 @@ export class ArchitectureBuilderMeta implements ComponentMeta {
     }
     getPropsReducer(tree: any): any {
         return {
-            style: tree.read('style'),
-            connectionTypes: tree.read('connectionTypes'),
-            paletteItems: tree.read('paletteItems'),
             nodes: tree.read('nodes'),
-            edges: tree.read('edges')
+            edges: tree.read('edges'),
+            paletteItems: tree.read('paletteItems'),
+            connectionTypes: tree.read('connectionTypes'),
+            
+            // These must exactly match the keys in your architecturebuilder.props.json
+            snapEnabled: tree.read('snapEnabled', true),
+            snapPixels: tree.read('snapPixels', 15),
+            hideHandles: tree.read('hideHandles', false),
+            
+            style: tree.read('style')
         };
     }
 }

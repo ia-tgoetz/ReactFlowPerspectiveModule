@@ -29,11 +29,12 @@ export const ArchitectureNode = ({ id, data, selected }: NodeProps<ArchitectureN
         ...(data.style || {}) 
     };
 
-    // ⭐ THE FIX: "If individual node is true it takes priority, otherwise follow global"
+    // 1. Safely evaluate both booleans
     const localHide = data.hideHandles === true || String(data.hideHandles).toLowerCase() === 'true';
     const globalHide = data.globalHideHandles === true || String(data.globalHideHandles).toLowerCase() === 'true';
-    
-    const isHidden = localHide || globalHide;
+
+    // 2. THE FIX: If local is explicitly true, hide it. Otherwise, fallback to the global state.
+    const isHidden = localHide ? true : globalHide;
 
     const handleOpacity = isHidden ? 0 : 1;
     const handlePointerEvents = isHidden ? 'none' : 'auto';

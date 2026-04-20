@@ -1,7 +1,6 @@
 {
   "type": "object",
   "properties": {
-
     "paletteItems": {
       "type": "array",
       "description": "The list of items available in the drag-and-drop sidebar.",
@@ -21,19 +20,246 @@
       },
       "default": [
         {
-          "id": "gateway",
-          "category": "Standard",
-          "label": "Ignition Gateway",
-          "tooltip": "Ignition Gateway",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"#F58A4B\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"10\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">IG</text></svg>",
-          "supportedConnections": ["gateway-db"],
-          "defaultConfigs": { "version": "8.3" }
+          "id": "standard",
+          "category": "Gateways",
+          "label": "Standard Gateway",
+          "tooltip": "Standard Gateway",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--standard, #F58A4B)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">SG</text></svg>",
+          "supportedConnections": ["gateway-network", "db", "mqtt", "rest", "client", "standard", "device-driver", "opc-ua", "opc-com", "mongodb", "kafka"]
+        },
+        {
+          "id": "edge-panel",
+          "category": "Gateways",
+          "label": "Edge Panel Gateway",
+          "tooltip": "Edge Panel Gateway",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--panel, #00ACAC)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">EP</text></svg>",
+          "supportedConnections": ["gateway-network", "mqtt", "rest", "client", "standard", "device-driver", "opc-ua", "opc-com"]
+        },
+        {
+          "id": "cloud",
+          "category": "Gateways",
+          "label": "Cloud Gateway",
+          "tooltip": "Cloud Gateway",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--cloud, #5b21b6)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">CG</text></svg>",
+          "supportedConnections": ["gateway-network", "db", "mqtt", "rest", "client", "standard", "mongodb", "kafka"]
+        },
+        {
+          "id": "Database",
+          "category": "Data",
+          "label": "Database",
+          "tooltip": "Database",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"#34A853\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">DB</text></svg>",
+          "supportedConnections": ["db"]
+        },
+        {
+          "id": "MongoDB",
+          "category": "Data",
+          "label": "MongoDB",
+          "tooltip": "MongoDB",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"green\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">MDB</text></svg>",
+          "supportedConnections": ["mongodb"]
+        },
+        {
+          "id": "Kafka",
+          "category": "Data",
+          "label": "Kafka",
+          "tooltip": "Kafka",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">KFK</text></svg>",
+          "supportedConnections": ["kafka"]
+        },
+        {
+          "id": "Device",
+          "category": "Edge",
+          "label": "Device",
+          "tooltip": "Device",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--seq-3, #f59e0b)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">DEV</text></svg>",
+          "supportedConnections": ["device-driver"]
+        },
+        {
+          "id": "OPCUA",
+          "category": "Edge",
+          "label": "OPC-UA Server",
+          "tooltip": "OPC-UA Server",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"#FFE7BA\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"#333\" text-anchor=\"middle\" font-family=\"sans-serif\">OPC</text></svg>",
+          "supportedConnections": ["opc-ua", "opc-com"]
+        },
+        {
+          "id": "IIOT",
+          "category": "Edge",
+          "label": "IIOT",
+          "tooltip": "IIOT",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--cirrusLink, #8b5cf6)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">IOT</text></svg>",
+          "supportedConnections": ["mqtt", "rest"]
+        },
+        {
+          "id": "Client",
+          "category": "Endpoints",
+          "label": "Client",
+          "tooltip": "Client",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-60, #9ca3af)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">CLI</text></svg>",
+          "supportedConnections": ["client", "rest"]
+        },
+        {
+          "id": "Connector",
+          "category": "Infrastructure",
+          "label": "Connector",
+          "tooltip": "Connector",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">CON</text></svg>",
+          "supportedConnections": ["standard", "rest"]
+        },
+        {
+          "id": "Comms",
+          "category": "Infrastructure",
+          "label": "Communication",
+          "tooltip": "Communication",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">COM</text></svg>",
+          "supportedConnections": ["standard", "gateway-network"]
+        },
+        {
+          "id": "LoadBalancer",
+          "category": "Infrastructure",
+          "label": "Load Balancer",
+          "tooltip": "Load Balancer",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">LB</text></svg>",
+          "supportedConnections": ["standard", "client", "rest"]
+        },
+        {
+          "id": "Firewall",
+          "category": "Infrastructure",
+          "label": "Firewall",
+          "tooltip": "Firewall",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"red\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">FW</text></svg>",
+          "supportedConnections": ["standard", "gateway-network"]
+        },
+        {
+          "id": "ReverseProxy",
+          "category": "Infrastructure",
+          "label": "Reverse Proxy",
+          "tooltip": "Reverse Proxy",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">RP</text></svg>",
+          "supportedConnections": ["standard", "rest", "client"]
+        },
+        {
+          "id": "Usersource",
+          "category": "Infrastructure",
+          "label": "User Source",
+          "tooltip": "User Source",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">USR</text></svg>",
+          "supportedConnections": ["standard"]
+        },
+        {
+          "id": "server",
+          "category": "Infrastructure",
+          "label": "Server",
+          "tooltip": "Server",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">SRV</text></svg>",
+          "supportedConnections": ["standard"]
+        },
+        {
+          "id": "fourIR",
+          "category": "Infrastructure",
+          "label": "4IR",
+          "tooltip": "4IR",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">4IR</text></svg>",
+          "supportedConnections": ["standard", "gateway-network", "mqtt"]
+        },
+        {
+          "id": "Note",
+          "category": "Misc",
+          "label": "Note",
+          "tooltip": "Note",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">NTE</text></svg>",
+          "supportedConnections": []
+        },
+        {
+          "id": "Label",
+          "category": "Misc",
+          "label": "Label",
+          "tooltip": "Label",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">LBL</text></svg>",
+          "supportedConnections": []
+        },
+        {
+          "id": "Custom",
+          "category": "Misc",
+          "label": "Custom",
+          "tooltip": "Custom",
+          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">CST</text></svg>",
+          "supportedConnections": ["standard", "rest", "db", "mqtt"]
         }
       ]
     },
     "connectionTypes": {
       "type": "object",
-      "default": {}
+      "description": "Defines the visual styles and labels for different connection types.",
+      "default": {
+        "gateway-network": {
+          "label": "Gateway Network",
+          "color": "var(--ignition-orange)",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/platform/gateway-network",
+          "multiple": false
+        },
+        "mqtt": {
+          "label": "MQTT",
+          "color": "var(--cirrusLink)",
+          "docs": "https://docs.chariot.io/display/CLD80/Cirrus+Link+Ignition+Modules",
+          "multiple": true
+        },
+        "device-driver": {
+          "label": "Device Driver",
+          "color": "var(--seq-3)",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/opc-ua/opc-ua-drivers",
+          "multiple": true
+        },
+        "opc-ua": {
+          "label": "OPC-UA",
+          "color": "#FFE7BA",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/opc-ua",
+          "multiple": true
+        },
+        "opc-com": {
+          "label": "OPC-COM",
+          "color": "#FFE7BA",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/opc-ua/third-party-opc-servers/opc-com",
+          "multiple": true
+        },
+        "kafka": {
+          "label": "Kafka",
+          "color": "#00ACAC",
+          "docs": "https://docs.inductiveautomation.com/docs/8.3/ignition-modules/cloud-connector-modules/kafka",
+          "multiple": true
+        },
+        "db": {
+          "label": "DB",
+          "color": "#34A853",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/platform/database-connections",
+          "multiple": true
+        },
+        "client": {
+          "label": "Client",
+          "color": "var(--neutral-60)",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/perspective/perspective-sessions",
+          "multiple": false
+        },
+        "standard": {
+          "label": "Standard",
+          "color": "var(--neutral-100)",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/platform/gateway/status/connections",
+          "multiple": true
+        },
+        "mongodb": {
+          "label": "MongoDB",
+          "color": "green",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/cloud-connector-modules/mongodb",
+          "multiple": true
+        },
+        "rest": {
+          "label": "REST API",
+          "color": "#f59e0b",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/webdev",
+          "multiple": true
+        }
+      }
     },
     "nodes": {
       "type": "object",

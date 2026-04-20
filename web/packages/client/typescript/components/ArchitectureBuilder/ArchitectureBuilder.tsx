@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ComponentProps } from '@inductiveautomation/perspective-client';
 import { observer } from 'mobx-react';
 // @ts-ignore
-import ReactFlow, { ReactFlowProvider, Background, Controls, ConnectionMode, Edge, Connection, applyNodeChanges, NodeChange } from 'reactflow';
+import ReactFlow, { ReactFlowProvider, Background, Controls, ConnectionMode, Edge, Connection, applyNodeChanges, NodeChange, MarkerType } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { Sidebar, PaletteItem } from './Sidebar';
 import { ArchitectureNode } from './ArchitectureNode';
@@ -64,11 +64,20 @@ const mapIgnitionToReactFlowEdges = (ignitionEdges: any, connectionTypes: any, s
             let flowType = edgeData.lineType || 'smoothstep';
             if (flowType === 'bezier') flowType = 'default';
 
+            // Feature: Render Directional Arrow
+            const arrowMarker = edgeData.arrow !== false ? {
+                type: MarkerType.ArrowClosed,
+                width: 20,
+                height: 20,
+                color: strokeStyle.stroke
+            } : undefined;
+
             return {
                 id, ...edgeData,
                 type: flowType,
                 label: typeConfig.label || edgeData.connectionType || '',
                 style: strokeStyle,
+                markerEnd: arrowMarker,
                 labelBgStyle: { fill: 'var(--neutral-10)' }, 
                 labelStyle: { fill: isSelected ? 'var(--callToAction)' : 'var(--neutral-90)', fontWeight: 'bold' },
                 interactionWidth: 20,
@@ -105,7 +114,6 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
   const connectionTypes = React.useMemo(() => JSON.parse(connectionTypesJson), [connectionTypesJson]);
   const paletteItems = React.useMemo(() => JSON.parse(paletteItemsJson), [paletteItemsJson]);
   
-  // ⭐ THE FIX: Securely read the root primitives directly from the props tree
   const globalHideHandles = props.props.hideHandles === true || String(props.props.hideHandles).toLowerCase() === 'true';
   const snapEnabled = props.props.snapEnabled !== false && String(props.props.snapEnabled).toLowerCase() !== 'false'; 
   const snapPixels = Number(props.props.snapPixels) || 15;
@@ -130,36 +138,58 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       setLocalNodes((nds) => applyNodeChanges(changes, nds));
   }, []);
 
+  const getValidIntersection = React.useCallback((sourceId: string, targetId: string) => {
+      const sourceNode = rawNodesDict[sourceId];
+      const targetNode = rawNodesDict[targetId];
+      if (!sourceNode || !targetNode || !sourceNode.supportedConnections || !targetNode.supportedConnections) return [];
+
+      let intersection = sourceNode.supportedConnections.filter((c: string) => targetNode.supportedConnections.includes(c));
+
+      // Feature: Cardinality Check (Multiple: false)
+      intersection = intersection.filter((connType: string) => {
+          const typeDef = connectionTypes[connType];
+          if (typeDef && typeDef.multiple === false) {
+              // Check if an edge of this type already exists between these two nodes
+              const edgeExists = Object.values(rawEdgesDict).some((e: any) =>
+                  (e.source === sourceId && e.target === targetId && e.connectionType === connType) ||
+                  (e.source === targetId && e.target === sourceId && e.connectionType === connType) 
+              );
+              return !edgeExists;
+          }
+          return true;
+      });
+
+      return intersection;
+  }, [rawNodesDict, rawEdgesDict, connectionTypes]);
+
   const isValidConnection = React.useCallback((connection: any) => {
-    const sourceNode = rawNodesDict[connection.source];
-    const targetNode = rawNodesDict[connection.target];
-    if (!sourceNode || !targetNode || !sourceNode.supportedConnections || !targetNode.supportedConnections) return false;
-    const intersection = sourceNode.supportedConnections.filter((c: string) => targetNode.supportedConnections.includes(c));
-    return intersection.length > 0;
-  }, [rawNodesDict]);
+      const validTypes = getValidIntersection(connection.source, connection.target);
+      return validTypes.length > 0;
+  }, [getValidIntersection]);
 
   const onConnect = React.useCallback((connectionParams: any) => {
-    const sourceNode = rawNodesDict[connectionParams.source];
-    const targetNode = rawNodesDict[connectionParams.target];
-    const intersection = sourceNode.supportedConnections.filter((c: string) => targetNode.supportedConnections.includes(c));
-    if (intersection.length === 0) return;
-    
-    if (props.store?.props) {
-        props.store.props.write('edges', {
-            ...rawEdgesDict, 
-            [generateShortId()]: { ...connectionParams, lineType: 'smoothstep', dashed: false, connectionType: intersection[0] }
-        });
-    }
-  }, [props.store, rawNodesDict, rawEdgesDict]);
+      const validTypes = getValidIntersection(connectionParams.source, connectionParams.target);
+      if (validTypes.length === 0) return;
+      
+      if (props.store?.props) {
+          props.store.props.write('edges', {
+              ...rawEdgesDict, 
+              [generateShortId()]: { 
+                  ...connectionParams, 
+                  lineType: 'smoothstep', 
+                  dashed: false, 
+                  arrow: true, // Default to true
+                  connectionType: validTypes[0] 
+              }
+          });
+      }
+  }, [props.store, rawEdgesDict, getValidIntersection]);
 
   const onEdgeUpdate = React.useCallback((oldEdge: Edge, newConnection: Connection) => {
       if (!newConnection.source || !newConnection.target) return;
-      const sourceNode = rawNodesDict[newConnection.source];
-      const targetNode = rawNodesDict[newConnection.target];
-      if (!sourceNode || !targetNode || !sourceNode.supportedConnections || !targetNode.supportedConnections) return;
-
-      const intersection = sourceNode.supportedConnections.filter((c: string) => targetNode.supportedConnections.includes(c));
-      if (intersection.length === 0) return;
+      
+      const validTypes = getValidIntersection(newConnection.source, newConnection.target);
+      if (validTypes.length === 0) return;
 
       if (props.store?.props) {
           const nextEdges = { ...rawEdgesDict };
@@ -171,11 +201,11 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
               target: newConnection.target,
               sourceHandle: newConnection.sourceHandle,
               targetHandle: newConnection.targetHandle,
-              connectionType: intersection.includes(oldData.connectionType) ? oldData.connectionType : intersection[0]
+              connectionType: validTypes.includes(oldData.connectionType) ? oldData.connectionType : validTypes[0]
           };
           props.store.props.write('edges', nextEdges);
       }
-  }, [props.store, rawNodesDict, rawEdgesDict]);
+  }, [props.store, rawEdgesDict, getValidIntersection]);
 
   const onNodesDelete = React.useCallback((deleted: any[]) => {
       if (!props.store?.props) return;
@@ -225,6 +255,20 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
   const handleContextMenuAction = (action: string) => {
       if (!contextMenu) return;
       const isNode = contextMenu.type === 'node';
+
+      // Feature: Toggle arrow direction directly from context menu
+      if (action === 'toggleArrow' && !isNode) {
+          if (props.store?.props) {
+              const nextEdges = { ...rawEdgesDict };
+              if (nextEdges[contextMenu.id]) {
+                  nextEdges[contextMenu.id].arrow = nextEdges[contextMenu.id].arrow === false ? true : false;
+                  props.store.props.write('edges', nextEdges);
+              }
+          }
+          closeContextMenu();
+          return;
+      }
+
       const paletteId = isNode ? rawNodesDict[contextMenu.id]?.paletteId : rawEdgesDict[contextMenu.id]?.connectionType;
       
       if (props.componentEvents) {
@@ -288,7 +332,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
             paletteId: paletteItem.id, 
             label: paletteItem.label, svg: paletteItem.svg, tooltip: paletteItem.tooltip,
             x: dropX, y: dropY, 
-            hideHandles: false, // <-- Explicitly added back so it populates in the JSON tree!
+            hideHandles: false, 
             style: paletteItem.style || { classes: "" },
             configs: initialConfigs,
             supportedConnections: paletteItem.supportedConnections || []
@@ -341,11 +385,10 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       if (edge) {
           currentLineType = edge.lineType || 'smoothstep';
           currentConnectionType = edge.connectionType;
-          const sourceNode = rawNodesDict[edge.source];
-          const targetNode = rawNodesDict[edge.target];
-          if (sourceNode && targetNode && sourceNode.supportedConnections && targetNode.supportedConnections) {
-              availableConnections = sourceNode.supportedConnections.filter((c: string) => targetNode.supportedConnections.includes(c));
-          }
+          // When changing connection type via menu, recalculate valid intersection
+          availableConnections = getValidIntersection(edge.source, edge.target);
+          // Make sure the currently assigned type is always visible in the list to avoid confusion
+          if (!availableConnections.includes(currentConnectionType)) availableConnections.push(currentConnectionType);
       }
   }
 
@@ -388,6 +431,9 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
                 
                 {contextMenu.type === 'edge' && (
                     <>
+                        <div style={{ padding: '8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('toggleArrow')}>
+                            {rawEdgesDict[contextMenu.id]?.arrow !== false ? '❌ Remove Arrow' : '➡️ Add Arrow'}
+                        </div>
                         <div style={{ borderTop: '1px solid var(--neutral-40)', margin: '4px 0' }} />
                         <div 
                             style={{ padding: '8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', justifyContent: 'space-between', backgroundColor: activeSubMenu === 'lineType' ? 'var(--neutral-30)' : 'transparent' }}
@@ -408,7 +454,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
 
                 {activeSubMenu === 'lineType' && (
                     <div style={{
-                        position: 'absolute', top: '75px', left: '100%', marginLeft: '2px',
+                        position: 'absolute', top: '105px', left: '100%', marginLeft: '2px',
                         backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)',
                         borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '5px', minWidth: '130px'
                     }}>
@@ -421,7 +467,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
 
                 {activeSubMenu === 'connectionType' && (
                     <div style={{
-                        position: 'absolute', top: '110px', left: '100%', marginLeft: '2px',
+                        position: 'absolute', top: '140px', left: '100%', marginLeft: '2px',
                         backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)',
                         borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '5px', minWidth: '150px'
                     }}>
