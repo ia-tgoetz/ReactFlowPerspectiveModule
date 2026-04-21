@@ -52,7 +52,7 @@ const mapIgnitionToReactFlowNodes = (ignitionNodes: any, handleGearClick: (id: s
         return { 
             id, type: isContainer ? 'container' : 'architecture', selected: id === selectedId, 
             position: { x: nodeData.x || 0, y: nodeData.y || 0 }, 
-            zIndex: nodeData.zIndex ?? (isContainer ? -1 : 10),
+            zIndex: isContainer ? (nodeData.zIndex ?? -1) : 1000, 
             style: isContainer ? { width: nodeData.width || 300, height: nodeData.height || 300 } : undefined, 
             data: { 
                 label: nodeData.label || 'Unknown', svg: nodeData.svg || '', tooltip: nodeData.tooltip || '', configs: nodeData.configs || {}, 
@@ -71,10 +71,12 @@ const getNodesInside = (containerId: string, allNodes: any): string[] => {
     const container = allNodes[containerId];
     if (!container) return [];
     
+    const cWidth = container.width || 300;
+    const cHeight = container.height || 300;
     const cx1 = container.x;
     const cy1 = container.y;
-    const cx2 = container.x + (container.width || 300);
-    const cy2 = container.y + (container.height || 300);
+    const cx2 = cx1 + cWidth;
+    const cy2 = cy1 + cHeight;
 
     let inside: string[] = [];
     Object.keys(allNodes).forEach(id => {
@@ -82,15 +84,19 @@ const getNodesInside = (containerId: string, allNodes: any): string[] => {
         const node = allNodes[id];
         if (!node) return;
         
-        const nx = node.x;
-        const ny = node.y;
         const nw = node.paletteId === 'container' ? (node.width || 300) : 120;
         const nh = node.paletteId === 'container' ? (node.height || 300) : 120;
         
-        const cx = nx + nw / 2;
-        const cy = ny + nh / 2;
+        const nx1 = node.x;
+        const ny1 = node.y;
+        const nx2 = nx1 + nw;
+        const ny2 = ny1 + nh;
         
-        if (cx >= cx1 && cx <= cx2 && cy >= cy1 && cy <= cy2) inside.push(id);
+        if (nw >= cWidth || nh >= cHeight) return; 
+        
+        if (nx1 >= cx1 && ny1 >= cy1 && nx2 <= cx2 && ny2 <= cy2) {
+            inside.push(id);
+        }
     });
     return inside;
 };
@@ -107,7 +113,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
   
   const [contextMenu, setContextMenu] = React.useState<{ id: string, top: number, left: number, type: 'node' | 'edge' | 'pane', clientX?: number, clientY?: number, isContainer?: boolean } | null>(null);
-  const [activeSubMenu, setActiveSubMenu] = React.useState<'lineType' | 'connectionType' | 'swapNode' | null>(null); 
+  const [activeSubMenu, setActiveSubMenu] = React.useState<'lineType' | 'connectionType' | 'swapNode' | 'order' | null>(null); 
   
   const draggedItemRef = React.useRef<PaletteItem | null>(null);
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
@@ -226,7 +232,6 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       }
   }, [props.componentEvents, rawNodesDict]);
 
-  // <-- CHANGED: Capture the new X and Y from the Resizer component and save to Ignition
   const handleResizeEnd = React.useCallback((id: string, x: number, y: number, width: number, height: number) => {
       if (props.store?.props) { 
           const nextNodes = { ...rawNodesDict }; 
@@ -245,7 +250,6 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
 
   React.useEffect(() => { setLocalNodes(flowNodes); }, [flowNodes]);
 
-  // <-- CHANGED: Cleaned out the dimensions math loop because handleResizeEnd covers it perfectly!
   const onNodesChange = React.useCallback((changes: NodeChange[]) => {
       setLocalNodes((nds) => applyNodeChanges(changes, nds));
   }, []);
@@ -368,7 +372,18 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       event.preventDefault(); setSelectedId(node.id);
       const bounds = reactFlowWrapper.current?.getBoundingClientRect();
       const isContainer = rawNodesDict[node.id]?.paletteId === 'container';
-      if (bounds) { setContextMenu({ id: node.id, top: event.clientY - bounds.top, left: event.clientX - bounds.left, type: 'node', isContainer }); setActiveSubMenu(null); }
+      if (bounds) { 
+          setContextMenu({ 
+              id: node.id, 
+              top: event.clientY - bounds.top, 
+              left: event.clientX - bounds.left, 
+              type: 'node', 
+              isContainer,
+              clientX: event.clientX,
+              clientY: event.clientY
+          }); 
+          setActiveSubMenu(null); 
+      }
   }, [rawNodesDict]);
 
   const onEdgeContextMenu = React.useCallback((event: any, edge: any) => {
@@ -401,7 +416,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
           closeContextMenu(); return;
       }
 
-      if (action === 'paste' && contextMenu.type === 'pane') {
+      if (action === 'paste' && (contextMenu.type === 'pane' || contextMenu.isContainer)) {
           if (reactFlowInstance && contextMenu.clientX && contextMenu.clientY) {
               const position = reactFlowInstance.screenToFlowPosition({ x: contextMenu.clientX, y: contextMenu.clientY });
               let dropX = position.x; let dropY = position.y;
@@ -453,11 +468,26 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
           closeContextMenu(); return;
       }
 
-      if ((action === 'bringForward' || action === 'sendBackward') && isNode) {
+      if (['bringToFront', 'bringForward', 'sendBackward', 'sendToBack'].includes(action) && isNode) {
           if (props.store?.props) {
               const nextNodes = { ...rawNodesDict };
               const currentZ = nextNodes[contextMenu.id].zIndex ?? -1;
-              nextNodes[contextMenu.id].zIndex = action === 'bringForward' ? currentZ + 1 : currentZ - 1;
+
+              if (action === 'bringForward') {
+                  nextNodes[contextMenu.id].zIndex = Math.min(currentZ + 1, 999);
+              } else if (action === 'sendBackward') {
+                  nextNodes[contextMenu.id].zIndex = currentZ - 1;
+              } else {
+                  const containerZIndices = Object.values(nextNodes)
+                      .filter((n: any) => n.paletteId === 'container')
+                      .map((n: any) => n.zIndex ?? -1);
+                  
+                  if (action === 'bringToFront') {
+                      nextNodes[contextMenu.id].zIndex = Math.min(Math.max(...containerZIndices, -1) + 1, 999);
+                  } else if (action === 'sendToBack') {
+                      nextNodes[contextMenu.id].zIndex = Math.min(...containerZIndices, -1) - 1;
+                  }
+              }
               props.store.props.write('nodes', nextNodes);
           }
           closeContextMenu(); return;
@@ -515,20 +545,24 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
 
   const onDragOver = React.useCallback((event: any) => { event.preventDefault(); event.stopPropagation(); event.dataTransfer.dropEffect = 'move'; }, []);
   
-  const onDrop = React.useCallback((event: any) => {
+const onDrop = React.useCallback((event: any) => {
     event.preventDefault(); event.stopPropagation();
     const paletteItem = draggedItemRef.current; if (!paletteItem || !reactFlowInstance) return;
     const position = reactFlowInstance.screenToFlowPosition({ x: event.clientX, y: event.clientY });
     let dropX = Math.round(position.x); let dropY = Math.round(position.y);
     if (snapEnabled) { dropX = Math.round(dropX / snapPixels) * snapPixels; dropY = Math.round(dropY / snapPixels) * snapPixels; }
-    const initialConfigs = paletteItem.defaultConfigs || paletteItem.configs || {};
     
+    // <-- CHANGED: Deep Clone to break memory references so MobX accepts the write
+    const initialConfigs = JSON.parse(JSON.stringify(paletteItem.defaultConfigs || paletteItem.configs || {}));
+    const initialStyle = JSON.parse(JSON.stringify(paletteItem.style || { classes: "" }));
+    const initialConnections = JSON.parse(JSON.stringify(paletteItem.supportedConnections || []));
+
     if (props.store?.props) {
         const newNodeId = generateShortId();
         const newNodeData: any = { 
             paletteId: paletteItem.id, label: paletteItem.label, svg: paletteItem.svg, tooltip: paletteItem.tooltip, 
             x: dropX, y: dropY, 
-            hideHandles: false, style: paletteItem.style || { classes: "" }, configs: initialConfigs, supportedConnections: paletteItem.supportedConnections || [] 
+            hideHandles: false, style: initialStyle, configs: initialConfigs, supportedConnections: initialConnections 
         };
         
         if (paletteItem.id === 'container') {
@@ -585,6 +619,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
             onNodeContextMenu={onNodeContextMenu} onEdgeContextMenu={onEdgeContextMenu} 
             onPaneClick={onPaneClick} onPaneContextMenu={onPaneContextMenu}
             connectionMode={ConnectionMode.Loose} snapToGrid={snapEnabled} snapGrid={snapGrid}
+            elevateNodesOnSelect={false}
           >
             <Background gap={snapPixels} />
             <Controls />
@@ -610,8 +645,21 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
                                 
                                 {contextMenu.isContainer && (
                                     <>
-                                        <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('bringForward')}>🔼 Bring Forward</div> 
-                                        <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('sendBackward')}>🔽 Send Backward</div> 
+                                        <div style={{ padding: '5px 8px', cursor: clipboardRef.current ? 'pointer' : 'not-allowed', color: clipboardRef.current ? 'var(--neutral-90)' : 'var(--neutral-50)' }} onClick={() => { if(clipboardRef.current) handleContextMenuAction('paste'); }}>📋 Paste</div>
+
+                                        <div style={{ position: 'relative' }} onMouseEnter={() => setActiveSubMenu('order')}>
+                                            <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', justifyContent: 'space-between', backgroundColor: activeSubMenu === 'order' ? 'var(--neutral-30)' : 'transparent' }}> 
+                                                <span>📑 Order</span><span>▶</span> 
+                                            </div>
+                                            {activeSubMenu === 'order' && (
+                                                <div style={{ position: 'absolute', top: '-4px', left: '100%', marginLeft: '4px', backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '4px', minWidth: '150px' }}>
+                                                    <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onClick={() => handleContextMenuAction('bringToFront')}>⏫ Bring to Front</div>
+                                                    <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onClick={() => handleContextMenuAction('bringForward')}>🔼 Bring Forward</div>
+                                                    <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onClick={() => handleContextMenuAction('sendBackward')}>🔽 Send Backward</div>
+                                                    <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onClick={() => handleContextMenuAction('sendToBack')}>⏬ Send to Back</div>
+                                                </div>
+                                            )}
+                                        </div>
                                     </>
                                 )}
 

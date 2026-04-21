@@ -22,7 +22,6 @@ export interface SidebarProps {
 export const Sidebar = ({ paletteItems, isOpen, toggleSidebar, onDragStartItem }: SidebarProps) => {
     const [collapsedCategories, setCollapsedCategories] = useState<Record<string, boolean>>({});
 
-    // <-- CHANGED: Separate the "container" item from the standard grouped categories
     const { containerItems, groupedItems } = useMemo(() => {
         const containers: PaletteItem[] = [];
         const groups: Record<string, PaletteItem[]> = {};
@@ -54,7 +53,6 @@ export const Sidebar = ({ paletteItems, isOpen, toggleSidebar, onDragStartItem }
                 <div style={{ padding: '15px', whiteSpace: 'nowrap' }}>
                     <h3 style={{ marginTop: 0, color: 'var(--neutral-90)' }}>Palette</h3>
                     
-                    {/* <-- ADDED: Dedicated pinned section at the top for Area Containers --> */}
                     {containerItems.length > 0 && (
                         <div style={{ marginBottom: '20px', paddingBottom: '15px', borderBottom: '1px solid var(--neutral-40)' }}>
                             {containerItems.map((item) => (

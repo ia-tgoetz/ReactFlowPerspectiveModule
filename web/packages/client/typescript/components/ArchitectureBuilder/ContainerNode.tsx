@@ -6,7 +6,6 @@ export interface ContainerNodeData {
     label: string;
     style?: any; 
     onGearClick?: (id: string, event: React.MouseEvent) => void;
-    // <-- CHANGED: Now accepts x and y coordinates!
     onResizeEnd?: (id: string, x: number, y: number, width: number, height: number) => void; 
 }
 
@@ -18,7 +17,6 @@ export const ContainerNode = ({ id, data, selected }: NodeProps<ContainerNodeDat
                 isVisible={selected} 
                 minWidth={150} 
                 minHeight={150} 
-                // <-- CHANGED: Pass the new x and y back to the parent
                 onResizeEnd={(e, params) => {
                     if (data.onResizeEnd) data.onResizeEnd(id, params.x, params.y, params.width, params.height);
                 }}
