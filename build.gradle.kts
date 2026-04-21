@@ -1,3 +1,4 @@
+import java.util.Properties
 import java.util.concurrent.TimeUnit
 
 plugins {
@@ -7,8 +8,23 @@ plugins {
     id("org.barfuin.gradle.taskinfo") version "2.1.0"
 }
 
+// --- Custom loader to read sign.props securely ---
+val signPropsFile = file("sign.props")
+if (signPropsFile.exists()) {
+    val signProps = Properties()
+    signPropsFile.inputStream().use { signProps.load(it) }
+
+    // Inject the credentials into the project's extra properties
+    // The IA plugin automatically looks for these exact property names!
+    extra.set("ignition.signing.keystoreFile", signProps.getProperty("key.file"))
+    extra.set("ignition.signing.keystorePassword", signProps.getProperty("key.pass"))
+    extra.set("ignition.signing.certFile", signProps.getProperty("cert.file"))
+    extra.set("ignition.signing.certAlias", signProps.getProperty("cert.alias"))
+    extra.set("ignition.signing.certPassword", signProps.getProperty("cert.pass"))
+}
+
 allprojects {
-    version = "2.0.0" // <-- Change this from 2.0.0 to force the Designer to download the new files!
+    version = "1.0.0" // <-- Change this from 2.0.0 to force the Designer to download the new files!
     group = "com.wargoetz.reactflow" // <-- UPDATED
 }
 
@@ -29,9 +45,9 @@ ignitionModule {
     // (this module does not run in the scope of a Vision client, so we don't need a "C" entry here)
     moduleDependencies.put("com.inductiveautomation.perspective", "DG")
 
-    // map of 'Gradle Project Path' to Ignition Scope in which the project is relevant.  This is is combined with
-    // the dependency declarations within the subproject's build.gradle.kts in order to determine which
-    // dependencies need to be bundled with the module and added to the module.xml.
+    // map of 'Gradle Project Path' to Ignition Scope in which the project is relevant.
+    // This is combined with the dependency declarations within the subproject's build.gradle.kts 
+    // in order to determine which dependencies need to be bundled with the module and added to the module.xml.
     projectScopes.putAll(
         mapOf(
             ":gateway" to "G",
@@ -41,15 +57,15 @@ ignitionModule {
         )
     )
 
-    // 'hook classes' are the things that Ignition loads and runs when your module is installed.  This map tells
-    // Ignition which classes should be loaded in a given scope.
+    // 'hook classes' are the things that Ignition loads and runs when your module is installed.  
+    // This map tells Ignition which classes should be loaded in a given scope.
     hooks.putAll(
         mapOf(
             "com.wargoetz.reactflow.gateway.GatewayHook" to "G", // <-- UPDATED
             "com.wargoetz.reactflow.designer.DesignerHook" to "D"  // <-- UPDATED
         )
     )
-    skipModlSigning.set(true) // Skip signing for development builds.  Remember to sign before production release!
+    skipModlSigning.set(false) // Skip signing for development builds. Remember to sign before production release!
 }
 
 val deepClean by tasks.registering {
