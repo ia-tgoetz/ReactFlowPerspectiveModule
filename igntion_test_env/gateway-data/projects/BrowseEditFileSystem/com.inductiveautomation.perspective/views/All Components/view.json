@@ -124,33 +124,98 @@
         },
         "props": {
           "nodes": {
-            "Id54f9835": {
+            "Ia2767eaa": {
               "configs": {
-                "backgroundColor": "rgba(128, 128, 128, 0.2)"
+                "test": "test1"
+              },
+              "height": 450,
+              "hideHandles": false,
+              "label": "Area / Site",
+              "paletteId": "container",
+              "style": {
+                "backgroundColor": "rgba(128, 128, 128, 0.8)"
+              },
+              "supportedConnections": [],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"22\" height\u003d\"22\" x\u003d\"1\" y\u003d\"1\" fill\u003d\"transparent\" stroke\u003d\"#888\" stroke-width\u003d\"2\" stroke-dasharray\u003d\"4 2\" rx\u003d\"4\"/\u003e\u003c/svg\u003e",
+              "tooltip": "Grouping Container",
+              "width": 525,
+              "x": 45,
+              "y": 45,
+              "zIndex": -2
+            },
+            "Ia4aba746": {
+              "configs": {},
+              "hideHandles": false,
+              "label": "Connector",
+              "paletteId": "Connector",
+              "style": {
+                "classes": ""
+              },
+              "supportedConnections": [
+                "standard",
+                "rest"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--neutral-50, #6b7280)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eCON\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Connector",
+              "x": 75,
+              "y": 285
+            },
+            "Ia772cf1f": {
+              "configs": {},
+              "hideHandles": false,
+              "label": "Standard Gateway",
+              "paletteId": "standard",
+              "style": {
+                "classes": ""
+              },
+              "supportedConnections": [
+                "gateway-network",
+                "db",
+                "mqtt",
+                "rest",
+                "client",
+                "standard",
+                "device-driver",
+                "opc-ua",
+                "opc-com",
+                "mongodb",
+                "kafka"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--standard, #F58A4B)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eSG\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Standard Gateway",
+              "x": 360,
+              "y": 180
+            },
+            "Iab5c05cc": {
+              "configs": {
+                "test": "test1"
               },
               "height": 300,
               "hideHandles": false,
               "label": "Area / Site",
               "paletteId": "container",
               "style": {
-                "classes": ""
+                "backgroundColor": "rgba(128, 128, 128, 0.8)"
               },
               "supportedConnections": [],
               "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"22\" height\u003d\"22\" x\u003d\"1\" y\u003d\"1\" fill\u003d\"transparent\" stroke\u003d\"#888\" stroke-width\u003d\"2\" stroke-dasharray\u003d\"4 2\" rx\u003d\"4\"/\u003e\u003c/svg\u003e",
               "tooltip": "Grouping Container",
               "width": 300,
-              "x": 315,
-              "y": 150
+              "x": 255,
+              "y": 60
             }
           },
           "paletteItems": [
             {
               "category": "Zones",
               "defaultConfigs": {
-                "backgroundColor": "rgba(128, 128, 128, 0.2)"
+                "test": "test1"
               },
               "id": "container",
               "label": "Area / Site",
+              "style": {
+                "backgroundColor": "rgba(128, 128, 128, 0.8)"
+              },
               "supportedConnections": [],
               "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"22\" height\u003d\"22\" x\u003d\"1\" y\u003d\"1\" fill\u003d\"transparent\" stroke\u003d\"#888\" stroke-width\u003d\"2\" stroke-dasharray\u003d\"4 2\" rx\u003d\"4\"/\u003e\u003c/svg\u003e",
               "tooltip": "Grouping Container"
