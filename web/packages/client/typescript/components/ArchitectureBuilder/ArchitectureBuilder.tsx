@@ -13,12 +13,24 @@ const sharedInputStyle: React.CSSProperties = {
     color: 'var(--neutral-90)', borderRadius: '4px', boxSizing: 'border-box', fontSize: '12px'
 };
 
-// <-- UPGRADED: Smart Color Parser with Alpha Slider -->
+const standardPalette = [
+    '#ffffff', '#e0e0e0', '#c0c0c0', '#a0a0a0', '#808080', '#606060', '#404040', '#202020', '#000000',
+    '#ffcccc', '#ff9999', '#ff6666', '#ff3333', '#ff0000', '#cc0000', '#990000', '#660000', '#330000',
+    '#ffe5cc', '#ffcc99', '#ffb266', '#ff9933', '#ff8000', '#cc6600', '#994c00', '#663300', '#331900',
+    '#ffffcc', '#ffff99', '#ffff66', '#ffff33', '#ffff00', '#cccc00', '#999900', '#666600', '#333300',
+    '#ccffcc', '#99ff99', '#66ff66', '#33ff33', '#00ff00', '#00cc00', '#009900', '#006600', '#003300',
+    '#ccffff', '#99ffff', '#66ffff', '#33ffff', '#00ffff', '#00cccc', '#009999', '#006666', '#003333',
+    '#ccccff', '#9999ff', '#6666ff', '#3333ff', '#0000ff', '#0000cc', '#000099', '#000066', '#000033',
+    '#ffccff', '#ff99ff', '#ff66ff', '#ff33ff', '#ff00ff', '#cc00cc', '#990099', '#660066', '#330033'
+];
+
 const ColorInput = ({ value, onChange, placeholder }: { value: string, onChange: (val: string) => void, placeholder: string }) => {
+    const [pickerOpen, setPickerOpen] = React.useState(false);
+    const [activeTab, setActiveTab] = React.useState<'palette' | 'custom'>('palette');
+    
     let currentHex = '#000000';
     let currentAlpha = 1;
     
-    // Parse incoming values (hex, rgb, or rgba) to set the color square and slider accurately
     if (value.startsWith('#')) {
         if (value.length === 7) currentHex = value;
         else if (value.length === 9) {
@@ -62,45 +74,93 @@ const ColorInput = ({ value, onChange, placeholder }: { value: string, onChange:
         const g = parseInt(currentHex.slice(3, 5), 16);
         const b = parseInt(currentHex.slice(5, 7), 16);
         if (newAlpha === 1) {
-            onChange(currentHex); // Keep it clean if 100%
+            onChange(currentHex); 
         } else {
             onChange(`rgba(${r}, ${g}, ${b}, ${newAlpha})`);
         }
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '4px' }}>
-            <div style={{ display: 'flex', gap: '6px' }}>
-                <input 
-                    type="text" 
-                    value={value} 
-                    onChange={e => onChange(e.target.value)} 
-                    placeholder={placeholder} 
-                    style={{ ...sharedInputStyle, marginTop: 0, flex: 1 }} 
-                />
-                <div style={{ width: '28px', height: '28px', borderRadius: '4px', overflow: 'hidden', border: '1px solid var(--neutral-40)', flexShrink: 0, position: 'relative' }}>
-                    <input 
-                        type="color" 
-                        value={currentHex} 
-                        onChange={e => handleColorChange(e.target.value)} 
-                        style={{ position: 'absolute', top: '-10px', left: '-10px', width: '50px', height: '50px', padding: 0, border: 'none', cursor: 'pointer' }} 
-                        title="Pick a color"
-                    />
-                </div>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '0 2px' }}>
-                <span style={{ fontSize: '10px', color: 'var(--neutral-60)', width: '35px' }}>Alpha:</span>
-                <input 
-                    type="range" 
-                    min="0" max="1" step="0.01" 
-                    value={currentAlpha} 
-                    onChange={e => handleAlphaChange(parseFloat(e.target.value))} 
-                    style={{ flex: 1, cursor: 'pointer', height: '4px' }} 
-                />
-                <span style={{ fontSize: '10px', color: 'var(--neutral-60)', width: '25px', textAlign: 'right' }}>
-                    {Math.round(currentAlpha * 100)}%
-                </span>
-            </div>
+        <div style={{ position: 'relative', display: 'flex', gap: '6px', marginTop: '4px' }}>
+            <input 
+                type="text" 
+                value={value} 
+                onChange={e => onChange(e.target.value)} 
+                placeholder={placeholder} 
+                style={{ ...sharedInputStyle, marginTop: 0, flex: 1 }} 
+            />
+            <div 
+                onClick={() => setPickerOpen(!pickerOpen)}
+                style={{ 
+                    width: '28px', height: '28px', borderRadius: '4px', border: '1px solid var(--neutral-40)', 
+                    backgroundColor: value || '#000000', cursor: 'pointer', flexShrink: 0 
+                }}
+                title="Open color picker"
+            />
+
+            {pickerOpen && (
+                <>
+                    <div onClick={() => setPickerOpen(false)} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 1001 }} />
+                    <div style={{ 
+                        position: 'absolute', top: '100%', right: 0, marginTop: '8px', zIndex: 1002, 
+                        backgroundColor: 'var(--neutral-10)', border: '1px solid var(--neutral-50)', 
+                        borderRadius: '6px', padding: '12px', width: '220px', boxShadow: '0 8px 16px rgba(0,0,0,0.5)' 
+                    }}>
+                        <div style={{ display: 'flex', borderBottom: '1px solid var(--neutral-40)', marginBottom: '10px' }}>
+                            <div 
+                                onClick={() => setActiveTab('palette')} 
+                                style={{ padding: '4px 10px', fontSize: '11px', cursor: 'pointer', borderBottom: activeTab === 'palette' ? '2px solid var(--callToAction)' : '2px solid transparent', color: activeTab === 'palette' ? 'var(--neutral-90)' : 'var(--neutral-60)', fontWeight: activeTab === 'palette' ? 'bold' : 'normal' }}
+                            >Palette</div>
+                            <div 
+                                onClick={() => setActiveTab('custom')} 
+                                style={{ padding: '4px 10px', fontSize: '11px', cursor: 'pointer', borderBottom: activeTab === 'custom' ? '2px solid var(--callToAction)' : '2px solid transparent', color: activeTab === 'custom' ? 'var(--neutral-90)' : 'var(--neutral-60)', fontWeight: activeTab === 'custom' ? 'bold' : 'normal' }}
+                            >Custom</div>
+                        </div>
+
+                        {activeTab === 'palette' && (
+                            <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                                {standardPalette.map(swatch => (
+                                    <div
+                                        key={`popover-palette-${swatch}`}
+                                        onClick={() => { onChange(swatch); setPickerOpen(false); }}
+                                        style={{ width: '18px', height: '18px', backgroundColor: swatch, border: '1px solid rgba(0,0,0,0.2)', borderRadius: '2px', cursor: 'pointer' }}
+                                        title={swatch}
+                                    />
+                                ))}
+                            </div>
+                        )}
+                        
+                        {activeTab === 'custom' && (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', padding: '5px 0' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <span style={{ fontSize: '11px', color: 'var(--neutral-80)' }}>Base Color:</span>
+                                    <div style={{ width: '100%', maxWidth: '100px', height: '24px', borderRadius: '4px', overflow: 'hidden', border: '1px solid var(--neutral-40)', position: 'relative' }}>
+                                        <input 
+                                            type="color" 
+                                            value={currentHex} 
+                                            onChange={e => handleColorChange(e.target.value)} 
+                                            style={{ position: 'absolute', top: '-10px', left: '-10px', width: '150px', height: '50px', padding: 0, border: 'none', cursor: 'pointer' }} 
+                                        />
+                                    </div>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <span style={{ fontSize: '11px', color: 'var(--neutral-80)', width: '40px' }}>Alpha:</span>
+                                    <input 
+                                        type="range" 
+                                        min="0" max="1" step="0.01" 
+                                        value={currentAlpha} 
+                                        onChange={e => handleAlphaChange(parseFloat(e.target.value))} 
+                                        style={{ flex: 1, cursor: 'pointer', height: '4px' }} 
+                                    />
+                                    <span style={{ fontSize: '11px', color: 'var(--neutral-80)', width: '30px', textAlign: 'right' }}>
+                                        {Math.round(currentAlpha * 100)}%
+                                    </span>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </>
+            )}
         </div>
     );
 };
@@ -144,10 +204,10 @@ const StyleEditorModal = ({ node, onSave, onCancel }: { node: any, onSave: (styl
 
     return (
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 1000, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <div style={{ backgroundColor: 'var(--neutral-20)', padding: '20px', borderRadius: '8px', width: '450px', border: '1px solid var(--neutral-50)', boxShadow: '0 8px 16px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: '15px' }} onClick={(e) => e.stopPropagation()}>
+            <div style={{ backgroundColor: 'var(--neutral-20)', padding: '24px', borderRadius: '8px', width: '650px', border: '1px solid var(--neutral-50)', boxShadow: '0 8px 16px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: '20px' }} onClick={(e) => e.stopPropagation()}>
                 <h3 style={{ margin: 0, color: 'var(--neutral-90)' }}>Edit Styles: {node.label}</h3>
                 
-                <div style={{ display: 'flex', gap: '20px' }}>
+                <div style={{ display: 'flex', gap: '30px' }}>
                     <div style={{ flex: 1 }}>
                         <div style={sectionTitleStyle}>Component</div>
                         <div style={labelRowStyle}>
@@ -309,7 +369,7 @@ const getNodesInside = (containerId: string, allNodes: any): string[] => {
     return inside;
 };
 
-export interface ArchitectureBuilderProps { hideHandles?: any; handleCount?: any; snapEnabled?: any; snapPixels?: any; style?: any; connectionTypes: any; paletteItems: any[]; nodes: any; edges: any; }
+export interface ArchitectureBuilderProps { hideHandles?: any; handleCount?: any; defaultConnectionType?: string; snapEnabled?: any; snapPixels?: any; style?: any; connectionTypes: any; paletteItems: any[]; nodes: any; edges: any; }
 
 export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureBuilderProps>) => {
   const reactFlowWrapper = React.useRef<HTMLDivElement>(null);
@@ -339,9 +399,13 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
   
   const globalHideHandles = props.props.hideHandles === true || String(props.props.hideHandles).toLowerCase() === 'true';
   const globalHandleCount = Number(props.props.handleCount) || 5; 
+  const globalDefaultConnectionType = props.props.defaultConnectionType || '';
+  
   const snapEnabled = props.props.snapEnabled !== false && String(props.props.snapEnabled).toLowerCase() !== 'false'; 
   const snapPixels = Number(props.props.snapPixels) || 15;
   const snapGrid = React.useMemo<[number, number]>(() => [snapPixels, snapPixels], [snapPixels]);
+
+  const closeContextMenu = React.useCallback(() => { setContextMenu(null); setActiveSubMenu(null); }, []);
 
   const executeCopy = React.useCallback((id: string) => {
       const isContainer = rawNodesDict[id]?.paletteId === 'container';
@@ -413,6 +477,12 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
 
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+            closeContextMenu();
+            setStyleEditorNodeId(null);
+            return;
+        }
+
         if ((e.target as HTMLElement).tagName === 'INPUT' || (e.target as HTMLElement).tagName === 'TEXTAREA') return;
 
         if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
@@ -431,7 +501,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [selectedId, rawNodesDict, snapEnabled, snapPixels, props.store, executeCopy, executePaste]);
+  }, [selectedId, rawNodesDict, snapEnabled, snapPixels, props.store, executeCopy, executePaste, closeContextMenu]);
 
   const handleGearClick = React.useCallback((id: string) => {
       setSelectedId(id); 
@@ -489,13 +559,18 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
   const onConnect = React.useCallback((connectionParams: any) => {
       const validTypes = getValidIntersection(connectionParams.source, connectionParams.target);
       if (validTypes.length === 0) return;
-      const selectedType = validTypes[0];
+      
+      let selectedType = validTypes[0]; 
+      if (globalDefaultConnectionType && validTypes.includes(globalDefaultConnectionType)) {
+          selectedType = globalDefaultConnectionType;
+      }
+      
       const typeDef = connectionTypes[selectedType] || {};
 
       if (props.store?.props) {
           props.store.props.write('edges', { ...rawEdgesDict, [generateShortId()]: { ...connectionParams, lineType: 'smoothstep', dashed: false, arrow: typeDef.arrow !== false, showLabel: false, connectionType: selectedType, offsetX: 0, offsetY: 0 } });
       }
-  }, [props.store, rawEdgesDict, getValidIntersection, connectionTypes]);
+  }, [props.store, rawEdgesDict, getValidIntersection, connectionTypes, globalDefaultConnectionType]);
 
   const onEdgeUpdate = React.useCallback((oldEdge: Edge, newConnection: Connection) => {
       if (!newConnection.source || !newConnection.target) return;
@@ -606,8 +681,6 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       const bounds = reactFlowWrapper.current?.getBoundingClientRect();
       if (bounds) { setContextMenu({ id: 'pane', top: event.clientY - bounds.top, left: event.clientX - bounds.left, type: 'pane', clientX: event.clientX, clientY: event.clientY }); setActiveSubMenu(null); }
   }, []);
-
-  const closeContextMenu = React.useCallback(() => { setContextMenu(null); setActiveSubMenu(null); }, []);
 
   const handleContextMenuAction = (action: string) => {
       if (!contextMenu) return;
@@ -824,157 +897,198 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
 
   return (
     <div {...props.emit({ classes })} style={containerStyle} tabIndex={0}>
-      <Sidebar paletteItems={paletteItems} isOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} onDragStartItem={(item) => { draggedItemRef.current = item; }} />
-      
-      <div style={{ flexGrow: 1, height: '100%', position: 'relative', overflow: 'hidden' }} ref={reactFlowWrapper}>
-        <ReactFlowProvider>
-          <ReactFlow 
-            nodes={localNodes} edges={flowEdges} nodeTypes={nodeTypes} edgeTypes={edgeTypes} 
-            isValidConnection={isValidConnection} onInit={setReactFlowInstance} 
-            onDrop={onDrop} onDragOver={onDragOver} onConnect={onConnect} onEdgeUpdate={onEdgeUpdate}
-            onEdgeUpdateStart={(event: any, edge: any) => { updatingEdgeRef.current = edge?.id || null; }}
-            onEdgeUpdateEnd={() => { updatingEdgeRef.current = null; }}
-            onNodeDragStart={onNodeDragStart} onNodeDrag={onNodeDrag} onNodeDragStop={onNodeDragStop} 
-            onNodesChange={onNodesChange} 
-            onNodeClick={onNodeClick} onEdgeClick={onEdgeClick}
-            onNodesDelete={onNodesDelete} onEdgesDelete={onEdgesDelete}
-            onNodeContextMenu={onNodeContextMenu} onEdgeContextMenu={onEdgeContextMenu} 
-            onPaneClick={onPaneClick} onPaneContextMenu={onPaneContextMenu}
-            connectionMode={ConnectionMode.Loose} snapToGrid={snapEnabled} snapGrid={snapGrid}
-            elevateNodesOnSelect={false}
-          >
-            <Background gap={snapPixels} />
-            <Controls />
-          </ReactFlow>
-        </ReactFlowProvider>
+      <style>
+        {`
+        .arch-theme-wrapper {
+            display: flex;
+            flex-direction: row;
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            --edge: #78D175;
+            --panel: #78D175;
+            --cloud: #25A4E9;
+            --standard: #FF8C00;
+            --cirrusLink: #156D97;
+            --sepasoft: #2DA449;
+            --ia-darkgray: #39464B;
+            --ia-green: #8DC63E;
+            --ia-gray: #445C6D;
+            --ignition-orange: #F7901E;
+            --ignition-blue: #003E69;
+            --ignition-darkblue: #002143;
+            --edge-green: #78D175;
+            --edge-gray: #283439;
+            --edge-dark-gray: #1E2528;
+            --edge-light-gray: #4E5558;
+        }
+        `}
+      </style>
 
-        {styleEditorNodeId && rawNodesDict[styleEditorNodeId] && (
-            <StyleEditorModal 
-                node={rawNodesDict[styleEditorNodeId]}
-                onSave={(newStyle, newLabelStyle) => {
-                    if (props.store?.props) {
-                        const nextNodes = { ...rawNodesDict };
-                        nextNodes[styleEditorNodeId].style = newStyle;
-                        nextNodes[styleEditorNodeId].labelStyle = newLabelStyle;
-                        props.store.props.write('nodes', nextNodes);
-                    }
-                    setStyleEditorNodeId(null);
-                }}
-                onCancel={() => setStyleEditorNodeId(null)}
-            />
-        )}
+      <div className="arch-theme-wrapper">
+        <Sidebar paletteItems={paletteItems} isOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} onDragStartItem={(item) => { draggedItemRef.current = item; }} />
+        
+        <div style={{ flexGrow: 1, height: '100%', position: 'relative', overflow: 'hidden' }} ref={reactFlowWrapper}>
+          <ReactFlowProvider>
+            <ReactFlow 
+              nodes={localNodes} edges={flowEdges} nodeTypes={nodeTypes} edgeTypes={edgeTypes} 
+              isValidConnection={isValidConnection} onInit={setReactFlowInstance} 
+              onDrop={onDrop} onDragOver={onDragOver} onConnect={onConnect} onEdgeUpdate={onEdgeUpdate}
+              onEdgeUpdateStart={(event: any, edge: any) => { updatingEdgeRef.current = edge?.id || null; }}
+              onEdgeUpdateEnd={() => { updatingEdgeRef.current = null; }}
+              onNodeDragStart={onNodeDragStart} onNodeDrag={onNodeDrag} onNodeDragStop={onNodeDragStop} 
+              onNodesChange={onNodesChange} 
+              onNodeClick={onNodeClick} onEdgeClick={onEdgeClick}
+              onNodesDelete={onNodesDelete} onEdgesDelete={onEdgesDelete}
+              onNodeContextMenu={onNodeContextMenu} onEdgeContextMenu={onEdgeContextMenu} 
+              onPaneClick={onPaneClick} onPaneContextMenu={onPaneContextMenu}
+              connectionMode={ConnectionMode.Loose} snapToGrid={snapEnabled} snapGrid={snapGrid}
+              elevateNodesOnSelect={false}
+            >
+              <Background gap={snapPixels} />
+              <Controls />
+            </ReactFlow>
+          </ReactFlowProvider>
 
-        {contextMenu && (
-            <div style={{ position: 'absolute', top: contextMenu.top, left: contextMenu.left, zIndex: 10, backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '4px', minWidth: '140px', fontSize: '12px' }}>
-                
-                {contextMenu.type === 'pane' && ( 
-                    <div style={{ padding: '5px 8px', cursor: clipboardRef.current ? 'pointer' : 'not-allowed', color: clipboardRef.current ? 'var(--neutral-90)' : 'var(--neutral-50)' }} onClick={() => { if(clipboardRef.current) handleContextMenuAction('paste'); }}> 
-                        📋 Paste 
-                    </div> 
-                )}
-                
-                {contextMenu.type !== 'pane' && (
-                    <>
-                        <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('adjust')}>⚙️ Adjust</div>
-                        
-                        {contextMenu.type === 'node' && ( 
-                            <>
-                                <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--callToAction)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('editStyle')}>🎨 Edit Style</div>
+          {styleEditorNodeId && rawNodesDict[styleEditorNodeId] && (
+              <StyleEditorModal 
+                  node={rawNodesDict[styleEditorNodeId]}
+                  onSave={(newStyle, newLabelStyle) => {
+                      if (props.store?.props) {
+                          const nextNodes = { ...rawNodesDict };
+                          nextNodes[styleEditorNodeId].style = newStyle;
+                          nextNodes[styleEditorNodeId].labelStyle = newLabelStyle;
+                          props.store.props.write('nodes', nextNodes);
+                      }
+                      setStyleEditorNodeId(null);
+                  }}
+                  onCancel={() => setStyleEditorNodeId(null)}
+              />
+          )}
 
-                                <div style={{ borderTop: '1px solid var(--neutral-40)', margin: '4px 0' }} />
-                                
-                                <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('copy')}>📋 Copy</div> 
-                                
-                                {contextMenu.isContainer && (
-                                    <>
-                                        <div style={{ padding: '5px 8px', cursor: clipboardRef.current ? 'pointer' : 'not-allowed', color: clipboardRef.current ? 'var(--neutral-90)' : 'var(--neutral-50)' }} onClick={() => { if(clipboardRef.current) handleContextMenuAction('paste'); }}>📋 Paste</div>
+          {contextMenu && (
+              <div style={{ position: 'absolute', top: contextMenu.top, left: contextMenu.left, zIndex: 10, backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '4px', minWidth: '140px', fontSize: '12px' }}>
+                  
+                  {contextMenu.type === 'pane' && ( 
+                      <div style={{ padding: '5px 8px', cursor: clipboardRef.current ? 'pointer' : 'not-allowed', color: clipboardRef.current ? 'var(--neutral-90)' : 'var(--neutral-50)' }} onClick={() => { if(clipboardRef.current) handleContextMenuAction('paste'); }}> 
+                          📋 Paste 
+                      </div> 
+                  )}
+                  
+                  {contextMenu.type !== 'pane' && (
+                      <>
+                          <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('config')}>⚙️ Config</div>
+                          
+                          {contextMenu.type === 'node' && ( 
+                              <>
+                                  <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--callToAction)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('editStyle')}>🎨 Edit Style</div>
 
-                                        <div style={{ position: 'relative' }} onMouseEnter={() => setActiveSubMenu('order')}>
-                                            <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', justifyContent: 'space-between', backgroundColor: activeSubMenu === 'order' ? 'var(--neutral-30)' : 'transparent' }}> 
-                                                <span>📑 Order</span><span>▶</span> 
-                                            </div>
-                                            {activeSubMenu === 'order' && (
-                                                <div style={{ position: 'absolute', top: '-4px', left: '100%', marginLeft: '4px', backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '4px', minWidth: '150px' }}>
-                                                    <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onClick={() => handleContextMenuAction('bringToFront')}>⏫ Bring to Front</div>
-                                                    <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onClick={() => handleContextMenuAction('bringForward')}>🔼 Bring Forward</div>
-                                                    <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onClick={() => handleContextMenuAction('sendBackward')}>🔽 Send Backward</div>
-                                                    <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onClick={() => handleContextMenuAction('sendToBack')}>⏬ Send to Back</div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </>
-                                )}
+                                  <div style={{ borderTop: '1px solid var(--neutral-40)', margin: '4px 0' }} />
+                                  
+                                  <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('copy')}>📋 Copy</div> 
+                                  
+                                  {contextMenu.isContainer && (
+                                      <>
+                                          <div style={{ padding: '5px 8px', cursor: clipboardRef.current ? 'pointer' : 'not-allowed', color: clipboardRef.current ? 'var(--neutral-90)' : 'var(--neutral-50)' }} onClick={() => { if(clipboardRef.current) handleContextMenuAction('paste'); }}>📋 Paste</div>
 
-                                {validSwapItems.length > 0 && (
-                                    <div style={{ position: 'relative' }} onMouseEnter={() => setActiveSubMenu('swapNode')}>
-                                        <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', justifyContent: 'space-between', backgroundColor: activeSubMenu === 'swapNode' ? 'var(--neutral-30)' : 'transparent' }}> 
-                                            <span>🔄 Swap Node</span><span>▶</span> 
-                                        </div>
-                                        {activeSubMenu === 'swapNode' && (
-                                            <div style={{ position: 'absolute', top: '-4px', left: '100%', marginLeft: '4px', backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '4px', minWidth: '150px' }}>
-                                                {validSwapItems.map(targetItem => (
-                                                    <div key={targetItem.id} style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', alignItems: 'center' }} onClick={() => handleNodeSwap(targetItem.id)}>
-                                                        <div style={{ width: '16px', height: '16px', marginRight: '6px', display: 'flex', alignItems: 'center' }} dangerouslySetInnerHTML={{ __html: targetItem.svg }} />
-                                                        <span>{targetItem.label}</span>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                            </>
-                        )}
+                                          <div style={{ position: 'relative' }} onMouseEnter={() => setActiveSubMenu('order')}>
+                                              <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', justifyContent: 'space-between', backgroundColor: activeSubMenu === 'order' ? 'var(--neutral-30)' : 'transparent' }}> 
+                                                  <span>📑 Order</span><span>▶</span> 
+                                              </div>
+                                              {activeSubMenu === 'order' && (
+                                                  <div style={{ position: 'absolute', top: '-4px', left: '100%', marginLeft: '4px', backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '4px', minWidth: '150px' }}>
+                                                      <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onClick={() => handleContextMenuAction('bringToFront')}>⏫ Bring to Front</div>
+                                                      <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onClick={() => handleContextMenuAction('bringForward')}>🔼 Bring Forward</div>
+                                                      <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onClick={() => handleContextMenuAction('sendBackward')}>🔽 Send Backward</div>
+                                                      <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onClick={() => handleContextMenuAction('sendToBack')}>⏬ Send to Back</div>
+                                                  </div>
+                                              )}
+                                          </div>
+                                      </>
+                                  )}
 
-                        {contextMenu.type === 'edge' && (
-                            <>
-                                <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('toggleArrow')}> 
-                                    {rawEdgesDict[contextMenu.id]?.arrow !== false ? '❌ Remove Arrow' : '➡️ Add Arrow'} 
-                                </div>
-                                <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('toggleLabel')}> 
-                                    {rawEdgesDict[contextMenu.id]?.showLabel === true ? '👁️ Hide Label' : '👁️ Show Label'} 
-                                </div>
-                                <div style={{ borderTop: '1px solid var(--neutral-40)', margin: '4px 0' }} />
-                                <div style={{ position: 'relative' }} onMouseEnter={() => setActiveSubMenu('lineType')}>
-                                    <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', justifyContent: 'space-between', backgroundColor: activeSubMenu === 'lineType' ? 'var(--neutral-30)' : 'transparent' }}> 
-                                        <span>〰️ Line Type</span><span>▶</span> 
-                                    </div>
-                                    {activeSubMenu === 'lineType' && (
-                                        <div style={{ position: 'absolute', top: '-4px', left: '100%', marginLeft: '4px', backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '4px', minWidth: '120px' }}>
-                                            <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onClick={() => handleLineTypeChange('smoothstep')}>〰️ Smooth {currentLineType === 'smoothstep' && '✓'}</div>
-                                            <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onClick={() => handleLineTypeChange('step')}>🔲 Stepped {currentLineType === 'step' && '✓'}</div>
-                                            <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onClick={() => handleLineTypeChange('straight')}>📏 Straight {currentLineType === 'straight' && '✓'}</div>
-                                            <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onClick={() => handleLineTypeChange('default')}>➰ Bezier {currentLineType === 'default' && '✓'}</div>
-                                        </div>
-                                    )}
-                                </div>
-                                <div style={{ position: 'relative' }} onMouseEnter={() => setActiveSubMenu('connectionType')}>
-                                    <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', justifyContent: 'space-between', backgroundColor: activeSubMenu === 'connectionType' ? 'var(--neutral-30)' : 'transparent' }}> 
-                                        <span>🔗 Connection</span><span>▶</span> 
-                                    </div>
-                                    {activeSubMenu === 'connectionType' && (
-                                        <div style={{ position: 'absolute', top: '-4px', left: '100%', marginLeft: '4px', backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '4px', minWidth: '140px' }}>
-                                            {availableConnections.length === 0 ? ( 
-                                                <div style={{ padding: '5px 8px', color: 'var(--neutral-60)' }}>No valid connections</div> 
-                                            ) : ( 
-                                                availableConnections.map(c => ( 
-                                                    <div key={c} style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onClick={() => handleConnectionTypeChange(c)}> 
-                                                        <span style={{ color: connectionTypes[c]?.color || 'var(--neutral-90)' }}>●</span> {connectionTypes[c]?.label || c} {currentConnectionType === c && '✓'} 
-                                                    </div> 
-                                                )) 
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
-                            </>
-                        )}
-                        {contextMenu.isContainer && (
-                            <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--error)', borderTop: '1px solid var(--neutral-40)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('deleteWithContents')}>🗑️ Delete Area & Contents</div>
-                        )}
-                        <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--error)', borderTop: contextMenu.isContainer ? 'none' : '1px solid var(--neutral-40)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('delete')}>{contextMenu.isContainer ? '🗑️ Delete Area Only' : '🗑️ Delete'}</div>
-                    </>
-                )}
-            </div>
-        )}
+                                  {validSwapItems.length > 0 && (
+                                      <div style={{ position: 'relative' }} onMouseEnter={() => setActiveSubMenu('swapNode')}>
+                                          <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', justifyContent: 'space-between', backgroundColor: activeSubMenu === 'swapNode' ? 'var(--neutral-30)' : 'transparent' }}> 
+                                              <span>🔄 Swap Node</span><span>▶</span> 
+                                          </div>
+                                          {activeSubMenu === 'swapNode' && (
+                                              <div style={{ position: 'absolute', top: '-4px', left: '100%', marginLeft: '4px', backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '4px', minWidth: '150px' }}>
+                                                  {validSwapItems.map(targetItem => (
+                                                      <div key={targetItem.id} style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', alignItems: 'center' }} onClick={() => handleNodeSwap(targetItem.id)}>
+                                                          <div style={{ width: '16px', height: '16px', marginRight: '6px', display: 'flex', alignItems: 'center' }} dangerouslySetInnerHTML={{ __html: targetItem.svg }} />
+                                                          <span>{targetItem.label}</span>
+                                                      </div>
+                                                  ))}
+                                              </div>
+                                          )}
+                                      </div>
+                                  )}
+                              </>
+                          )}
+
+                          {contextMenu.type === 'edge' && (
+                              <>
+                                  <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('toggleArrow')}> 
+                                      {rawEdgesDict[contextMenu.id]?.arrow !== false ? '❌ Remove Arrow' : '➡️ Add Arrow'} 
+                                  </div>
+                                  <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('toggleLabel')}> 
+                                      {rawEdgesDict[contextMenu.id]?.showLabel === true ? '👁️ Hide Label' : '👁️ Show Label'} 
+                                  </div>
+                                  <div style={{ borderTop: '1px solid var(--neutral-40)', margin: '4px 0' }} />
+                                  
+                                  <div style={{ position: 'relative' }} onMouseEnter={() => setActiveSubMenu('lineType')}>
+                                      <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', justifyContent: 'space-between', backgroundColor: activeSubMenu === 'lineType' ? 'var(--neutral-30)' : 'transparent' }}> 
+                                          <span>〰️ Line Type</span><span>▶</span> 
+                                      </div>
+                                      {activeSubMenu === 'lineType' && (
+                                          <div style={{ position: 'absolute', top: '-4px', left: '100%', marginLeft: '4px', backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '4px', minWidth: '120px' }}>
+                                              <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', justifyContent: 'space-between', whiteSpace: 'nowrap', gap: '12px' }} onClick={() => handleLineTypeChange('smoothstep')}>
+                                                  <span>〰️ Smooth</span><span>{currentLineType === 'smoothstep' ? '✓' : ''}</span>
+                                              </div>
+                                              <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', justifyContent: 'space-between', whiteSpace: 'nowrap', gap: '12px' }} onClick={() => handleLineTypeChange('step')}>
+                                                  <span>🔲 Stepped</span><span>{currentLineType === 'step' ? '✓' : ''}</span>
+                                              </div>
+                                              <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', justifyContent: 'space-between', whiteSpace: 'nowrap', gap: '12px' }} onClick={() => handleLineTypeChange('straight')}>
+                                                  <span>📏 Straight</span><span>{currentLineType === 'straight' ? '✓' : ''}</span>
+                                              </div>
+                                              <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', justifyContent: 'space-between', whiteSpace: 'nowrap', gap: '12px' }} onClick={() => handleLineTypeChange('default')}>
+                                                  <span>➰ Bezier</span><span>{currentLineType === 'default' ? '✓' : ''}</span>
+                                              </div>
+                                          </div>
+                                      )}
+                                  </div>
+                                  
+                                  <div style={{ position: 'relative' }} onMouseEnter={() => setActiveSubMenu('connectionType')}>
+                                      <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', justifyContent: 'space-between', backgroundColor: activeSubMenu === 'connectionType' ? 'var(--neutral-30)' : 'transparent' }}> 
+                                          <span>🔗 Connection</span><span>▶</span> 
+                                      </div>
+                                      {activeSubMenu === 'connectionType' && (
+                                          <div style={{ position: 'absolute', top: '-4px', left: '100%', marginLeft: '4px', backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '4px', minWidth: '140px' }}>
+                                              {availableConnections.length === 0 ? ( 
+                                                  <div style={{ padding: '5px 8px', color: 'var(--neutral-60)' }}>No valid connections</div> 
+                                              ) : ( 
+                                                  availableConnections.map(c => ( 
+                                                      <div key={c} style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', whiteSpace: 'nowrap', gap: '12px' }} onClick={() => handleConnectionTypeChange(c)}> 
+                                                          <span><span style={{ color: connectionTypes[c]?.color || 'var(--neutral-90)', marginRight: '4px' }}>●</span> {connectionTypes[c]?.label || c}</span>
+                                                          <span>{currentConnectionType === c ? '✓' : ''}</span>
+                                                      </div> 
+                                                  )) 
+                                              )}
+                                          </div>
+                                      )}
+                                  </div>
+                              </>
+                          )}
+                          {contextMenu.isContainer && (
+                              <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--error)', borderTop: '1px solid var(--neutral-40)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('deleteWithContents')}>🗑️ Delete Area & Contents</div>
+                          )}
+                          <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--error)', borderTop: contextMenu.isContainer ? 'none' : '1px solid var(--neutral-40)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('delete')}>{contextMenu.isContainer ? '🗑️ Delete Area Only' : '🗑️ Delete'}</div>
+                      </>
+                  )}
+              </div>
+          )}
+        </div>
       </div>
     </div>
   );

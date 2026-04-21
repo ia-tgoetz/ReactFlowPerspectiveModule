@@ -33,16 +33,14 @@ export const ArchitectureNode = ({ id, data, selected }: NodeProps<ArchitectureN
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        minWidth: '120px', 
-        minHeight: '120px',
+        minWidth: '140px', // <-- INCREASED
+        minHeight: '140px', // <-- INCREASED
         position: 'relative',
         ...(data.style || {}),
         
         boxShadow: selected ? '0 0 0 2px rgba(0, 123, 255, 0.25)' : (data.style?.boxShadow || '0 2px 4px rgba(0,0,0,0.1)')
     };
 
-    // <-- FIXED: Handle Styling Logic -->
-    // We now ALWAYS render handles so edges don't break, but we make them invisible and unclickable if hidden.
     const handleStyle: React.CSSProperties = { 
         background: 'var(--neutral-50)',
         opacity: showHandles ? 1 : 0, 
@@ -63,7 +61,6 @@ export const ArchitectureNode = ({ id, data, selected }: NodeProps<ArchitectureN
                 `}
             </style>
 
-            {/* <-- FIXED: Removed the conditional {showHandles && ...} wrapper! --> */}
             <>
                 {positions.map((pos, i) => <Handle key={`top-${i}`} type="source" position={Position.Top} id={`top-${i}`} style={{ ...handleStyle, left: pos }} />)}
                 {positions.map((pos, i) => <Handle key={`right-${i}`} type="source" position={Position.Right} id={`right-${i}`} style={{ ...handleStyle, top: pos }} />)}
@@ -100,7 +97,8 @@ export const ArchitectureNode = ({ id, data, selected }: NodeProps<ArchitectureN
                 </span>
             </div>
 
-            {data.svg && <div style={{ width: '60px', height: '60px' }} dangerouslySetInnerHTML={{ __html: data.svg }} />}
+            {/* <-- INCREASED SVG SIZE --> */}
+            {data.svg && <div style={{ width: '80px', height: '80px' }} dangerouslySetInnerHTML={{ __html: data.svg }} />}
 
         </div>
     );
