@@ -16,7 +16,8 @@
           "swappableWith": { "type": "array", "items": { "type": "string" }, "description": "Palette IDs this node can swap into." },
           "configs": { "type": "object", "default": {} },
           "defaultConfigs": { "type": "object", "description": "Configs assigned when dropped.", "default": {} },
-          "style": { "$ref": "urn:ignition-schema:schemas/style-properties.schema.json" }
+          "style": { "$ref": "urn:ignition-schema:schemas/style-properties.schema.json" },
+          "labelStyle": { "$ref": "urn:ignition-schema:schemas/style-properties.schema.json" }
         }
       },
       "default": [
@@ -301,7 +302,8 @@
             "hideHandles": { "type": "boolean", "description": "Overrides global hideHandles if set." },
             "configs": { "type": "object" },
             "supportedConnections": { "type": "array", "items": { "type": "string" } },
-            "style": { "$ref": "urn:ignition-schema:schemas/style-properties.schema.json" }
+            "style": { "$ref": "urn:ignition-schema:schemas/style-properties.schema.json" },
+            "labelStyle": { "$ref": "urn:ignition-schema:schemas/style-properties.schema.json" }
           }
         }
       },

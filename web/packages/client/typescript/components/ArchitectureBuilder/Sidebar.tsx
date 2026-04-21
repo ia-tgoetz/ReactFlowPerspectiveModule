@@ -10,6 +10,7 @@ export interface PaletteItem {
     configs?: any;
     defaultConfigs?: any;
     style?: any;
+    labelStyle?: any; // <-- ADD THIS LINE
 }
 
 export interface SidebarProps {

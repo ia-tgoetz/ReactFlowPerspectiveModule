@@ -56,7 +56,9 @@ const mapIgnitionToReactFlowNodes = (ignitionNodes: any, handleGearClick: (id: s
             style: isContainer ? { width: nodeData.width || 300, height: nodeData.height || 300 } : undefined, 
             data: { 
                 label: nodeData.label || 'Unknown', svg: nodeData.svg || '', tooltip: nodeData.tooltip || '', configs: nodeData.configs || {}, 
-                style: nodeData.style || {}, paletteId: nodeData.paletteId || 'unknown', hideHandles: nodeData.hideHandles, globalHideHandles: globalHideHandles, onGearClick: handleGearClick, onResizeEnd: isContainer ? handleResizeEnd : undefined 
+                style: nodeData.style || {}, 
+                labelStyle: nodeData.labelStyle || {}, // <-- ADDED THIS LINE
+                paletteId: nodeData.paletteId || 'unknown', hideHandles: nodeData.hideHandles, globalHideHandles: globalHideHandles, onGearClick: handleGearClick, onResizeEnd: isContainer ? handleResizeEnd : undefined 
             } 
         }; 
     });
@@ -552,17 +554,18 @@ const onDrop = React.useCallback((event: any) => {
     let dropX = Math.round(position.x); let dropY = Math.round(position.y);
     if (snapEnabled) { dropX = Math.round(dropX / snapPixels) * snapPixels; dropY = Math.round(dropY / snapPixels) * snapPixels; }
     
-    // <-- CHANGED: Deep Clone to break memory references so MobX accepts the write
     const initialConfigs = JSON.parse(JSON.stringify(paletteItem.defaultConfigs || paletteItem.configs || {}));
     const initialStyle = JSON.parse(JSON.stringify(paletteItem.style || { classes: "" }));
-    const initialConnections = JSON.parse(JSON.stringify(paletteItem.supportedConnections || []));
+    // <-- ADDED DEEP CLONE FOR LABEL STYLE
+    const initialLabelStyle = JSON.parse(JSON.stringify(paletteItem.labelStyle || { classes: "" })); 
 
     if (props.store?.props) {
         const newNodeId = generateShortId();
         const newNodeData: any = { 
             paletteId: paletteItem.id, label: paletteItem.label, svg: paletteItem.svg, tooltip: paletteItem.tooltip, 
             x: dropX, y: dropY, 
-            hideHandles: false, style: initialStyle, configs: initialConfigs, supportedConnections: initialConnections 
+            // <-- ADDED LABEL STYLE TO SAVE PAYLOAD
+            hideHandles: false, style: initialStyle, labelStyle: initialLabelStyle, configs: initialConfigs, supportedConnections: paletteItem.supportedConnections || [] 
         };
         
         if (paletteItem.id === 'container') {
