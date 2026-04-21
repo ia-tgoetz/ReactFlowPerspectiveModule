@@ -346,6 +346,11 @@
       "description": "Globally hide all connection handles.",
       "default": false
     },
+    "handleCount": {
+      "type": "number",
+      "description": "Number of connection handles on each side of the nodes (1 to 8)",
+      "default": 5
+    },
     "style": {
       "description": "Standard Perspective style object applied to the component.",
       "$ref": "urn:ignition-schema:schemas/style-properties.schema.json"
