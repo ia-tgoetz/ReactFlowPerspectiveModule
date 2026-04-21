@@ -1,30 +1,5 @@
 /* Direct stylesheet authoring is an advanced feature. Knowledge of CSS required.*/
 
-:root {
-	/* Custom color variables */
-	--edge: #78D175;
-	--panel: #78D175;
-	--cloud: #25A4E9;
-	--standard: #FF8C00;
-	--cirrusLink: #156D97;
-	--sepasoft: #2DA449;
-	/* Inductive Automation Colors */
-	--ia-darkgray: #39464B;
-	--ia-green: #8DC63E;
-	--ia-gray: #445C6D;
-	
-	/* Ignition Colors */
-	--ignition-orange: #F7901E;
-	--ignition-blue: #003E69;
-	--ignition-darkblue: #002143;
-
-	/* Ignition Edge Colors */
-	--edge-green: #78D175;
-	--edge-gray: #283439;
-	--edge-dark-gray: #1E2528;
-	--edge-light-gray: #4E5558;
-
-}
 
 /* Scrollbar styling */
 ::-webkit-scrollbar {

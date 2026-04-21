@@ -93,7 +93,7 @@ export class ArchitectureBuilderMeta implements ComponentMeta {
             snapPixels: tree.read('snapPixels', 15),
             hideHandles: tree.read('hideHandles', false),
             handleCount: tree.read('handleCount', 5),
-            
+            defaultConnectionType: tree.read('defaultConnectionType', ''),
             style: tree.read('style')
         };
     }

@@ -178,7 +178,9 @@
               "defaultConfigs": {},
               "id": "container",
               "label": "Area / Site",
-              "style": {},
+              "style": {
+                "backgroundColor": "rgba(128, 128, 128, 0.8)"
+              },
               "supportedConnections": [],
               "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"22\" height\u003d\"22\" x\u003d\"1\" y\u003d\"1\" fill\u003d\"transparent\" stroke\u003d\"#888\" stroke-width\u003d\"2\" stroke-dasharray\u003d\"4 2\" rx\u003d\"4\"/\u003e\u003c/svg\u003e",
               "tooltip": "Grouping Container"
