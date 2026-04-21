@@ -18,6 +18,9 @@ if (Test-Path $TargetPath) {
     if ($LASTEXITCODE -eq 0) {
         Write-Host "--- Success! Waiting for Gateway to initialize... ---" -ForegroundColor Green
         
+        # --- START THE STOPWATCH ---
+        $Stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+        
         # 2. Wait-Loop using /system/gwinfo
         $IsUp = $false
         $Attempts = 0
@@ -26,20 +29,23 @@ if (Test-Path $TargetPath) {
                 $Response = Invoke-RestMethod -Uri "http://$GatewayUrl/system/gwinfo" -Method Get -TimeoutSec 2 -ErrorAction Stop
                 if ($Response -like "*ContextStatus=RUNNING*") { $IsUp = $true }
             } catch { Write-Host "." -NoNewline }
+            
             if (-not $IsUp) { Start-Sleep -Seconds 2; $Attempts++ }
         }
 
         if ($IsUp) {
-            Write-Host "`n--- Gateway is UP! Launching Designer ---" -ForegroundColor Green
+            # --- STOP THE STOPWATCH & CALCULATE MS ---
+            $Stopwatch.Stop()
+            $StartupTimeMs = [math]::Round($Stopwatch.Elapsed.TotalMilliseconds)
+            
+            Write-Host "`n--- Gateway is UP! Startup took $StartupTimeMs ms. Launching Designer ---" -ForegroundColor Green
             
             # 3. 8.3 Deep Link Syntax
             # Format: designer://GatewayAddress/projectName?insecure=true
-            # $DeepLink = "designer://${GatewayUrl}/${ProjectName}?insecure=true"
-            
-            # Write-Host "Executing: $DeepLink" -ForegroundColor Gray
-            # Start-Process $DeepLink
             Start-Process "designer://${GatewayUrl}/${ProjectName}?insecure=true"
         } else {
+            # Be sure to stop the stopwatch even if it fails, just for good measure
+            $Stopwatch.Stop()
             Write-Host "`n--- Timeout: Gateway did not reach RUNNING state. ---" -ForegroundColor Red
         }
     }

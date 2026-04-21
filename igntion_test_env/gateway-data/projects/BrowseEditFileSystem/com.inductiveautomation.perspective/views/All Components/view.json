@@ -1,35 +1,498 @@
 {
   "custom": {},
   "params": {},
-  "props": {},
+  "props": {
+    "defaultSize": {
+      "width": 989
+    }
+  },
   "root": {
     "children": [
       {
         "meta": {
-          "name": "jsonEditor_1"
+          "name": "jsonEditor"
         },
         "position": {
           "shrink": 0
         },
+        "props": {
+          "data": {
+            "id": "I8668a6f2",
+            "paletteId": "mqtt",
+            "type": "edge"
+          }
+        },
         "type": "com.wargoetz.reactflow.jsoneditor"
       },
       {
+        "children": [
+          {
+            "meta": {
+              "name": "Checkbox"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.selected": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": ".../ArchitectureBuilder.props.hideHandles"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "marginLeft": "16px"
+              },
+              "text": "hideHandles"
+            },
+            "type": "ia.input.checkbox"
+          },
+          {
+            "meta": {
+              "name": "Checkbox_0"
+            },
+            "position": {
+              "shrink": 0
+            },
+            "propConfig": {
+              "props.selected": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": ".../ArchitectureBuilder.props.snapEnabled"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "style": {
+                "marginLeft": "16px"
+              },
+              "text": "snapping"
+            },
+            "type": "ia.input.checkbox"
+          },
+          {
+            "meta": {
+              "name": "NumericEntryField"
+            },
+            "position": {
+              "basis": "150px"
+            },
+            "propConfig": {
+              "props.value": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": ".../ArchitectureBuilder.props.snapPixels"
+                  },
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "spinner": {
+                "enabled": false
+              },
+              "style": {
+                "marginLeft": "16px"
+              }
+            },
+            "type": "ia.input.numeric-entry-field"
+          }
+        ],
         "meta": {
-          "name": "dbSchema"
+          "name": "FlexContainer"
         },
         "position": {
-          "basis": "600px"
+          "shrink": 0
         },
-        "type": "com.wargoetz.reactflow.databaseschema"
+        "type": "ia.container.flex"
       },
       {
         "meta": {
-          "name": "HierarchyChart"
+          "name": "ArchitectureBuilder"
         },
         "position": {
           "basis": "600px"
         },
-        "type": "com.wargoetz.reactflow.hierarchychart"
+        "props": {
+          "nodes": {
+            "Ia2767eaa": {
+              "configs": {
+                "test": "test1"
+              },
+              "height": 450,
+              "hideHandles": false,
+              "label": "Area / Site",
+              "paletteId": "container",
+              "style": {
+                "backgroundColor": "rgba(128, 128, 128, 0.8)"
+              },
+              "supportedConnections": [],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"22\" height\u003d\"22\" x\u003d\"1\" y\u003d\"1\" fill\u003d\"transparent\" stroke\u003d\"#888\" stroke-width\u003d\"2\" stroke-dasharray\u003d\"4 2\" rx\u003d\"4\"/\u003e\u003c/svg\u003e",
+              "tooltip": "Grouping Container",
+              "width": 525,
+              "x": 45,
+              "y": 45,
+              "zIndex": -2
+            },
+            "Ia4aba746": {
+              "configs": {},
+              "hideHandles": false,
+              "label": "Connector",
+              "paletteId": "Connector",
+              "style": {
+                "classes": ""
+              },
+              "supportedConnections": [
+                "standard",
+                "rest"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--neutral-50, #6b7280)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eCON\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Connector",
+              "x": 75,
+              "y": 285
+            },
+            "Ia772cf1f": {
+              "configs": {},
+              "hideHandles": false,
+              "label": "Standard Gateway",
+              "paletteId": "standard",
+              "style": {
+                "classes": ""
+              },
+              "supportedConnections": [
+                "gateway-network",
+                "db",
+                "mqtt",
+                "rest",
+                "client",
+                "standard",
+                "device-driver",
+                "opc-ua",
+                "opc-com",
+                "mongodb",
+                "kafka"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--standard, #F58A4B)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eSG\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Standard Gateway",
+              "x": 360,
+              "y": 180
+            },
+            "Iab5c05cc": {
+              "configs": {
+                "test": "test1"
+              },
+              "height": 300,
+              "hideHandles": false,
+              "label": "Area / Site",
+              "paletteId": "container",
+              "style": {
+                "backgroundColor": "rgba(128, 128, 128, 0.8)"
+              },
+              "supportedConnections": [],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"22\" height\u003d\"22\" x\u003d\"1\" y\u003d\"1\" fill\u003d\"transparent\" stroke\u003d\"#888\" stroke-width\u003d\"2\" stroke-dasharray\u003d\"4 2\" rx\u003d\"4\"/\u003e\u003c/svg\u003e",
+              "tooltip": "Grouping Container",
+              "width": 300,
+              "x": 255,
+              "y": 60
+            }
+          },
+          "paletteItems": [
+            {
+              "category": "Zones",
+              "defaultConfigs": {
+                "test": "test1"
+              },
+              "id": "container",
+              "label": "Area / Site",
+              "style": {
+                "backgroundColor": "rgba(128, 128, 128, 0.8)"
+              },
+              "supportedConnections": [],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"22\" height\u003d\"22\" x\u003d\"1\" y\u003d\"1\" fill\u003d\"transparent\" stroke\u003d\"#888\" stroke-width\u003d\"2\" stroke-dasharray\u003d\"4 2\" rx\u003d\"4\"/\u003e\u003c/svg\u003e",
+              "tooltip": "Grouping Container"
+            },
+            {
+              "category": "Gateways",
+              "id": "standard",
+              "label": "Standard Gateway",
+              "supportedConnections": [
+                "gateway-network",
+                "db",
+                "mqtt",
+                "rest",
+                "client",
+                "standard",
+                "device-driver",
+                "opc-ua",
+                "opc-com",
+                "mongodb",
+                "kafka"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--standard, #F58A4B)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eSG\u003c/text\u003e\u003c/svg\u003e",
+              "swappableWith": [
+                "edge-iiot",
+                "edge-panel",
+                "cloud"
+              ],
+              "tooltip": "Standard Gateway"
+            },
+            {
+              "category": "Gateways",
+              "id": "edge-iiot",
+              "label": "Edge IIOT Gateway",
+              "supportedConnections": [
+                "gateway-network",
+                "mqtt",
+                "rest",
+                "standard",
+                "device-driver",
+                "opc-ua",
+                "opc-com"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--cirrusLink, #8b5cf6)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eIOT\u003c/text\u003e\u003c/svg\u003e",
+              "swappableWith": [
+                "standard",
+                "edge-panel",
+                "cloud"
+              ],
+              "tooltip": "Edge IIOT Gateway"
+            },
+            {
+              "category": "Gateways",
+              "id": "edge-panel",
+              "label": "Edge Panel Gateway",
+              "supportedConnections": [
+                "gateway-network",
+                "mqtt",
+                "rest",
+                "client",
+                "standard",
+                "device-driver",
+                "opc-ua",
+                "opc-com"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--panel, #00ACAC)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eEP\u003c/text\u003e\u003c/svg\u003e",
+              "swappableWith": [
+                "standard",
+                "edge-iiot",
+                "cloud"
+              ],
+              "tooltip": "Edge Panel Gateway"
+            },
+            {
+              "category": "Gateways",
+              "id": "cloud",
+              "label": "Cloud Gateway",
+              "supportedConnections": [
+                "gateway-network",
+                "db",
+                "mqtt",
+                "rest",
+                "client",
+                "standard",
+                "mongodb",
+                "kafka"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--cloud, #5b21b6)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eCG\u003c/text\u003e\u003c/svg\u003e",
+              "swappableWith": [
+                "standard",
+                "edge-iiot",
+                "edge-panel"
+              ],
+              "tooltip": "Cloud Gateway"
+            },
+            {
+              "category": "Data",
+              "id": "Database",
+              "label": "Database",
+              "supportedConnections": [
+                "db"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"#34A853\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eDB\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Database"
+            },
+            {
+              "category": "Data",
+              "id": "MongoDB",
+              "label": "MongoDB",
+              "supportedConnections": [
+                "mongodb"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"green\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eMDB\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "MongoDB"
+            },
+            {
+              "category": "Data",
+              "id": "Kafka",
+              "label": "Kafka",
+              "supportedConnections": [
+                "kafka"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--neutral-50, #6b7280)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eKFK\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Kafka"
+            },
+            {
+              "category": "Edge",
+              "id": "Device",
+              "label": "Device",
+              "supportedConnections": [
+                "device-driver"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--seq-3, #f59e0b)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eDEV\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Device"
+            },
+            {
+              "category": "Edge",
+              "id": "OPCUA",
+              "label": "OPC-UA Server",
+              "supportedConnections": [
+                "opc-ua",
+                "opc-com"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"#FFE7BA\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"#333\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eOPC\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "OPC-UA Server"
+            },
+            {
+              "category": "Endpoints",
+              "id": "Client",
+              "label": "Client",
+              "supportedConnections": [
+                "client",
+                "rest"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--neutral-60, #9ca3af)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eCLI\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Client"
+            },
+            {
+              "category": "Infrastructure",
+              "id": "Connector",
+              "label": "Connector",
+              "supportedConnections": [
+                "standard",
+                "rest"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--neutral-50, #6b7280)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eCON\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Connector"
+            },
+            {
+              "category": "Infrastructure",
+              "id": "Comms",
+              "label": "Communication",
+              "supportedConnections": [
+                "standard",
+                "gateway-network"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--neutral-50, #6b7280)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eCOM\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Communication"
+            },
+            {
+              "category": "Infrastructure",
+              "id": "LoadBalancer",
+              "label": "Load Balancer",
+              "supportedConnections": [
+                "standard",
+                "client",
+                "rest"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--neutral-50, #6b7280)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eLB\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Load Balancer"
+            },
+            {
+              "category": "Infrastructure",
+              "id": "Firewall",
+              "label": "Firewall",
+              "supportedConnections": [
+                "standard",
+                "gateway-network"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"red\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eFW\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Firewall"
+            },
+            {
+              "category": "Infrastructure",
+              "id": "ReverseProxy",
+              "label": "Reverse Proxy",
+              "supportedConnections": [
+                "standard",
+                "rest",
+                "client"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--neutral-50, #6b7280)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eRP\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Reverse Proxy"
+            },
+            {
+              "category": "Infrastructure",
+              "id": "Usersource",
+              "label": "User Source",
+              "supportedConnections": [
+                "standard"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--neutral-50, #6b7280)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eUSR\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "User Source"
+            },
+            {
+              "category": "Infrastructure",
+              "id": "server",
+              "label": "Server",
+              "supportedConnections": [
+                "standard"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--neutral-50, #6b7280)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eSRV\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Server"
+            },
+            {
+              "category": "Infrastructure",
+              "id": "fourIR",
+              "label": "4IR",
+              "supportedConnections": [
+                "standard",
+                "gateway-network",
+                "mqtt"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--neutral-50, #6b7280)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003e4IR\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "4IR"
+            },
+            {
+              "category": "Misc",
+              "id": "Note",
+              "label": "Note",
+              "supportedConnections": [],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--neutral-50, #6b7280)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eNTE\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Note"
+            },
+            {
+              "category": "Misc",
+              "id": "Label",
+              "label": "Label",
+              "supportedConnections": [],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--neutral-50, #6b7280)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eLBL\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Label"
+            },
+            {
+              "category": "Misc",
+              "id": "Custom",
+              "label": "Custom",
+              "supportedConnections": [
+                "standard",
+                "rest",
+                "db",
+                "mqtt"
+              ],
+              "svg": "\u003csvg viewBox\u003d\"0 0 24 24\" width\u003d\"100%\" height\u003d\"100%\"\u003e\u003crect width\u003d\"24\" height\u003d\"24\" fill\u003d\"var(--neutral-50, #6b7280)\" rx\u003d\"4\"/\u003e\u003ctext x\u003d\"12\" y\u003d\"16\" font-size\u003d\"9\" fill\u003d\"white\" text-anchor\u003d\"middle\" font-family\u003d\"sans-serif\"\u003eCST\u003c/text\u003e\u003c/svg\u003e",
+              "tooltip": "Custom"
+            }
+          ]
+        },
+        "type": "com.wargoetz.reactflow.architecturebuilder"
       }
     ],
     "meta": {

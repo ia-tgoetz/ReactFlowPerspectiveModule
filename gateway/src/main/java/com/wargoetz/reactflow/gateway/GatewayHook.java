@@ -7,7 +7,8 @@ import com.inductiveautomation.ignition.gateway.model.GatewayContext;
 import com.inductiveautomation.perspective.gateway.api.PerspectiveContext;
 import com.wargoetz.reactflow.common.DatabaseSchemaMeta;
 import com.wargoetz.reactflow.common.HierarchyChartMeta;
-import com.wargoetz.reactflow.common.JsonEditorMeta; // <-- ADDED
+import com.wargoetz.reactflow.common.JsonEditorMeta; 
+import com.wargoetz.reactflow.common.ArchitectureBuilderMeta; // <-- ADDED
 
 public class GatewayHook extends AbstractGatewayModuleHook {
 
@@ -23,7 +24,8 @@ public class GatewayHook extends AbstractGatewayModuleHook {
         PerspectiveContext perspectiveContext = PerspectiveContext.get(this.gatewayContext);
         perspectiveContext.getComponentRegistry().registerComponent(DatabaseSchemaMeta.DESCRIPTOR);
         perspectiveContext.getComponentRegistry().registerComponent(HierarchyChartMeta.DESCRIPTOR);
-        perspectiveContext.getComponentRegistry().registerComponent(JsonEditorMeta.DESCRIPTOR); // <-- ADDED
+        perspectiveContext.getComponentRegistry().registerComponent(JsonEditorMeta.DESCRIPTOR); 
+        perspectiveContext.getComponentRegistry().registerComponent(ArchitectureBuilderMeta.DESCRIPTOR); // <-- ADDED
     }
 
     @Override
@@ -31,7 +33,8 @@ public class GatewayHook extends AbstractGatewayModuleHook {
         PerspectiveContext perspectiveContext = PerspectiveContext.get(this.gatewayContext);
         perspectiveContext.getComponentRegistry().removeComponent(DatabaseSchemaMeta.COMPONENT_ID);
         perspectiveContext.getComponentRegistry().removeComponent(HierarchyChartMeta.COMPONENT_ID);
-        perspectiveContext.getComponentRegistry().removeComponent(JsonEditorMeta.COMPONENT_ID); // <-- ADDED
+        perspectiveContext.getComponentRegistry().removeComponent(JsonEditorMeta.COMPONENT_ID); 
+        perspectiveContext.getComponentRegistry().removeComponent(ArchitectureBuilderMeta.COMPONENT_ID); // <-- ADDED
     }
 
     @Override
