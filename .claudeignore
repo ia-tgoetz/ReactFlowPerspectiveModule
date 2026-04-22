@@ -1,0 +1,35 @@
+# Build artifacts
+build/
+**/build/
+
+# Gradle caches
+.gradle/
+**/.gradle/
+
+# Node.js dependencies
+**/node_modules/
+
+# Frontend build output
+web/packages/*/dist/
+web/packages/*/build/
+
+# IDE configuration
+.vscode/
+.idea/
+**/.idea/
+
+# Signing keystores and certificates (sensitive)
+private/
+**/*.jks
+**/*.p12
+**/*.pfx
+**/*.p7b
+**/*.keystore
+**/*.cer
+**/*.crt
+
+# Ignition test environment (embedded gateway with keystores and runtime data)
+igntion_test_env/
+
+# Git internals
+.git/
