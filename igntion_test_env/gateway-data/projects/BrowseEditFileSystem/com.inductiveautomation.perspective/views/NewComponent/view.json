@@ -1,9 +1,6 @@
 {
   "custom": {
-    "category": "value",
-    "defaultConfigs": "value",
-    "id": "value",
-    "key": {
+    "paletteItem": {
       "category": "Gateways",
       "configs": {},
       "defaultConfigs": {},
@@ -36,93 +33,9 @@
         "cloud"
       ],
       "tooltip": "Standard Gateway"
-    },
-    "label": "value",
-    "style": {},
-    "supportedConnections": "value",
-    "svg": "\u003c?xml version\u003d\"1.0\" encoding\u003d\"UTF-8\"?\u003e\u003csvg id\u003d\"Layer_2\" xmlns\u003d\"http://www.w3.org/2000/svg\" xmlns:xlink\u003d\"http://www.w3.org/1999/xlink\" viewBox\u003d\"0 0 207.78 239.43\"\u003e\u003cdefs\u003e\u003cstyle\u003e.cls-1,.cls-2,.cls-3{fill:none;}.cls-2{clip-path:url(#clippath-1);}.cls-4{fill:#f79435;}.cls-5{fill:#fff;}.cls-6{fill:#bfbfc1;}.cls-7{fill:#959799;}.cls-8{fill:#626264;}.cls-3{clip-path:url(#clippath);}\u003c/style\u003e\u003cclipPath id\u003d\"clippath\"\u003e\u003crect class\u003d\"cls-1\" width\u003d\"207.78\" height\u003d\"239.43\"/\u003e\u003c/clipPath\u003e\u003cclipPath id\u003d\"clippath-1\"\u003e\u003crect class\u003d\"cls-1\" width\u003d\"207.78\" height\u003d\"239.43\"/\u003e\u003c/clipPath\u003e\u003c/defs\u003e\u003cg id\u003d\"Layer_1-2\"\u003e\u003cg id\u003d\"Client_Laptop_White_-_Left\"\u003e\u003cg class\u003d\"cls-3\"\u003e\u003cpolygon class\u003d\"cls-6\" points\u003d\"110.42 0 .03 63.81 .04 183.01 116.73 115.51 116.73 3.61 110.42 0\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"116.73 3.61 6.26 67.64 6.26 179.38 116.73 115.51 116.73 3.61\"/\u003e\u003cpolygon class\u003d\"cls-5\" points\u003d\"109.56 16.09 13.72 71.56 13.72 165.05 109.56 109.71 109.56 16.09\"/\u003e\u003cpolygon class\u003d\"cls-8\" points\u003d\"0 182.97 97.3 239.43 207.78 175.68 207.78 168.12 116.73 115.51 6.26 179.38 6.26 67.64 .03 63.81 0 182.97\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"97.44 231.82 97.3 239.43 207.78 175.67 207.78 168.12 97.44 231.82\"/\u003e\u003cpolygon class\u003d\"cls-6\" points\u003d\"6.26 179.38 97.44 231.83 207.78 168.12 116.73 115.51 6.26 179.38\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"139.18 173.09 158.93 184.51 132.48 199.9 112.56 188.44 139.18 173.09\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"38.45 181.74 34.08 184.25 29.05 181.34 33.42 178.83 38.45 181.74\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"44.22 178.42 39.85 180.93 34.83 178.01 39.19 175.5 44.22 178.42\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"49.99 175.09 45.63 177.61 40.6 174.69 44.97 172.19 49.99 175.09\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"55.77 171.77 51.4 174.28 46.37 171.38 50.75 168.86 55.77 171.77\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"61.56 168.44 57.19 170.95 52.16 168.05 56.53 165.54 61.56 168.44\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"67.33 165.13 62.96 167.64 57.93 164.73 62.31 162.22 67.33 165.13\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"73.11 161.8 68.74 164.32 63.71 161.4 68.08 158.89 73.11 161.8\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"78.88 158.48 74.52 160.99 69.49 158.08 73.86 155.58 78.88 158.48\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"84.66 155.17 80.3 157.67 75.26 154.75 79.63 152.25 84.66 155.17\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"90.43 151.84 86.07 154.34 81.05 151.44 85.4 148.93 90.43 151.84\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"96.21 148.52 91.85 151.03 86.82 148.12 91.19 145.6 96.21 148.52\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"101.98 145.19 97.63 147.7 92.6 144.79 96.96 142.28 101.98 145.19\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"107.77 141.87 103.4 144.39 98.37 141.48 102.75 138.97 107.77 141.87\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"113.54 138.68 109.18 141.19 104.15 138.28 108.51 135.76 113.54 138.68\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"119.31 135.35 114.95 137.87 109.92 134.95 114.29 132.44 119.31 135.35\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"125.03 132.02 120.68 134.54 115.64 131.62 120 129.11 125.03 132.02\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"56.25 191.93 51.89 194.44 46.86 191.54 51.23 189.03 56.25 191.93\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"62.04 188.62 57.67 191.12 52.64 188.22 57.01 185.7 62.04 188.62\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"67.81 185.29 63.44 187.79 58.41 184.89 62.78 182.38 67.81 185.29\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"73.59 181.97 69.22 184.48 64.19 181.57 68.56 179.06 73.59 181.97\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"79.36 178.64 75 181.16 69.97 178.24 74.33 175.74 79.36 178.64\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"85.14 175.32 80.77 177.83 75.74 174.93 80.11 172.42 85.14 175.32\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"90.92 172.01 86.55 174.52 81.52 171.6 85.88 169.09 90.92 172.01\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"96.7 168.68 92.32 171.19 87.29 168.28 91.67 165.77 96.7 168.68\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"102.48 165.36 98.11 167.87 93.08 164.96 97.44 162.44 102.48 165.36\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"108.25 162.03 103.88 164.54 98.85 161.63 103.22 159.11 108.25 162.03\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"114.03 158.71 109.66 161.22 104.63 158.32 109 155.81 114.03 158.71\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"119.81 155.38 115.43 157.91 110.41 154.99 114.78 152.48 119.81 155.38\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"125.58 152.07 121.2 154.58 116.18 151.67 120.55 149.16 125.58 152.07\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"62.57 195.58 58.19 198.1 53.17 195.18 57.54 192.67 62.57 195.58\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"68.34 192.26 63.97 194.78 58.94 191.86 63.31 189.36 68.34 192.26\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"74.11 188.95 69.75 191.45 64.72 188.53 69.1 186.03 74.11 188.95\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"79.89 185.62 75.52 188.12 70.5 185.22 74.86 182.71 79.89 185.62\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"85.66 182.3 81.31 184.81 76.28 181.9 80.65 179.38 85.66 182.3\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"91.45 178.97 87.08 181.48 82.06 178.59 86.42 176.06 91.45 178.97\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"97.22 175.65 92.86 178.16 87.83 175.26 92.2 172.75 97.22 175.65\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"103 172.32 98.63 174.84 93.61 171.93 97.98 169.42 103 172.32\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"108.78 169.01 104.41 171.53 99.38 168.61 103.75 166.1 108.78 169.01\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"114.55 165.69 110.19 168.2 105.16 165.28 109.53 162.77 114.55 165.69\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"120.33 162.36 115.97 164.88 110.93 161.96 115.3 159.45 120.33 162.36\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"126.11 159.04 121.74 161.55 116.72 158.65 121.09 156.12 126.11 159.04\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"131.89 155.71 127.52 158.24 122.49 155.33 126.86 152.81 131.89 155.71\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"69.26 199.47 64.89 201.98 59.86 199.06 64.23 196.55 69.26 199.47\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"75.04 196.14 70.67 198.65 65.64 195.74 70 193.22 75.04 196.14\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"80.8 192.82 76.44 195.33 71.41 192.43 75.78 189.9 80.8 192.82\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"86.58 189.49 82.22 192 77.19 189.1 81.56 186.59 86.58 189.49\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"92.36 186.18 87.99 188.69 82.96 185.78 87.34 183.26 92.36 186.18\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"98.13 182.85 93.78 185.37 88.75 182.45 93.11 179.94 98.13 182.85\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"103.92 179.53 99.55 182.04 94.52 179.13 98.9 176.63 103.92 179.53\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"109.7 176.21 105.32 178.72 100.3 175.8 104.67 173.3 109.7 176.21\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"115.47 172.88 111.1 175.39 106.07 172.49 110.45 169.98 115.47 172.88\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"121.25 169.57 116.88 172.08 111.85 169.17 116.22 166.65 121.25 169.57\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"127.02 166.24 122.66 168.75 117.63 165.84 122 163.33 127.02 166.24\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"132.8 162.92 128.43 165.43 123.4 162.52 127.77 160.02 132.8 162.92\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"138.58 159.59 134.21 162.11 129.19 159.19 133.54 156.69 138.58 159.59\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"75.35 202.99 70.99 205.5 65.96 202.59 70.33 200.09 75.35 202.99\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"81.13 199.68 76.76 202.18 71.74 199.26 76.11 196.76 81.13 199.68\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"86.9 196.36 82.54 198.85 77.51 195.95 81.88 193.44 86.9 196.36\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"127.35 173.09 88.32 195.54 83.29 192.63 122.32 170.19 127.35 173.09\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"133.12 169.77 128.76 172.28 123.73 169.38 128.09 166.85 133.12 169.77\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"138.9 166.44 134.53 168.95 129.5 166.05 133.87 163.54 138.9 166.44\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"144.68 163.13 140.31 165.65 135.28 162.73 139.64 160.22 144.68 163.13\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"131.35 148.86 126.99 151.38 121.96 148.48 126.33 145.96 131.35 148.86\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"137.13 145.55 132.76 148.07 127.73 145.15 132.11 142.64 137.13 145.55\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"137.65 152.53 133.3 155.03 128.27 152.12 132.63 149.62 137.65 152.53\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"143.44 149.2 139.07 151.71 134.04 148.81 138.41 146.29 143.44 149.2\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"144.36 156.4 139.99 158.91 134.96 156 139.33 153.49 144.36 156.4\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"150.13 153.07 145.75 155.59 140.74 152.67 145.1 150.16 150.13 153.07\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"150.46 159.93 146.08 162.44 141.05 159.54 145.43 157.02 150.46 159.93\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"156.24 156.6 151.85 159.11 146.84 156.22 151.2 153.7 156.24 156.6\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"49.57 188.05 45.2 190.58 40.17 187.66 44.54 185.15 49.57 188.05\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"55.34 184.74 50.97 187.26 45.94 184.33 50.32 181.82 55.34 184.74\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"61.12 181.41 56.75 183.93 51.72 181.01 56.09 178.5 61.12 181.41\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"66.89 178.09 62.53 180.6 57.5 177.69 61.87 175.17 66.89 178.09\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"72.67 174.76 68.3 177.28 63.28 174.36 67.64 171.86 72.67 174.76\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"78.45 171.45 74.08 173.95 69.04 171.05 73.43 168.54 78.45 171.45\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"84.22 168.12 79.86 170.64 74.83 167.73 79.19 165.21 84.22 168.12\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"90.01 164.8 85.64 167.32 80.61 164.4 84.98 161.89 90.01 164.8\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"95.78 161.48 91.42 163.99 86.38 161.07 90.75 158.56 95.78 161.48\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"101.56 158.17 97.19 160.67 92.16 157.76 96.53 155.25 101.56 158.17\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"107.34 154.84 102.96 157.34 97.94 154.44 102.31 151.92 107.34 154.84\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"113.11 151.51 108.74 154.03 103.71 151.12 108.08 148.6 113.11 151.51\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"118.89 148.19 114.52 150.71 109.49 147.79 113.86 145.28 118.89 148.19\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"124.66 145 120.29 147.51 115.26 144.6 119.63 142.09 124.66 145\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"130.43 141.68 126.07 144.19 121.05 141.28 125.42 138.76 130.43 141.68\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"136.15 138.34 131.79 140.86 126.76 137.94 131.13 135.43 136.15 138.34\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"142.85 142.23 138.48 144.74 133.45 141.82 137.82 139.31 142.85 142.23\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"149.15 145.87 144.78 148.38 139.75 145.48 144.12 142.97 149.15 145.87\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"155.85 149.75 151.48 152.26 146.45 149.36 150.81 146.83 155.85 149.75\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"161.95 153.27 157.58 155.8 152.55 152.88 156.92 150.37 161.95 153.27\"/\u003e\u003cg class\u003d\"cls-2\"\u003e\u003cpath class\u003d\"cls-4\" d\u003d\"m47.69,117.3c1.44-1.86,3.1-3.21,4.93-4.03,1.82-.84,3.36-.9,4.6-.25,1.25.66,1.8,1.84,1.67,3.55-.15,1.73-.92,3.45-2.39,5.22-1.44,1.75-3.08,3.06-4.9,3.86-1.84.82-3.37.96-4.62.41-1.27-.55-1.82-1.67-1.69-3.38.14-1.71.93-3.51,2.39-5.39\"/\u003e\u003cpath class\u003d\"cls-4\" d\u003d\"m91.26,44.6c-.62-.9-1.58-1.36-2.9-1.34-1.32.03-2.71.49-4.17,1.4-1.49.92-2.74,2.5-3.8,4.73-.2.4-.71,1.62-1.53,3.64-.82,2.02-1.86,4.58-3.13,7.68-1.26,3.08-2.69,6.58-4.29,10.46-1.6,3.88-3.26,7.94-4.96,12.19-1.72,4.24-3.45,8.53-5.2,12.88-1.71,4.24-3.34,8.26-4.88,12.09.73-.11,1.43-.11,2.1,0,3.17-5.81,6.56-12.01,10.16-18.58,3.64-6.65,7.03-12.86,10.16-18.65,3.12-5.78,5.79-10.69,7.99-14.75,2.21-4.04,3.46-6.39,3.78-7.06,1.06-2.23,1.29-3.79.69-4.69\"/\u003e\u003cpath class\u003d\"cls-4\" d\u003d\"m47.61,112.94c-1.01-3.06-1.82-5.51-2.46-7.37-.62-1.88-1.16-3.36-1.57-4.43-.42-1.07-.75-1.85-.99-2.32-.24-.48-.47-.86-.7-1.17-.54-.74-1.32-1-2.38-.75-1.06.23-2.17.92-3.36,2.04-1.18,1.12-1.97,2.25-2.36,3.37-.39,1.14-.31,2.06.22,2.8.23.3.52.63.89.99.36.37.99.86,1.84,1.52.85.66,2.04,1.51,3.56,2.56,1.5,1.04,3.51,2.41,6.02,4.08.42-.45.85-.91,1.3-1.33\"/\u003e\u003c/g\u003e\u003c/g\u003e\u003c/g\u003e\u003c/g\u003e\u003c/svg\u003e",
-    "tooltip": "value"
+    }
   },
   "params": {
-    "connectionTypes": {
-      "client": {
-        "arrow": false,
-        "color": "var(--neutral-60)",
-        "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/perspective/perspective-sessions",
-        "label": "Client",
-        "multiple": false
-      },
-      "db": {
-        "arrow": false,
-        "color": "#34A853",
-        "docs": "https://docs.inductiveautomation.com/docs/8.1/platform/database-connections",
-        "label": "DB",
-        "multiple": true
-      },
-      "device-driver": {
-        "arrow": false,
-        "color": "var(--seq-3)",
-        "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/opc-ua/opc-ua-drivers",
-        "label": "Device Driver",
-        "multiple": true
-      },
-      "gateway-network": {
-        "arrow": true,
-        "color": "var(--ignition-orange)",
-        "docs": "https://docs.inductiveautomation.com/docs/8.1/platform/gateway-network",
-        "label": "Gateway Network",
-        "multiple": false
-      },
-      "kafka": {
-        "arrow": false,
-        "color": "#00ACAC",
-        "docs": "https://docs.inductiveautomation.com/docs/8.3/ignition-modules/cloud-connector-modules/kafka",
-        "label": "Kafka",
-        "multiple": true
-      },
-      "mongodb": {
-        "arrow": false,
-        "color": "green",
-        "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/cloud-connector-modules/mongodb",
-        "label": "MongoDB",
-        "multiple": true
-      },
-      "mqtt": {
-        "arrow": false,
-        "color": "var(--cirrusLink)",
-        "docs": "https://docs.chariot.io/display/CLD80/Cirrus+Link+Ignition+Modules",
-        "label": "MQTT",
-        "multiple": true
-      },
-      "opc-com": {
-        "arrow": false,
-        "color": "#FFE7BA",
-        "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/opc-ua/third-party-opc-servers/opc-com",
-        "label": "OPC-COM",
-        "multiple": true
-      },
-      "opc-ua": {
-        "arrow": false,
-        "color": "#FFE7BA",
-        "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/opc-ua",
-        "label": "OPC-UA",
-        "multiple": true
-      },
-      "rest": {
-        "arrow": true,
-        "color": "#f59e0b",
-        "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/webdev",
-        "label": "REST API",
-        "multiple": true
-      },
-      "standard": {
-        "arrow": false,
-        "color": "var(--neutral-100)",
-        "docs": "https://docs.inductiveautomation.com/docs/8.1/platform/gateway/status/connections",
-        "label": "Standard",
-        "multiple": true
-      }
-    },
     "lists": {
       "categories": [
         "Gateways",
@@ -133,6 +46,85 @@
         "Infrastructure",
         "Edge"
       ],
+      "connectionTypes": {
+        "client": {
+          "arrow": false,
+          "color": "var(--neutral-60)",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/perspective/perspective-sessions",
+          "label": "Client",
+          "multiple": false
+        },
+        "db": {
+          "arrow": false,
+          "color": "#34A853",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/platform/database-connections",
+          "label": "DB",
+          "multiple": true
+        },
+        "device-driver": {
+          "arrow": false,
+          "color": "var(--seq-3)",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/opc-ua/opc-ua-drivers",
+          "label": "Device Driver",
+          "multiple": true
+        },
+        "gateway-network": {
+          "arrow": true,
+          "color": "var(--ignition-orange)",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/platform/gateway-network",
+          "label": "Gateway Network",
+          "multiple": false
+        },
+        "kafka": {
+          "arrow": false,
+          "color": "#00ACAC",
+          "docs": "https://docs.inductiveautomation.com/docs/8.3/ignition-modules/cloud-connector-modules/kafka",
+          "label": "Kafka",
+          "multiple": true
+        },
+        "mongodb": {
+          "arrow": false,
+          "color": "green",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/cloud-connector-modules/mongodb",
+          "label": "MongoDB",
+          "multiple": true
+        },
+        "mqtt": {
+          "arrow": false,
+          "color": "var(--cirrusLink)",
+          "docs": "https://docs.chariot.io/display/CLD80/Cirrus+Link+Ignition+Modules",
+          "label": "MQTT",
+          "multiple": true
+        },
+        "opc-com": {
+          "arrow": false,
+          "color": "#FFE7BA",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/opc-ua/third-party-opc-servers/opc-com",
+          "label": "OPC-COM",
+          "multiple": true
+        },
+        "opc-ua": {
+          "arrow": false,
+          "color": "#FFE7BA",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/opc-ua",
+          "label": "OPC-UA",
+          "multiple": true
+        },
+        "rest": {
+          "arrow": true,
+          "color": "#f59e0b",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/webdev",
+          "label": "REST API",
+          "multiple": true
+        },
+        "standard": {
+          "arrow": false,
+          "color": "var(--neutral-100)",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/platform/gateway/status/connections",
+          "label": "Standard",
+          "multiple": true
+        }
+      },
       "ids": [
         "container",
         "standard",
@@ -181,42 +173,52 @@
         "Communication",
         "User Source"
       ]
+    },
+    "paletteItem": {
+      "category": "Gateways",
+      "configs": {},
+      "defaultConfigs": {},
+      "id": "standard",
+      "label": "Standard Gateway",
+      "labelStyle": {
+        "classes": ""
+      },
+      "style": {
+        "classes": "",
+        "paddingTop": "30px"
+      },
+      "supportedConnections": [
+        "gateway-network",
+        "db",
+        "mqtt",
+        "rest",
+        "client",
+        "standard",
+        "device-driver",
+        "opc-ua",
+        "opc-com",
+        "mongodb",
+        "kafka"
+      ],
+      "svg": "\u003c?xml version\u003d\"1.0\" encoding\u003d\"UTF-8\"?\u003e\u003csvg id\u003d\"Layer_2\" xmlns\u003d\"http://www.w3.org/2000/svg\" xmlns:xlink\u003d\"http://www.w3.org/1999/xlink\" viewBox\u003d\"0 0 126.84 178.36\"\u003e\u003cdefs\u003e\u003cstyle\u003e.cls-1,.cls-2,.cls-3{fill:none;}.cls-2{clip-path:url(#clippath-1);}.cls-4{fill:#96979a;}.cls-5{fill:#bfc0c2;}.cls-6{fill:#2f4566;}.cls-7{fill:#778fab;}.cls-3{clip-path:url(#clippath);}\u003c/style\u003e\u003cclipPath id\u003d\"clippath\"\u003e\u003crect class\u003d\"cls-1\" width\u003d\"126.84\" height\u003d\"178.36\"/\u003e\u003c/clipPath\u003e\u003cclipPath id\u003d\"clippath-1\"\u003e\u003crect class\u003d\"cls-1\" width\u003d\"126.84\" height\u003d\"178.36\"/\u003e\u003c/clipPath\u003e\u003c/defs\u003e\u003cg id\u003d\"Layer_1-2\"\u003e\u003cg id\u003d\"Client_Panel_Blue_-_Left\"\u003e\u003cg class\u003d\"cls-3\"\u003e\u003cpolygon class\u003d\"cls-5\" points\u003d\"109.79 0 .03 60.7 .03 64.38 0 64.41 0 174.85 6.28 178.36 115.48 115.22 115.7 115.51 115.52 3.28 109.79 0\"/\u003e\u003cpolygon class\u003d\"cls-4\" points\u003d\"6.28 64.46 6.28 178.36 115.62 115.14 115.62 3.27 6.28 64.46\"/\u003e\u003cpolygon class\u003d\"cls-6\" points\u003d\"108.45 15.27 13.57 68.36 13.57 165.25 108.45 110.51 108.45 15.27\"/\u003e\u003cg class\u003d\"cls-2\"\u003e\u003cpath class\u003d\"cls-5\" d\u003d\"m102.26,67.13l7.71,6.81-1.5,1.29-6.04-5.33c-1.62-1.43-4.12-1.27-5.55.35l8.58,7.56-1.52,1.29-6.89-6.08c-1.62-1.43-4.11-1.28-5.55.35l9.43,8.32-1.5,1.29-15.28-13.49c-1.35-1.18-3.41-1.05-4.59.29-1.18,1.35-1.06,3.4.29,4.59l20.87,18.42c.51.45.56,1.24.11,1.75-.45.51-1.23.56-1.75.11l-5.64-4.98.62,6.62s0,.09,0,.14v.06h.01c.22,1.76,1.62,3.21,3.45,3.42l9.92,1.12,4.11.46s.07,0,.11.02h.17s0,0,0,0c1.17.07,2.38-.36,3.22-1.31l10.81-12.24c1.43-1.62,1.28-4.13-.34-5.56l-17.71-15.64c-1.62-1.43-4.12-1.27-5.55.35\"/\u003e\u003cpath class\u003d\"cls-7\" d\u003d\"m49.02,113.87c1.26-1.62,2.69-2.8,4.28-3.52,1.59-.72,2.94-.79,4.02-.21,1.09.57,1.57,1.6,1.45,3.09-.13,1.5-.81,3.01-2.07,4.55-1.26,1.53-2.69,2.66-4.28,3.37-1.6.73-2.94.84-4.03.36-1.1-.47-1.58-1.45-1.47-2.95.13-1.5.82-3.05,2.09-4.69\"/\u003e\u003cpath class\u003d\"cls-7\" d\u003d\"m86.98,50.51c-.54-.79-1.37-1.17-2.53-1.16-1.15.01-2.35.42-3.63,1.22-1.29.79-2.39,2.17-3.32,4.12-.17.35-.61,1.41-1.33,3.17-.72,1.77-1.62,3.99-2.73,6.7-1.1,2.69-2.35,5.73-3.75,9.1-1.39,3.38-2.84,6.92-4.32,10.62-1.49,3.7-3,7.44-4.52,11.22-1.49,3.69-2.92,7.2-4.25,10.53.64-.09,1.25-.09,1.82,0,2.77-5.05,5.72-10.45,8.85-16.18,3.18-5.8,6.13-11.22,8.86-16.26,2.73-5.04,5.06-9.31,6.96-12.84,1.92-3.53,3.02-5.57,3.29-6.15.93-1.95,1.12-3.31.6-4.09\"/\u003e\u003cpath class\u003d\"cls-7\" d\u003d\"m48.94,110.07c-.87-2.66-1.58-4.81-2.13-6.43-.55-1.64-1.02-2.92-1.38-3.86-.36-.94-.65-1.61-.87-2.02-.21-.42-.41-.76-.6-1.02-.47-.63-1.17-.86-2.07-.66-.92.21-1.89.8-2.93,1.78-1.03.98-1.71,1.97-2.06,2.95-.34.98-.28,1.79.2,2.44.18.26.44.55.77.86.31.32.85.75,1.6,1.33.74.57,1.77,1.31,3.09,2.23,1.32.91,3.07,2.1,5.25,3.56.36-.4.75-.79,1.13-1.16\"/\u003e\u003c/g\u003e\u003c/g\u003e\u003c/g\u003e\u003c/g\u003e\u003c/svg\u003e",
+      "swappableWith": [
+        "edge-iiot",
+        "edge-panel",
+        "cloud"
+      ],
+      "tooltip": "Standard Gateway"
     }
   },
   "propConfig": {
-    "custom.category": {
-      "persistent": true
-    },
-    "custom.defaultConfigs": {
-      "persistent": true
-    },
-    "custom.id": {
-      "persistent": true
-    },
-    "custom.key": {
-      "persistent": true
-    },
-    "custom.label": {
-      "persistent": true
-    },
-    "custom.style": {
-      "persistent": true
-    },
-    "custom.supportedConnections": {
-      "persistent": true
-    },
-    "custom.svg": {
-      "persistent": true
-    },
-    "custom.tooltip": {
-      "persistent": true
-    },
-    "params.connectionTypes": {
-      "paramDirection": "input",
+    "custom.paletteItem": {
       "persistent": true
     },
     "params.lists": {
       "paramDirection": "input",
+      "persistent": true
+    },
+    "params.paletteItem": {
+      "paramDirection": "inout",
       "persistent": true
     }
   },
@@ -233,7 +235,7 @@
               "component": {
                 "onFileReceived": {
                   "config": {
-                    "script": "\tself.view.custom.svg\u003devent.file.getString()"
+                    "script": "\tself.view.params.paletteItem.svg\u003devent.file.getString()"
                   },
                   "scope": "G",
                   "type": "script"
@@ -265,7 +267,7 @@
               "props.source": {
                 "binding": {
                   "config": {
-                    "path": "view.custom.svg"
+                    "path": "view.params.paletteItem.svg"
                   },
                   "transforms": [
                     {
@@ -299,31 +301,292 @@
         "type": "ia.container.flex"
       },
       {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "245px",
+              "shrink": 0
+            },
+            "props": {
+              "text": "Supported Connection Types:",
+              "textStyle": {
+                "textAlign": "right"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "Connection Types"
+            },
+            "position": {
+              "grow": 1
+            },
+            "propConfig": {
+              "props.options": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.lists.connectionTypes"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tkeys\u003dsorted(value.keys())\n\treturn [{\"value\": item, \"label\": item} for item in keys]\n",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "multiSelect": true,
+              "placeholder": {
+                "text": "Select Supported Connection Types..."
+              },
+              "showClearIcon": true,
+              "style": {
+                "marginLeft": "4px"
+              },
+              "value": [
+                "client",
+                "db",
+                "device-driver",
+                "mqtt",
+                "gateway-network",
+                "opc-com",
+                "kafka",
+                "opc-ua",
+                "mongodb",
+                "rest",
+                "standard"
+              ]
+            },
+            "type": "ia.input.dropdown"
+          }
+        ],
         "meta": {
-          "name": "Dropdown"
+          "name": "Connection"
         },
-        "position": {
-          "basis": "36px"
+        "props": {
+          "alignItems": "flex-start",
+          "style": {
+            "margin": "2px",
+            "min-height": "40px",
+            "padding": "4px"
+          }
         },
-        "type": "ia.input.dropdown"
+        "type": "ia.container.flex"
       },
       {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "245px",
+              "shrink": 0
+            },
+            "props": {
+              "text": "Catagory:",
+              "textStyle": {
+                "textAlign": "right"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "Catagory"
+            },
+            "position": {
+              "grow": 1
+            },
+            "propConfig": {
+              "props.options": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.lists.categories"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\treturn [{\"value\": item, \"label\": item} for item in sorted(value)]\n",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "allowCustomOptions": true,
+              "placeholder": {
+                "text": "Select or Create Catagory..."
+              },
+              "showClearIcon": true,
+              "style": {
+                "marginLeft": "4px"
+              },
+              "value": null
+            },
+            "type": "ia.input.dropdown"
+          }
+        ],
         "meta": {
-          "name": "Dropdown_0"
+          "name": "Catagory"
         },
-        "position": {
-          "basis": "36px"
+        "props": {
+          "alignItems": "flex-start",
+          "style": {
+            "margin": "2px",
+            "min-height": "40px",
+            "padding": "4px"
+          }
         },
-        "type": "ia.input.dropdown"
+        "type": "ia.container.flex"
       },
       {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "245px",
+              "shrink": 0
+            },
+            "props": {
+              "text": "Component Type:",
+              "textStyle": {
+                "textAlign": "right"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "TypeID"
+            },
+            "position": {
+              "grow": 1
+            },
+            "propConfig": {
+              "props.options": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.lists.ids"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\treturn [{\"value\": item, \"label\": item} for item in sorted(value)]\n",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "allowCustomOptions": true,
+              "placeholder": {
+                "text": "Select or Create Component Type..."
+              },
+              "showClearIcon": true,
+              "style": {
+                "marginLeft": "4px"
+              },
+              "value": null
+            },
+            "type": "ia.input.dropdown"
+          }
+        ],
         "meta": {
-          "name": "Dropdown_1"
+          "name": "TypeId"
         },
-        "position": {
-          "basis": "36px"
+        "props": {
+          "alignItems": "flex-start",
+          "style": {
+            "margin": "2px",
+            "min-height": "40px",
+            "padding": "4px"
+          }
         },
-        "type": "ia.input.dropdown"
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "245px",
+              "shrink": 0
+            },
+            "props": {
+              "text": "Swappable Types:",
+              "textStyle": {
+                "textAlign": "right"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "Swappable With"
+            },
+            "position": {
+              "grow": 1
+            },
+            "propConfig": {
+              "props.options": {
+                "binding": {
+                  "config": {
+                    "struct": {
+                      "selectType": "{../TypeID.props.value}",
+                      "types": "{view.params.lists.ids}"
+                    },
+                    "waitOnAll": true
+                  },
+                  "transforms": [
+                    {
+                      "code": "\treturn [{\"value\": item, \"label\": item} for item in sorted(value[\u0027types\u0027]) if item !\u003d value[\u0027selectType\u0027]]",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "expr-struct"
+                }
+              }
+            },
+            "props": {
+              "multiSelect": true,
+              "placeholder": {
+                "text": "Select Swappable With Types..."
+              },
+              "showClearIcon": true,
+              "style": {
+                "marginLeft": "4px"
+              },
+              "value": null
+            },
+            "type": "ia.input.dropdown"
+          }
+        ],
+        "meta": {
+          "name": "Swap"
+        },
+        "props": {
+          "alignItems": "flex-start",
+          "style": {
+            "margin": "2px",
+            "min-height": "40px",
+            "padding": "4px"
+          }
+        },
+        "type": "ia.container.flex"
       }
     ],
     "meta": {
