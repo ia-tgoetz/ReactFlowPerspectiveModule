@@ -24,7 +24,7 @@ export const ArchitectureNode = ({ id, data, selected }: NodeProps<ArchitectureN
     const finalGearColor = data.labelStyle?.fill || finalLabelColor; 
 
     const combinedStyle: React.CSSProperties = {
-        padding: '40px 10px 10px 10px', 
+        padding: '10px', 
         borderRadius: '8px',
         backgroundColor: 'var(--neutral-10)',
         border: '1px solid var(--neutral-50)', 
@@ -33,19 +33,24 @@ export const ArchitectureNode = ({ id, data, selected }: NodeProps<ArchitectureN
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        minWidth: '140px', // <-- INCREASED
-        minHeight: '140px', // <-- INCREASED
+        width: '150px', 
+        height: '150px', 
+        boxSizing: 'border-box',
         position: 'relative',
         ...(data.style || {}),
-        
         boxShadow: selected ? '0 0 0 2px rgba(0, 123, 255, 0.25)' : (data.style?.boxShadow || '0 2px 4px rgba(0,0,0,0.1)')
     };
 
     const handleStyle: React.CSSProperties = { 
         background: 'var(--neutral-50)',
+        width: '8px',
+        height: '8px',
+        minWidth: '8px',
+        minHeight: '8px',
         opacity: showHandles ? 1 : 0, 
         pointerEvents: showHandles ? 'auto' : 'none',
-        border: showHandles ? undefined : 'none'
+        border: showHandles ? '1px solid var(--neutral-40)' : 'none',
+        transition: 'all 0.15s ease-in-out'
     };
     
     const handleCount = Math.max(1, Math.min(8, Number(data.handleCount) || 5));
@@ -53,20 +58,11 @@ export const ArchitectureNode = ({ id, data, selected }: NodeProps<ArchitectureN
 
     return (
         <div style={combinedStyle} title={data.tooltip}>
-            <style>
-                {`
-                .arch-node-gear { transform-origin: 50% 50%; transition: transform 0.75s ease-in-out; }
-                .arch-node-gear:hover { transform: rotate(360deg); }
-                .arch-node-gear:active { transform: translateX(-100%) rotate(-360deg); }
-                `}
-            </style>
-
-            <>
-                {positions.map((pos, i) => <Handle key={`top-${i}`} type="source" position={Position.Top} id={`top-${i}`} style={{ ...handleStyle, left: pos }} />)}
-                {positions.map((pos, i) => <Handle key={`right-${i}`} type="source" position={Position.Right} id={`right-${i}`} style={{ ...handleStyle, top: pos }} />)}
-                {positions.map((pos, i) => <Handle key={`bottom-${i}`} type="source" position={Position.Bottom} id={`bottom-${i}`} style={{ ...handleStyle, left: pos }} />)}
-                {positions.map((pos, i) => <Handle key={`left-${i}`} type="source" position={Position.Left} id={`left-${i}`} style={{ ...handleStyle, top: pos }} />)}
-            </>
+            {/* All handles are type="source"; ConnectionMode.Loose in the parent allows source-to-source connections */}
+            {positions.map((pos, i) => <Handle className="arch-node-handle" key={`top-${i}`} type="source" position={Position.Top} id={`top-${i}`} style={{ ...handleStyle, left: pos }} />)}
+            {positions.map((pos, i) => <Handle className="arch-node-handle" key={`right-${i}`} type="source" position={Position.Right} id={`right-${i}`} style={{ ...handleStyle, top: pos }} />)}
+            {positions.map((pos, i) => <Handle className="arch-node-handle" key={`bottom-${i}`} type="source" position={Position.Bottom} id={`bottom-${i}`} style={{ ...handleStyle, left: pos }} />)}
+            {positions.map((pos, i) => <Handle className="arch-node-handle" key={`left-${i}`} type="source" position={Position.Left} id={`left-${i}`} style={{ ...handleStyle, top: pos }} />)}
 
             <div
                 style={{
@@ -79,6 +75,7 @@ export const ArchitectureNode = ({ id, data, selected }: NodeProps<ArchitectureN
                     fontSize: '12px', fontWeight: 'bold', color: finalLabelColor,
                     cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px',
                     overflow: 'hidden',
+                    zIndex: 10,
                     ...(data.labelStyle || {}) 
                 }}
                 onClick={(e) => {
@@ -97,9 +94,13 @@ export const ArchitectureNode = ({ id, data, selected }: NodeProps<ArchitectureN
                 </span>
             </div>
 
-            {/* <-- INCREASED SVG SIZE --> */}
-            {data.svg && <div style={{ width: '80px', height: '80px' }} dangerouslySetInnerHTML={{ __html: data.svg }} />}
-
+            {data.svg && (
+                <div 
+                    className="arch-node-svg-wrapper" 
+                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', minHeight: 0, zIndex: 1 }} 
+                    dangerouslySetInnerHTML={{ __html: data.svg }} 
+                />
+            )}
         </div>
     );
 };

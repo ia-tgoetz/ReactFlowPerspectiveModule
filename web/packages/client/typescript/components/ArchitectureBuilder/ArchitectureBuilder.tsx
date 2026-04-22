@@ -332,7 +332,18 @@ const mapIgnitionToReactFlowNodes = (ignitionNodes: any, handleGearClick: (id: s
 
 const mapIgnitionToReactFlowEdges = (ignitionEdges: any, connectionTypes: any, selectedId: string | null) => {
     if (!ignitionEdges) return [];
-    return Object.entries(ignitionEdges).filter(([id, edgeData]: any) => edgeData !== null && edgeData !== undefined).map(([id, edgeData]: any) => { const typeConfig = connectionTypes[edgeData.connectionType] || {}; const isSelected = id === selectedId; const strokeStyle: any = { stroke: typeConfig.color || '#888', strokeWidth: isSelected ? 5 : 3 }; if (edgeData.dashed) strokeStyle.strokeDasharray = '8 5'; const arrowMarker = edgeData.arrow !== false ? { type: MarkerType.ArrowClosed, width: 20, height: 20, color: strokeStyle.stroke } : undefined; return { id, ...edgeData, type: 'custom', data: { lineType: edgeData.lineType || 'smoothstep', offsetX: edgeData.offsetX || 0, offsetY: edgeData.offsetY || 0, showLabel: edgeData.showLabel === true }, label: typeConfig.label || edgeData.connectionType || '', style: strokeStyle, markerEnd: arrowMarker, interactionWidth: 20, updatable: true }; });
+    return Object.entries(ignitionEdges).filter(([id, edgeData]: any) => edgeData !== null && edgeData !== undefined).map(([id, edgeData]: any) => { 
+        const typeConfig = connectionTypes[edgeData.connectionType] || {}; 
+        const isSelected = id === selectedId; 
+        
+        const strokeStyle: any = { stroke: typeConfig.color || '#888', strokeWidth: isSelected ? 6 : 4 }; 
+        
+        if (edgeData.dashed) strokeStyle.strokeDasharray = '8 5'; 
+        
+        const arrowMarker = edgeData.arrow !== false ? { type: MarkerType.ArrowClosed, width: 10, height: 10, color: strokeStyle.stroke } : undefined; 
+        
+        return { id, ...edgeData, type: 'custom', data: { lineType: edgeData.lineType || 'smoothstep', offsetX: edgeData.offsetX || 0, offsetY: edgeData.offsetY || 0, showLabel: edgeData.showLabel === true }, label: typeConfig.label || edgeData.connectionType || '', style: strokeStyle, markerEnd: arrowMarker, interactionWidth: 20, updatable: true }; 
+    });
 };
 
 const getNodesInside = (containerId: string, allNodes: any): string[] => {
@@ -352,8 +363,8 @@ const getNodesInside = (containerId: string, allNodes: any): string[] => {
         const node = allNodes[id];
         if (!node) return;
         
-        const nw = node.paletteId === 'container' ? (node.width || 300) : 120;
-        const nh = node.paletteId === 'container' ? (node.height || 300) : 120;
+        const nw = node.paletteId === 'container' ? (node.width || 300) : 150;
+        const nh = node.paletteId === 'container' ? (node.height || 300) : 150;
         
         const nx1 = node.x;
         const ny1 = node.y;
@@ -586,7 +597,8 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
   }, [props.store, rawEdgesDict, getValidIntersection]);
 
   const onNodeDragStart = React.useCallback((event: any, node: any) => {
-      if (rawNodesDict[node.id]?.paletteId === 'container') {
+      const rawNode = rawNodesDict[node.id];
+      if (rawNode?.paletteId === 'container' && !rawNode?.configs?.unlinked) {
           const insideIds = getNodesInside(node.id, rawNodesDict);
           const startPositions: any = {};
           insideIds.forEach(id => { startPositions[id] = { x: rawNodesDict[id].x, y: rawNodesDict[id].y }; });
@@ -682,7 +694,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       if (bounds) { setContextMenu({ id: 'pane', top: event.clientY - bounds.top, left: event.clientX - bounds.left, type: 'pane', clientX: event.clientX, clientY: event.clientY }); setActiveSubMenu(null); }
   }, []);
 
-  const handleContextMenuAction = (action: string) => {
+  const handleContextMenuAction = React.useCallback((action: string) => {
       if (!contextMenu) return;
       const isNode = contextMenu.type === 'node';
       const isEdge = contextMenu.type === 'edge';
@@ -693,6 +705,24 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
 
       if (props.componentEvents) { props.componentEvents.fireComponentEvent('onContextMenuAction', { id: contextMenu.id, paletteId: currentPaletteId, type: contextMenu.type, action: action }); }
 
+      if (action === 'reverseEdge' && isEdge) {
+          if (props.store?.props) {
+              const nextEdges = { ...rawEdgesDict };
+              const currentEdge = nextEdges[contextMenu.id];
+              if (currentEdge) {
+                  nextEdges[contextMenu.id] = {
+                      ...currentEdge,
+                      source: currentEdge.target,
+                      target: currentEdge.source,
+                      sourceHandle: currentEdge.targetHandle,
+                      targetHandle: currentEdge.sourceHandle
+                  };
+                  props.store.props.write('edges', nextEdges);
+              }
+          }
+          closeContextMenu(); return;
+      }
+
       if (action === 'editStyle' && isNode) {
           setStyleEditorNodeId(contextMenu.id);
           closeContextMenu(); return;
@@ -700,6 +730,18 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
 
       if (action === 'copy' && isNode) {
           executeCopy(contextMenu.id);
+          closeContextMenu(); return;
+      }
+
+      if (action === 'toggleLink' && contextMenu.isContainer) {
+          if (props.store?.props) {
+              const nextNodes = { ...rawNodesDict };
+              const target = nextNodes[contextMenu.id];
+              if (target) {
+                  target.configs = { ...target.configs, unlinked: !target.configs?.unlinked };
+                  props.store.props.write('nodes', nextNodes);
+              }
+          }
           closeContextMenu(); return;
       }
 
@@ -790,7 +832,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
           closeContextMenu(); return;
       }
       closeContextMenu();
-  };
+  }, [contextMenu, rawNodesDict, rawEdgesDict, selectedId, snapEnabled, snapPixels, reactFlowInstance, props.store, executeCopy, executePaste, closeContextMenu]);
 
   const handleNodeSwap = (newPaletteId: string) => {
       if (!contextMenu || contextMenu.type !== 'node') return;
@@ -886,6 +928,11 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       }
   }
 
+  const flyoutStyle: React.CSSProperties = (reactFlowWrapper.current && contextMenu &&
+      contextMenu.left + 310 > reactFlowWrapper.current.clientWidth)
+      ? { position: 'absolute', top: '-4px', right: '100%', marginRight: '4px' }
+      : { position: 'absolute', top: '-4px', left: '100%', marginLeft: '4px' };
+
   const { classes, ...ignitionStyles } = props.props.style || {};
   const containerStyle: React.CSSProperties = { 
       display: 'flex', 
@@ -922,6 +969,36 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
             --edge-dark-gray: #1E2528;
             --edge-light-gray: #4E5558;
         }
+
+        .arch-node-gear { transform-origin: 50% 50%; transition: transform 0.75s ease-in-out; }
+        .arch-node-gear:hover { transform: rotate(360deg); }
+        .arch-node-gear:active { transform: translateX(-100%) rotate(-360deg); }
+
+        .arch-node-svg-wrapper svg {
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .arch-node-handle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: transparent;
+            cursor: crosshair;
+        }
+
+        .arch-node-handle:hover {
+            background-color: var(--callToAction) !important;
+            border-color: var(--callToAction) !important;
+            transform: scale(1.5);
+        }
         `}
       </style>
 
@@ -944,6 +1021,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
               onPaneClick={onPaneClick} onPaneContextMenu={onPaneContextMenu}
               connectionMode={ConnectionMode.Loose} snapToGrid={snapEnabled} snapGrid={snapGrid}
               elevateNodesOnSelect={false}
+              minZoom={0.05}
             >
               <Background gap={snapPixels} />
               <Controls />
@@ -990,13 +1068,17 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
                                   {contextMenu.isContainer && (
                                       <>
                                           <div style={{ padding: '5px 8px', cursor: clipboardRef.current ? 'pointer' : 'not-allowed', color: clipboardRef.current ? 'var(--neutral-90)' : 'var(--neutral-50)' }} onClick={() => { if(clipboardRef.current) handleContextMenuAction('paste'); }}>📋 Paste</div>
+                                          
+                                          <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', borderTop: '1px solid var(--neutral-40)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('toggleLink')}>
+                                              {rawNodesDict[contextMenu.id]?.configs?.unlinked ? '🔗 Link Contents' : '🔓 Unlink Contents'}
+                                          </div>
 
                                           <div style={{ position: 'relative' }} onMouseEnter={() => setActiveSubMenu('order')}>
                                               <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', justifyContent: 'space-between', backgroundColor: activeSubMenu === 'order' ? 'var(--neutral-30)' : 'transparent' }}> 
                                                   <span>📑 Order</span><span>▶</span> 
                                               </div>
                                               {activeSubMenu === 'order' && (
-                                                  <div style={{ position: 'absolute', top: '-4px', left: '100%', marginLeft: '4px', backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '4px', minWidth: '150px' }}>
+                                                  <div style={{ ...flyoutStyle, backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '4px', minWidth: '150px' }}>
                                                       <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onClick={() => handleContextMenuAction('bringToFront')}>⏫ Bring to Front</div>
                                                       <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onClick={() => handleContextMenuAction('bringForward')}>🔼 Bring Forward</div>
                                                       <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onClick={() => handleContextMenuAction('sendBackward')}>🔽 Send Backward</div>
@@ -1013,7 +1095,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
                                               <span>🔄 Swap Node</span><span>▶</span> 
                                           </div>
                                           {activeSubMenu === 'swapNode' && (
-                                              <div style={{ position: 'absolute', top: '-4px', left: '100%', marginLeft: '4px', backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '4px', minWidth: '150px' }}>
+                                              <div style={{ ...flyoutStyle, backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '4px', minWidth: '150px' }}>
                                                   {validSwapItems.map(targetItem => (
                                                       <div key={targetItem.id} style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', alignItems: 'center' }} onClick={() => handleNodeSwap(targetItem.id)}>
                                                           <div style={{ width: '16px', height: '16px', marginRight: '6px', display: 'flex', alignItems: 'center' }} dangerouslySetInnerHTML={{ __html: targetItem.svg }} />
@@ -1029,6 +1111,9 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
 
                           {contextMenu.type === 'edge' && (
                               <>
+                                  <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('reverseEdge')}> 
+                                      🔄 Reverse Direction 
+                                  </div>
                                   <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('toggleArrow')}> 
                                       {rawEdgesDict[contextMenu.id]?.arrow !== false ? '❌ Remove Arrow' : '➡️ Add Arrow'} 
                                   </div>
@@ -1042,7 +1127,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
                                           <span>〰️ Line Type</span><span>▶</span> 
                                       </div>
                                       {activeSubMenu === 'lineType' && (
-                                          <div style={{ position: 'absolute', top: '-4px', left: '100%', marginLeft: '4px', backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '4px', minWidth: '120px' }}>
+                                          <div style={{ ...flyoutStyle, backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '4px', minWidth: '120px' }}>
                                               <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', justifyContent: 'space-between', whiteSpace: 'nowrap', gap: '12px' }} onClick={() => handleLineTypeChange('smoothstep')}>
                                                   <span>〰️ Smooth</span><span>{currentLineType === 'smoothstep' ? '✓' : ''}</span>
                                               </div>
@@ -1064,7 +1149,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
                                           <span>🔗 Connection</span><span>▶</span> 
                                       </div>
                                       {activeSubMenu === 'connectionType' && (
-                                          <div style={{ position: 'absolute', top: '-4px', left: '100%', marginLeft: '4px', backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '4px', minWidth: '140px' }}>
+                                          <div style={{ ...flyoutStyle, backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '4px', minWidth: '140px' }}>
                                               {availableConnections.length === 0 ? ( 
                                                   <div style={{ padding: '5px 8px', color: 'var(--neutral-60)' }}>No valid connections</div> 
                                               ) : ( 

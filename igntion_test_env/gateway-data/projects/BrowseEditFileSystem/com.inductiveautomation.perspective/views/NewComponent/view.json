@@ -1,0 +1,600 @@
+{
+  "custom": {
+    "paletteItem": {
+      "category": "Gateways",
+      "configs": {},
+      "defaultConfigs": {},
+      "id": "standard",
+      "label": "Standard Gateway",
+      "labelStyle": {
+        "classes": ""
+      },
+      "style": {
+        "classes": "",
+        "paddingTop": "30px"
+      },
+      "supportedConnections": [
+        "gateway-network",
+        "db",
+        "mqtt",
+        "rest",
+        "client",
+        "standard",
+        "device-driver",
+        "opc-ua",
+        "opc-com",
+        "mongodb",
+        "kafka"
+      ],
+      "svg": "\u003csvg id\u003d\"Layer_2\" xmlns\u003d\"http://www.w3.org/2000/svg\" xmlns:xlink\u003d\"http://www.w3.org/1999/xlink\" viewBox\u003d\"0 0 221.43 314.39\"\u003e\u003cdefs\u003e\u003cstyle\u003e.cls-1,.cls-2,.cls-3{fill:none;}.cls-2{clip-path:url(#clippath-1);}.cls-4{fill:#f79435;}.cls-5{fill:#fff;}.cls-6{fill:#accce2;}.cls-7{fill:#355980;}.cls-8{fill:#2f4666;}.cls-3{clip-path:url(#clippath);}\u003c/style\u003e\u003cclipPath id\u003d\"clippath\"\u003e\u003crect class\u003d\"cls-1\" width\u003d\"221.43\" height\u003d\"314.39\"/\u003e\u003c/clipPath\u003e\u003cclipPath id\u003d\"clippath-1\"\u003e\u003crect class\u003d\"cls-1\" width\u003d\"221.43\" height\u003d\"314.39\"/\u003e\u003c/clipPath\u003e\u003c/defs\u003e\u003cg id\u003d\"Layer_1-2\"\u003e\u003cg id\u003d\"Server_Blue_-_Left\"\u003e\u003cg class\u003d\"cls-3\"\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"72.12 127.85 72.13 314.39 221.43 228.19 221.43 41.64 72.12 127.85\"/\u003e\u003cpolygon class\u003d\"cls-6\" points\u003d\"149.32 0 0 86.21 72.12 127.85 221.43 41.64 149.32 0\"/\u003e\u003cpolygon class\u003d\"cls-8\" points\u003d\"0 272.74 72.12 314.39 72.12 127.85 0 86.21 0 272.74\"/\u003e\u003cg class\u003d\"cls-2\"\u003e\u003cpath class\u003d\"cls-4\" d\u003d\"m135.14,209.9c1.65-2.37,3.51-4.07,5.57-5.1,2.07-1.04,3.82-1.15,5.23-.31,1.42.83,2.04,2.32,1.89,4.48-.16,2.17-1.05,4.35-2.7,6.58-1.63,2.22-3.49,3.85-5.55,4.88-2.08,1.04-3.83,1.22-5.24.52-1.42-.7-2.06-2.11-1.9-4.28.16-2.16,1.06-4.43,2.71-6.78\"/\u003e\u003cpath class\u003d\"cls-4\" d\u003d\"m184.52,118.08c-.7-1.13-1.79-1.69-3.28-1.68-1.5.03-3.07.61-4.74,1.77-1.67,1.16-3.1,3.15-4.32,5.97-.21.52-.78,2.05-1.72,4.59-.94,2.56-2.11,5.79-3.55,9.7-1.43,3.91-3.05,8.31-4.87,13.21-1.81,4.89-3.69,10.02-5.63,15.39-1.94,5.36-3.9,10.77-5.88,16.25-1.94,5.35-3.79,10.44-5.53,15.26.83-.12,1.63-.12,2.37,0,3.6-7.33,7.44-15.15,11.52-23.45,4.13-8.4,7.97-16.25,11.52-23.55,3.55-7.31,6.57-13.51,9.05-18.62,2.5-5.11,3.92-8.08,4.28-8.91,1.21-2.82,1.46-4.8.77-5.93\"/\u003e\u003cpath class\u003d\"cls-4\" d\u003d\"m135.05,204.39c-1.14-3.87-2.06-6.97-2.78-9.32-.71-2.36-1.32-4.23-1.78-5.58-.48-1.36-.85-2.33-1.13-2.93-.27-.6-.53-1.1-.79-1.47-.61-.93-1.5-1.24-2.69-.96-1.19.31-2.46,1.17-3.8,2.58-1.34,1.42-2.24,2.85-2.68,4.27-.45,1.42-.36,2.6.24,3.52.26.38.59.8,1.01,1.24.41.46,1.11,1.1,2.08,1.93.97.83,2.31,1.91,4.03,3.23,1.71,1.32,3.99,3.05,6.83,5.17.48-.59.97-1.15,1.48-1.68\"/\u003e\u003cpath class\u003d\"cls-5\" d\u003d\"m58.62,152.25c-.49,0-.99-.12-1.44-.39l-45.25-26.14c-1.38-.8-1.85-2.56-1.06-3.94.8-1.38,2.56-1.85,3.94-1.06l45.25,26.14c1.38.8,1.85,2.56,1.06,3.94-.53.93-1.51,1.44-2.5,1.44\"/\u003e\u003cpath class\u003d\"cls-5\" d\u003d\"m58.62,167.21c-.49,0-.99-.12-1.44-.39l-45.25-26.13c-1.38-.8-1.85-2.56-1.06-3.94.8-1.38,2.56-1.85,3.94-1.06l45.25,26.13c1.38.8,1.85,2.56,1.06,3.94-.53.93-1.51,1.44-2.5,1.44\"/\u003e\u003cpath class\u003d\"cls-5\" d\u003d\"m58.62,182.17c-.49,0-.99-.12-1.44-.39l-45.25-26.12c-1.38-.8-1.85-2.56-1.06-3.94.8-1.38,2.56-1.85,3.94-1.06l45.25,26.12c1.38.8,1.85,2.56,1.06,3.94-.53.93-1.51,1.44-2.5,1.44\"/\u003e\u003c/g\u003e\u003c/g\u003e\u003c/g\u003e\u003c/g\u003e\u003c/svg\u003e",
+      "swappableWith": [
+        "edge-iiot",
+        "edge-panel",
+        "cloud"
+      ],
+      "tooltip": "Standard Gateway"
+    }
+  },
+  "params": {
+    "lists": {
+      "categories": [
+        "Gateways",
+        "Misc",
+        "Data",
+        "Zones",
+        "Endpoints",
+        "Infrastructure",
+        "Edge"
+      ],
+      "connectionTypes": {
+        "client": {
+          "arrow": false,
+          "color": "var(--neutral-60)",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/perspective/perspective-sessions",
+          "label": "Client",
+          "multiple": false
+        },
+        "db": {
+          "arrow": false,
+          "color": "#34A853",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/platform/database-connections",
+          "label": "DB",
+          "multiple": true
+        },
+        "device-driver": {
+          "arrow": false,
+          "color": "var(--seq-3)",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/opc-ua/opc-ua-drivers",
+          "label": "Device Driver",
+          "multiple": true
+        },
+        "gateway-network": {
+          "arrow": true,
+          "color": "var(--ignition-orange)",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/platform/gateway-network",
+          "label": "Gateway Network",
+          "multiple": false
+        },
+        "kafka": {
+          "arrow": false,
+          "color": "#00ACAC",
+          "docs": "https://docs.inductiveautomation.com/docs/8.3/ignition-modules/cloud-connector-modules/kafka",
+          "label": "Kafka",
+          "multiple": true
+        },
+        "mongodb": {
+          "arrow": false,
+          "color": "green",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/cloud-connector-modules/mongodb",
+          "label": "MongoDB",
+          "multiple": true
+        },
+        "mqtt": {
+          "arrow": false,
+          "color": "var(--cirrusLink)",
+          "docs": "https://docs.chariot.io/display/CLD80/Cirrus+Link+Ignition+Modules",
+          "label": "MQTT",
+          "multiple": true
+        },
+        "opc-com": {
+          "arrow": false,
+          "color": "#FFE7BA",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/opc-ua/third-party-opc-servers/opc-com",
+          "label": "OPC-COM",
+          "multiple": true
+        },
+        "opc-ua": {
+          "arrow": false,
+          "color": "#FFE7BA",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/opc-ua",
+          "label": "OPC-UA",
+          "multiple": true
+        },
+        "rest": {
+          "arrow": true,
+          "color": "#f59e0b",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/webdev",
+          "label": "REST API",
+          "multiple": true
+        },
+        "standard": {
+          "arrow": false,
+          "color": "var(--neutral-100)",
+          "docs": "https://docs.inductiveautomation.com/docs/8.1/platform/gateway/status/connections",
+          "label": "Standard",
+          "multiple": true
+        }
+      },
+      "ids": [
+        "container",
+        "standard",
+        "Connector",
+        "server",
+        "Comms",
+        "Device",
+        "Kafka",
+        "ReverseProxy",
+        "Label",
+        "edge-iiot",
+        "LoadBalancer",
+        "Custom",
+        "Usersource",
+        "fourIR",
+        "Firewall",
+        "cloud",
+        "OPCUA",
+        "edge-panel",
+        "Note",
+        "Database",
+        "MongoDB",
+        "Client"
+      ],
+      "labels": [
+        "Standard Gateway",
+        "Connector",
+        "Load Balancer",
+        "Server",
+        "Device",
+        "OPC-UA Server",
+        "Kafka",
+        "Label",
+        "Custom",
+        "Edge IIOT Gateway",
+        "Firewall",
+        "Reverse Proxy",
+        "Cloud Gateway",
+        "Area / Site",
+        "Note",
+        "Database",
+        "MongoDB",
+        "Edge Panel Gateway",
+        "Client",
+        "4IR",
+        "Communication",
+        "User Source"
+      ]
+    },
+    "paletteItem": {
+      "category": "Gateways",
+      "configs": {},
+      "defaultConfigs": {},
+      "id": "standard",
+      "label": "Standard Gateway",
+      "labelStyle": {
+        "classes": ""
+      },
+      "style": {
+        "classes": "",
+        "paddingTop": "30px"
+      },
+      "supportedConnections": [
+        "gateway-network",
+        "db",
+        "mqtt",
+        "rest",
+        "client",
+        "standard",
+        "device-driver",
+        "opc-ua",
+        "opc-com",
+        "mongodb",
+        "kafka"
+      ],
+      "svg": "\u003c?xml version\u003d\"1.0\" encoding\u003d\"UTF-8\"?\u003e\u003csvg id\u003d\"Layer_2\" xmlns\u003d\"http://www.w3.org/2000/svg\" xmlns:xlink\u003d\"http://www.w3.org/1999/xlink\" viewBox\u003d\"0 0 126.84 178.36\"\u003e\u003cdefs\u003e\u003cstyle\u003e.cls-1,.cls-2,.cls-3{fill:none;}.cls-2{clip-path:url(#clippath-1);}.cls-4{fill:#96979a;}.cls-5{fill:#bfc0c2;}.cls-6{fill:#2f4566;}.cls-7{fill:#778fab;}.cls-3{clip-path:url(#clippath);}\u003c/style\u003e\u003cclipPath id\u003d\"clippath\"\u003e\u003crect class\u003d\"cls-1\" width\u003d\"126.84\" height\u003d\"178.36\"/\u003e\u003c/clipPath\u003e\u003cclipPath id\u003d\"clippath-1\"\u003e\u003crect class\u003d\"cls-1\" width\u003d\"126.84\" height\u003d\"178.36\"/\u003e\u003c/clipPath\u003e\u003c/defs\u003e\u003cg id\u003d\"Layer_1-2\"\u003e\u003cg id\u003d\"Client_Panel_Blue_-_Left\"\u003e\u003cg class\u003d\"cls-3\"\u003e\u003cpolygon class\u003d\"cls-5\" points\u003d\"109.79 0 .03 60.7 .03 64.38 0 64.41 0 174.85 6.28 178.36 115.48 115.22 115.7 115.51 115.52 3.28 109.79 0\"/\u003e\u003cpolygon class\u003d\"cls-4\" points\u003d\"6.28 64.46 6.28 178.36 115.62 115.14 115.62 3.27 6.28 64.46\"/\u003e\u003cpolygon class\u003d\"cls-6\" points\u003d\"108.45 15.27 13.57 68.36 13.57 165.25 108.45 110.51 108.45 15.27\"/\u003e\u003cg class\u003d\"cls-2\"\u003e\u003cpath class\u003d\"cls-5\" d\u003d\"m102.26,67.13l7.71,6.81-1.5,1.29-6.04-5.33c-1.62-1.43-4.12-1.27-5.55.35l8.58,7.56-1.52,1.29-6.89-6.08c-1.62-1.43-4.11-1.28-5.55.35l9.43,8.32-1.5,1.29-15.28-13.49c-1.35-1.18-3.41-1.05-4.59.29-1.18,1.35-1.06,3.4.29,4.59l20.87,18.42c.51.45.56,1.24.11,1.75-.45.51-1.23.56-1.75.11l-5.64-4.98.62,6.62s0,.09,0,.14v.06h.01c.22,1.76,1.62,3.21,3.45,3.42l9.92,1.12,4.11.46s.07,0,.11.02h.17s0,0,0,0c1.17.07,2.38-.36,3.22-1.31l10.81-12.24c1.43-1.62,1.28-4.13-.34-5.56l-17.71-15.64c-1.62-1.43-4.12-1.27-5.55.35\"/\u003e\u003cpath class\u003d\"cls-7\" d\u003d\"m49.02,113.87c1.26-1.62,2.69-2.8,4.28-3.52,1.59-.72,2.94-.79,4.02-.21,1.09.57,1.57,1.6,1.45,3.09-.13,1.5-.81,3.01-2.07,4.55-1.26,1.53-2.69,2.66-4.28,3.37-1.6.73-2.94.84-4.03.36-1.1-.47-1.58-1.45-1.47-2.95.13-1.5.82-3.05,2.09-4.69\"/\u003e\u003cpath class\u003d\"cls-7\" d\u003d\"m86.98,50.51c-.54-.79-1.37-1.17-2.53-1.16-1.15.01-2.35.42-3.63,1.22-1.29.79-2.39,2.17-3.32,4.12-.17.35-.61,1.41-1.33,3.17-.72,1.77-1.62,3.99-2.73,6.7-1.1,2.69-2.35,5.73-3.75,9.1-1.39,3.38-2.84,6.92-4.32,10.62-1.49,3.7-3,7.44-4.52,11.22-1.49,3.69-2.92,7.2-4.25,10.53.64-.09,1.25-.09,1.82,0,2.77-5.05,5.72-10.45,8.85-16.18,3.18-5.8,6.13-11.22,8.86-16.26,2.73-5.04,5.06-9.31,6.96-12.84,1.92-3.53,3.02-5.57,3.29-6.15.93-1.95,1.12-3.31.6-4.09\"/\u003e\u003cpath class\u003d\"cls-7\" d\u003d\"m48.94,110.07c-.87-2.66-1.58-4.81-2.13-6.43-.55-1.64-1.02-2.92-1.38-3.86-.36-.94-.65-1.61-.87-2.02-.21-.42-.41-.76-.6-1.02-.47-.63-1.17-.86-2.07-.66-.92.21-1.89.8-2.93,1.78-1.03.98-1.71,1.97-2.06,2.95-.34.98-.28,1.79.2,2.44.18.26.44.55.77.86.31.32.85.75,1.6,1.33.74.57,1.77,1.31,3.09,2.23,1.32.91,3.07,2.1,5.25,3.56.36-.4.75-.79,1.13-1.16\"/\u003e\u003c/g\u003e\u003c/g\u003e\u003c/g\u003e\u003c/g\u003e\u003c/svg\u003e",
+      "swappableWith": [
+        "edge-iiot",
+        "edge-panel",
+        "cloud"
+      ],
+      "tooltip": "Standard Gateway"
+    }
+  },
+  "propConfig": {
+    "custom.paletteItem": {
+      "persistent": true
+    },
+    "params.lists": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.paletteItem": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {},
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "custom": {
+              "fileString": "value"
+            },
+            "events": {
+              "component": {
+                "onFileReceived": {
+                  "config": {
+                    "script": "\tself.view.params.paletteItem.svg\u003devent.file.getString()"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "FileUpload"
+            },
+            "position": {
+              "basis": "50%"
+            },
+            "props": {
+              "supportedFileTypes": [
+                "svg"
+              ]
+            },
+            "type": "ia.input.fileupload"
+          },
+          {
+            "meta": {
+              "name": "Image"
+            },
+            "position": {
+              "basis": "100px",
+              "grow": 1
+            },
+            "propConfig": {
+              "props.source": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.paletteItem.svg"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\timport base64\n\t\n\tdef convert_svg_to_markdown(svg_string):\n\t    \"\"\"\n\t    Takes a raw SVG string, encodes it to Base64, and returns \n\t    the fully formatted Markdown image string.\n\t    \"\"\"\n\t    # 1. Encode the raw string into Base64\n\t    # We encode to utf-8 first to ensure any special characters are handled correctly\n\t    encoded_bytes \u003d base64.b64encode(svg_string.encode(\u0027utf-8\u0027))\n\t    \n\t    # In Jython 2.7, b64encode returns a string, but it\u0027s safe to cast just in case\n\t    base64_string \u003d str(encoded_bytes)\n\t    \n\t    # 2. Construct the Data URI and Markdown syntax\n\t    markdown_output \u003d \"data:image/svg+xml;base64,\" + base64_string\n\t    \n\t    return markdown_output\n\t\n\t# --- TEST IT OUT ---\n\t\n\t# Paste your exact SVG string inside the triple quotes\n\tmy_raw_svg \u003d \"\"\"{}\"\"\".format(value)\n\t\n\t# Run the function\n\tfinal_markdown \u003d convert_svg_to_markdown(my_raw_svg)\n\t\n\t# Print the result so you can copy and paste it into your Markdown component\n\treturn final_markdown",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "fit": {
+                "mode": "contain"
+              }
+            },
+            "type": "ia.display.image"
+          }
+        ],
+        "meta": {
+          "name": "SVG"
+        },
+        "position": {
+          "basis": "200px"
+        },
+        "props": {
+          "style": {
+            "object-fit": "contain"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "245px",
+              "shrink": 0
+            },
+            "props": {
+              "text": "Supported Connection Types:",
+              "textStyle": {
+                "textAlign": "right"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "Connection Types"
+            },
+            "position": {
+              "grow": 1
+            },
+            "propConfig": {
+              "props.options": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.lists.connectionTypes"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\tkeys\u003dsorted(value.keys())\n\treturn [{\"value\": item, \"label\": item} for item in keys]\n",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "multiSelect": true,
+              "placeholder": {
+                "text": "Select Supported Connection Types..."
+              },
+              "showClearIcon": true,
+              "style": {
+                "marginLeft": "4px"
+              },
+              "value": [
+                "client",
+                "db",
+                "device-driver",
+                "mqtt",
+                "gateway-network",
+                "opc-com",
+                "kafka",
+                "opc-ua",
+                "mongodb",
+                "rest",
+                "standard"
+              ]
+            },
+            "type": "ia.input.dropdown"
+          }
+        ],
+        "meta": {
+          "name": "Connection"
+        },
+        "props": {
+          "alignItems": "flex-start",
+          "style": {
+            "margin": "2px",
+            "min-height": "40px",
+            "padding": "4px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "245px",
+              "shrink": 0
+            },
+            "props": {
+              "text": "Catagory:",
+              "textStyle": {
+                "textAlign": "right"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "Catagory"
+            },
+            "position": {
+              "grow": 1
+            },
+            "propConfig": {
+              "props.options": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.lists.categories"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\treturn [{\"value\": item, \"label\": item} for item in sorted(value)]\n",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "allowCustomOptions": true,
+              "placeholder": {
+                "text": "Select or Create Catagory..."
+              },
+              "showClearIcon": true,
+              "style": {
+                "marginLeft": "4px"
+              },
+              "value": null
+            },
+            "type": "ia.input.dropdown"
+          }
+        ],
+        "meta": {
+          "name": "Catagory"
+        },
+        "props": {
+          "alignItems": "flex-start",
+          "style": {
+            "margin": "2px",
+            "min-height": "40px",
+            "padding": "4px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "245px",
+              "shrink": 0
+            },
+            "props": {
+              "text": "Component Type:",
+              "textStyle": {
+                "textAlign": "right"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "TypeID"
+            },
+            "position": {
+              "grow": 1
+            },
+            "propConfig": {
+              "props.options": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.lists.ids"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\treturn [{\"value\": item, \"label\": item} for item in sorted(value)]\n",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "allowCustomOptions": true,
+              "placeholder": {
+                "text": "Select or Create Component Type..."
+              },
+              "showClearIcon": true,
+              "style": {
+                "marginLeft": "4px"
+              },
+              "value": null
+            },
+            "type": "ia.input.dropdown"
+          }
+        ],
+        "meta": {
+          "name": "TypeId"
+        },
+        "props": {
+          "alignItems": "flex-start",
+          "style": {
+            "margin": "2px",
+            "min-height": "40px",
+            "padding": "4px"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "children": [
+          {
+            "meta": {
+              "name": "Label"
+            },
+            "position": {
+              "basis": "245px",
+              "shrink": 0
+            },
+            "props": {
+              "text": "Swappable Types:",
+              "textStyle": {
+                "textAlign": "right"
+              }
+            },
+            "type": "ia.display.label"
+          },
+          {
+            "meta": {
+              "name": "Swappable With"
+            },
+            "position": {
+              "grow": 1
+            },
+            "propConfig": {
+              "props.options": {
+                "binding": {
+                  "config": {
+                    "struct": {
+                      "selectType": "{../TypeID.props.value}",
+                      "types": "{view.params.lists.ids}"
+                    },
+                    "waitOnAll": true
+                  },
+                  "transforms": [
+                    {
+                      "code": "\treturn [{\"value\": item, \"label\": item} for item in sorted(value[\u0027types\u0027]) if item !\u003d value[\u0027selectType\u0027]]",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "expr-struct"
+                }
+              }
+            },
+            "props": {
+              "multiSelect": true,
+              "placeholder": {
+                "text": "Select Swappable With Types..."
+              },
+              "showClearIcon": true,
+              "style": {
+                "marginLeft": "4px"
+              },
+              "value": null
+            },
+            "type": "ia.input.dropdown"
+          }
+        ],
+        "meta": {
+          "name": "Swap"
+        },
+        "props": {
+          "alignItems": "flex-start",
+          "style": {
+            "margin": "2px",
+            "min-height": "40px",
+            "padding": "4px"
+          }
+        },
+        "type": "ia.container.flex"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}
