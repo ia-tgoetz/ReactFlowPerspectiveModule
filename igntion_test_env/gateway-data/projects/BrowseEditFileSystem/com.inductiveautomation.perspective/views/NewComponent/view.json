@@ -1,0 +1,337 @@
+{
+  "custom": {
+    "category": "value",
+    "defaultConfigs": "value",
+    "id": "value",
+    "key": {
+      "category": "Gateways",
+      "configs": {},
+      "defaultConfigs": {},
+      "id": "standard",
+      "label": "Standard Gateway",
+      "labelStyle": {
+        "classes": ""
+      },
+      "style": {
+        "classes": "",
+        "paddingTop": "30px"
+      },
+      "supportedConnections": [
+        "gateway-network",
+        "db",
+        "mqtt",
+        "rest",
+        "client",
+        "standard",
+        "device-driver",
+        "opc-ua",
+        "opc-com",
+        "mongodb",
+        "kafka"
+      ],
+      "svg": "\u003csvg id\u003d\"Layer_2\" xmlns\u003d\"http://www.w3.org/2000/svg\" xmlns:xlink\u003d\"http://www.w3.org/1999/xlink\" viewBox\u003d\"0 0 221.43 314.39\"\u003e\u003cdefs\u003e\u003cstyle\u003e.cls-1,.cls-2,.cls-3{fill:none;}.cls-2{clip-path:url(#clippath-1);}.cls-4{fill:#f79435;}.cls-5{fill:#fff;}.cls-6{fill:#accce2;}.cls-7{fill:#355980;}.cls-8{fill:#2f4666;}.cls-3{clip-path:url(#clippath);}\u003c/style\u003e\u003cclipPath id\u003d\"clippath\"\u003e\u003crect class\u003d\"cls-1\" width\u003d\"221.43\" height\u003d\"314.39\"/\u003e\u003c/clipPath\u003e\u003cclipPath id\u003d\"clippath-1\"\u003e\u003crect class\u003d\"cls-1\" width\u003d\"221.43\" height\u003d\"314.39\"/\u003e\u003c/clipPath\u003e\u003c/defs\u003e\u003cg id\u003d\"Layer_1-2\"\u003e\u003cg id\u003d\"Server_Blue_-_Left\"\u003e\u003cg class\u003d\"cls-3\"\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"72.12 127.85 72.13 314.39 221.43 228.19 221.43 41.64 72.12 127.85\"/\u003e\u003cpolygon class\u003d\"cls-6\" points\u003d\"149.32 0 0 86.21 72.12 127.85 221.43 41.64 149.32 0\"/\u003e\u003cpolygon class\u003d\"cls-8\" points\u003d\"0 272.74 72.12 314.39 72.12 127.85 0 86.21 0 272.74\"/\u003e\u003cg class\u003d\"cls-2\"\u003e\u003cpath class\u003d\"cls-4\" d\u003d\"m135.14,209.9c1.65-2.37,3.51-4.07,5.57-5.1,2.07-1.04,3.82-1.15,5.23-.31,1.42.83,2.04,2.32,1.89,4.48-.16,2.17-1.05,4.35-2.7,6.58-1.63,2.22-3.49,3.85-5.55,4.88-2.08,1.04-3.83,1.22-5.24.52-1.42-.7-2.06-2.11-1.9-4.28.16-2.16,1.06-4.43,2.71-6.78\"/\u003e\u003cpath class\u003d\"cls-4\" d\u003d\"m184.52,118.08c-.7-1.13-1.79-1.69-3.28-1.68-1.5.03-3.07.61-4.74,1.77-1.67,1.16-3.1,3.15-4.32,5.97-.21.52-.78,2.05-1.72,4.59-.94,2.56-2.11,5.79-3.55,9.7-1.43,3.91-3.05,8.31-4.87,13.21-1.81,4.89-3.69,10.02-5.63,15.39-1.94,5.36-3.9,10.77-5.88,16.25-1.94,5.35-3.79,10.44-5.53,15.26.83-.12,1.63-.12,2.37,0,3.6-7.33,7.44-15.15,11.52-23.45,4.13-8.4,7.97-16.25,11.52-23.55,3.55-7.31,6.57-13.51,9.05-18.62,2.5-5.11,3.92-8.08,4.28-8.91,1.21-2.82,1.46-4.8.77-5.93\"/\u003e\u003cpath class\u003d\"cls-4\" d\u003d\"m135.05,204.39c-1.14-3.87-2.06-6.97-2.78-9.32-.71-2.36-1.32-4.23-1.78-5.58-.48-1.36-.85-2.33-1.13-2.93-.27-.6-.53-1.1-.79-1.47-.61-.93-1.5-1.24-2.69-.96-1.19.31-2.46,1.17-3.8,2.58-1.34,1.42-2.24,2.85-2.68,4.27-.45,1.42-.36,2.6.24,3.52.26.38.59.8,1.01,1.24.41.46,1.11,1.1,2.08,1.93.97.83,2.31,1.91,4.03,3.23,1.71,1.32,3.99,3.05,6.83,5.17.48-.59.97-1.15,1.48-1.68\"/\u003e\u003cpath class\u003d\"cls-5\" d\u003d\"m58.62,152.25c-.49,0-.99-.12-1.44-.39l-45.25-26.14c-1.38-.8-1.85-2.56-1.06-3.94.8-1.38,2.56-1.85,3.94-1.06l45.25,26.14c1.38.8,1.85,2.56,1.06,3.94-.53.93-1.51,1.44-2.5,1.44\"/\u003e\u003cpath class\u003d\"cls-5\" d\u003d\"m58.62,167.21c-.49,0-.99-.12-1.44-.39l-45.25-26.13c-1.38-.8-1.85-2.56-1.06-3.94.8-1.38,2.56-1.85,3.94-1.06l45.25,26.13c1.38.8,1.85,2.56,1.06,3.94-.53.93-1.51,1.44-2.5,1.44\"/\u003e\u003cpath class\u003d\"cls-5\" d\u003d\"m58.62,182.17c-.49,0-.99-.12-1.44-.39l-45.25-26.12c-1.38-.8-1.85-2.56-1.06-3.94.8-1.38,2.56-1.85,3.94-1.06l45.25,26.12c1.38.8,1.85,2.56,1.06,3.94-.53.93-1.51,1.44-2.5,1.44\"/\u003e\u003c/g\u003e\u003c/g\u003e\u003c/g\u003e\u003c/g\u003e\u003c/svg\u003e",
+      "swappableWith": [
+        "edge-iiot",
+        "edge-panel",
+        "cloud"
+      ],
+      "tooltip": "Standard Gateway"
+    },
+    "label": "value",
+    "style": {},
+    "supportedConnections": "value",
+    "svg": "\u003c?xml version\u003d\"1.0\" encoding\u003d\"UTF-8\"?\u003e\u003csvg id\u003d\"Layer_2\" xmlns\u003d\"http://www.w3.org/2000/svg\" xmlns:xlink\u003d\"http://www.w3.org/1999/xlink\" viewBox\u003d\"0 0 207.78 239.43\"\u003e\u003cdefs\u003e\u003cstyle\u003e.cls-1,.cls-2,.cls-3{fill:none;}.cls-2{clip-path:url(#clippath-1);}.cls-4{fill:#f79435;}.cls-5{fill:#fff;}.cls-6{fill:#bfbfc1;}.cls-7{fill:#959799;}.cls-8{fill:#626264;}.cls-3{clip-path:url(#clippath);}\u003c/style\u003e\u003cclipPath id\u003d\"clippath\"\u003e\u003crect class\u003d\"cls-1\" width\u003d\"207.78\" height\u003d\"239.43\"/\u003e\u003c/clipPath\u003e\u003cclipPath id\u003d\"clippath-1\"\u003e\u003crect class\u003d\"cls-1\" width\u003d\"207.78\" height\u003d\"239.43\"/\u003e\u003c/clipPath\u003e\u003c/defs\u003e\u003cg id\u003d\"Layer_1-2\"\u003e\u003cg id\u003d\"Client_Laptop_White_-_Left\"\u003e\u003cg class\u003d\"cls-3\"\u003e\u003cpolygon class\u003d\"cls-6\" points\u003d\"110.42 0 .03 63.81 .04 183.01 116.73 115.51 116.73 3.61 110.42 0\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"116.73 3.61 6.26 67.64 6.26 179.38 116.73 115.51 116.73 3.61\"/\u003e\u003cpolygon class\u003d\"cls-5\" points\u003d\"109.56 16.09 13.72 71.56 13.72 165.05 109.56 109.71 109.56 16.09\"/\u003e\u003cpolygon class\u003d\"cls-8\" points\u003d\"0 182.97 97.3 239.43 207.78 175.68 207.78 168.12 116.73 115.51 6.26 179.38 6.26 67.64 .03 63.81 0 182.97\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"97.44 231.82 97.3 239.43 207.78 175.67 207.78 168.12 97.44 231.82\"/\u003e\u003cpolygon class\u003d\"cls-6\" points\u003d\"6.26 179.38 97.44 231.83 207.78 168.12 116.73 115.51 6.26 179.38\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"139.18 173.09 158.93 184.51 132.48 199.9 112.56 188.44 139.18 173.09\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"38.45 181.74 34.08 184.25 29.05 181.34 33.42 178.83 38.45 181.74\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"44.22 178.42 39.85 180.93 34.83 178.01 39.19 175.5 44.22 178.42\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"49.99 175.09 45.63 177.61 40.6 174.69 44.97 172.19 49.99 175.09\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"55.77 171.77 51.4 174.28 46.37 171.38 50.75 168.86 55.77 171.77\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"61.56 168.44 57.19 170.95 52.16 168.05 56.53 165.54 61.56 168.44\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"67.33 165.13 62.96 167.64 57.93 164.73 62.31 162.22 67.33 165.13\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"73.11 161.8 68.74 164.32 63.71 161.4 68.08 158.89 73.11 161.8\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"78.88 158.48 74.52 160.99 69.49 158.08 73.86 155.58 78.88 158.48\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"84.66 155.17 80.3 157.67 75.26 154.75 79.63 152.25 84.66 155.17\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"90.43 151.84 86.07 154.34 81.05 151.44 85.4 148.93 90.43 151.84\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"96.21 148.52 91.85 151.03 86.82 148.12 91.19 145.6 96.21 148.52\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"101.98 145.19 97.63 147.7 92.6 144.79 96.96 142.28 101.98 145.19\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"107.77 141.87 103.4 144.39 98.37 141.48 102.75 138.97 107.77 141.87\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"113.54 138.68 109.18 141.19 104.15 138.28 108.51 135.76 113.54 138.68\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"119.31 135.35 114.95 137.87 109.92 134.95 114.29 132.44 119.31 135.35\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"125.03 132.02 120.68 134.54 115.64 131.62 120 129.11 125.03 132.02\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"56.25 191.93 51.89 194.44 46.86 191.54 51.23 189.03 56.25 191.93\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"62.04 188.62 57.67 191.12 52.64 188.22 57.01 185.7 62.04 188.62\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"67.81 185.29 63.44 187.79 58.41 184.89 62.78 182.38 67.81 185.29\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"73.59 181.97 69.22 184.48 64.19 181.57 68.56 179.06 73.59 181.97\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"79.36 178.64 75 181.16 69.97 178.24 74.33 175.74 79.36 178.64\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"85.14 175.32 80.77 177.83 75.74 174.93 80.11 172.42 85.14 175.32\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"90.92 172.01 86.55 174.52 81.52 171.6 85.88 169.09 90.92 172.01\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"96.7 168.68 92.32 171.19 87.29 168.28 91.67 165.77 96.7 168.68\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"102.48 165.36 98.11 167.87 93.08 164.96 97.44 162.44 102.48 165.36\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"108.25 162.03 103.88 164.54 98.85 161.63 103.22 159.11 108.25 162.03\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"114.03 158.71 109.66 161.22 104.63 158.32 109 155.81 114.03 158.71\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"119.81 155.38 115.43 157.91 110.41 154.99 114.78 152.48 119.81 155.38\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"125.58 152.07 121.2 154.58 116.18 151.67 120.55 149.16 125.58 152.07\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"62.57 195.58 58.19 198.1 53.17 195.18 57.54 192.67 62.57 195.58\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"68.34 192.26 63.97 194.78 58.94 191.86 63.31 189.36 68.34 192.26\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"74.11 188.95 69.75 191.45 64.72 188.53 69.1 186.03 74.11 188.95\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"79.89 185.62 75.52 188.12 70.5 185.22 74.86 182.71 79.89 185.62\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"85.66 182.3 81.31 184.81 76.28 181.9 80.65 179.38 85.66 182.3\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"91.45 178.97 87.08 181.48 82.06 178.59 86.42 176.06 91.45 178.97\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"97.22 175.65 92.86 178.16 87.83 175.26 92.2 172.75 97.22 175.65\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"103 172.32 98.63 174.84 93.61 171.93 97.98 169.42 103 172.32\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"108.78 169.01 104.41 171.53 99.38 168.61 103.75 166.1 108.78 169.01\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"114.55 165.69 110.19 168.2 105.16 165.28 109.53 162.77 114.55 165.69\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"120.33 162.36 115.97 164.88 110.93 161.96 115.3 159.45 120.33 162.36\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"126.11 159.04 121.74 161.55 116.72 158.65 121.09 156.12 126.11 159.04\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"131.89 155.71 127.52 158.24 122.49 155.33 126.86 152.81 131.89 155.71\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"69.26 199.47 64.89 201.98 59.86 199.06 64.23 196.55 69.26 199.47\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"75.04 196.14 70.67 198.65 65.64 195.74 70 193.22 75.04 196.14\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"80.8 192.82 76.44 195.33 71.41 192.43 75.78 189.9 80.8 192.82\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"86.58 189.49 82.22 192 77.19 189.1 81.56 186.59 86.58 189.49\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"92.36 186.18 87.99 188.69 82.96 185.78 87.34 183.26 92.36 186.18\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"98.13 182.85 93.78 185.37 88.75 182.45 93.11 179.94 98.13 182.85\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"103.92 179.53 99.55 182.04 94.52 179.13 98.9 176.63 103.92 179.53\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"109.7 176.21 105.32 178.72 100.3 175.8 104.67 173.3 109.7 176.21\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"115.47 172.88 111.1 175.39 106.07 172.49 110.45 169.98 115.47 172.88\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"121.25 169.57 116.88 172.08 111.85 169.17 116.22 166.65 121.25 169.57\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"127.02 166.24 122.66 168.75 117.63 165.84 122 163.33 127.02 166.24\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"132.8 162.92 128.43 165.43 123.4 162.52 127.77 160.02 132.8 162.92\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"138.58 159.59 134.21 162.11 129.19 159.19 133.54 156.69 138.58 159.59\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"75.35 202.99 70.99 205.5 65.96 202.59 70.33 200.09 75.35 202.99\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"81.13 199.68 76.76 202.18 71.74 199.26 76.11 196.76 81.13 199.68\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"86.9 196.36 82.54 198.85 77.51 195.95 81.88 193.44 86.9 196.36\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"127.35 173.09 88.32 195.54 83.29 192.63 122.32 170.19 127.35 173.09\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"133.12 169.77 128.76 172.28 123.73 169.38 128.09 166.85 133.12 169.77\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"138.9 166.44 134.53 168.95 129.5 166.05 133.87 163.54 138.9 166.44\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"144.68 163.13 140.31 165.65 135.28 162.73 139.64 160.22 144.68 163.13\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"131.35 148.86 126.99 151.38 121.96 148.48 126.33 145.96 131.35 148.86\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"137.13 145.55 132.76 148.07 127.73 145.15 132.11 142.64 137.13 145.55\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"137.65 152.53 133.3 155.03 128.27 152.12 132.63 149.62 137.65 152.53\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"143.44 149.2 139.07 151.71 134.04 148.81 138.41 146.29 143.44 149.2\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"144.36 156.4 139.99 158.91 134.96 156 139.33 153.49 144.36 156.4\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"150.13 153.07 145.75 155.59 140.74 152.67 145.1 150.16 150.13 153.07\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"150.46 159.93 146.08 162.44 141.05 159.54 145.43 157.02 150.46 159.93\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"156.24 156.6 151.85 159.11 146.84 156.22 151.2 153.7 156.24 156.6\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"49.57 188.05 45.2 190.58 40.17 187.66 44.54 185.15 49.57 188.05\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"55.34 184.74 50.97 187.26 45.94 184.33 50.32 181.82 55.34 184.74\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"61.12 181.41 56.75 183.93 51.72 181.01 56.09 178.5 61.12 181.41\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"66.89 178.09 62.53 180.6 57.5 177.69 61.87 175.17 66.89 178.09\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"72.67 174.76 68.3 177.28 63.28 174.36 67.64 171.86 72.67 174.76\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"78.45 171.45 74.08 173.95 69.04 171.05 73.43 168.54 78.45 171.45\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"84.22 168.12 79.86 170.64 74.83 167.73 79.19 165.21 84.22 168.12\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"90.01 164.8 85.64 167.32 80.61 164.4 84.98 161.89 90.01 164.8\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"95.78 161.48 91.42 163.99 86.38 161.07 90.75 158.56 95.78 161.48\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"101.56 158.17 97.19 160.67 92.16 157.76 96.53 155.25 101.56 158.17\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"107.34 154.84 102.96 157.34 97.94 154.44 102.31 151.92 107.34 154.84\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"113.11 151.51 108.74 154.03 103.71 151.12 108.08 148.6 113.11 151.51\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"118.89 148.19 114.52 150.71 109.49 147.79 113.86 145.28 118.89 148.19\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"124.66 145 120.29 147.51 115.26 144.6 119.63 142.09 124.66 145\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"130.43 141.68 126.07 144.19 121.05 141.28 125.42 138.76 130.43 141.68\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"136.15 138.34 131.79 140.86 126.76 137.94 131.13 135.43 136.15 138.34\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"142.85 142.23 138.48 144.74 133.45 141.82 137.82 139.31 142.85 142.23\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"149.15 145.87 144.78 148.38 139.75 145.48 144.12 142.97 149.15 145.87\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"155.85 149.75 151.48 152.26 146.45 149.36 150.81 146.83 155.85 149.75\"/\u003e\u003cpolygon class\u003d\"cls-7\" points\u003d\"161.95 153.27 157.58 155.8 152.55 152.88 156.92 150.37 161.95 153.27\"/\u003e\u003cg class\u003d\"cls-2\"\u003e\u003cpath class\u003d\"cls-4\" d\u003d\"m47.69,117.3c1.44-1.86,3.1-3.21,4.93-4.03,1.82-.84,3.36-.9,4.6-.25,1.25.66,1.8,1.84,1.67,3.55-.15,1.73-.92,3.45-2.39,5.22-1.44,1.75-3.08,3.06-4.9,3.86-1.84.82-3.37.96-4.62.41-1.27-.55-1.82-1.67-1.69-3.38.14-1.71.93-3.51,2.39-5.39\"/\u003e\u003cpath class\u003d\"cls-4\" d\u003d\"m91.26,44.6c-.62-.9-1.58-1.36-2.9-1.34-1.32.03-2.71.49-4.17,1.4-1.49.92-2.74,2.5-3.8,4.73-.2.4-.71,1.62-1.53,3.64-.82,2.02-1.86,4.58-3.13,7.68-1.26,3.08-2.69,6.58-4.29,10.46-1.6,3.88-3.26,7.94-4.96,12.19-1.72,4.24-3.45,8.53-5.2,12.88-1.71,4.24-3.34,8.26-4.88,12.09.73-.11,1.43-.11,2.1,0,3.17-5.81,6.56-12.01,10.16-18.58,3.64-6.65,7.03-12.86,10.16-18.65,3.12-5.78,5.79-10.69,7.99-14.75,2.21-4.04,3.46-6.39,3.78-7.06,1.06-2.23,1.29-3.79.69-4.69\"/\u003e\u003cpath class\u003d\"cls-4\" d\u003d\"m47.61,112.94c-1.01-3.06-1.82-5.51-2.46-7.37-.62-1.88-1.16-3.36-1.57-4.43-.42-1.07-.75-1.85-.99-2.32-.24-.48-.47-.86-.7-1.17-.54-.74-1.32-1-2.38-.75-1.06.23-2.17.92-3.36,2.04-1.18,1.12-1.97,2.25-2.36,3.37-.39,1.14-.31,2.06.22,2.8.23.3.52.63.89.99.36.37.99.86,1.84,1.52.85.66,2.04,1.51,3.56,2.56,1.5,1.04,3.51,2.41,6.02,4.08.42-.45.85-.91,1.3-1.33\"/\u003e\u003c/g\u003e\u003c/g\u003e\u003c/g\u003e\u003c/g\u003e\u003c/svg\u003e",
+    "tooltip": "value"
+  },
+  "params": {
+    "connectionTypes": {
+      "client": {
+        "arrow": false,
+        "color": "var(--neutral-60)",
+        "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/perspective/perspective-sessions",
+        "label": "Client",
+        "multiple": false
+      },
+      "db": {
+        "arrow": false,
+        "color": "#34A853",
+        "docs": "https://docs.inductiveautomation.com/docs/8.1/platform/database-connections",
+        "label": "DB",
+        "multiple": true
+      },
+      "device-driver": {
+        "arrow": false,
+        "color": "var(--seq-3)",
+        "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/opc-ua/opc-ua-drivers",
+        "label": "Device Driver",
+        "multiple": true
+      },
+      "gateway-network": {
+        "arrow": true,
+        "color": "var(--ignition-orange)",
+        "docs": "https://docs.inductiveautomation.com/docs/8.1/platform/gateway-network",
+        "label": "Gateway Network",
+        "multiple": false
+      },
+      "kafka": {
+        "arrow": false,
+        "color": "#00ACAC",
+        "docs": "https://docs.inductiveautomation.com/docs/8.3/ignition-modules/cloud-connector-modules/kafka",
+        "label": "Kafka",
+        "multiple": true
+      },
+      "mongodb": {
+        "arrow": false,
+        "color": "green",
+        "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/cloud-connector-modules/mongodb",
+        "label": "MongoDB",
+        "multiple": true
+      },
+      "mqtt": {
+        "arrow": false,
+        "color": "var(--cirrusLink)",
+        "docs": "https://docs.chariot.io/display/CLD80/Cirrus+Link+Ignition+Modules",
+        "label": "MQTT",
+        "multiple": true
+      },
+      "opc-com": {
+        "arrow": false,
+        "color": "#FFE7BA",
+        "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/opc-ua/third-party-opc-servers/opc-com",
+        "label": "OPC-COM",
+        "multiple": true
+      },
+      "opc-ua": {
+        "arrow": false,
+        "color": "#FFE7BA",
+        "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/opc-ua",
+        "label": "OPC-UA",
+        "multiple": true
+      },
+      "rest": {
+        "arrow": true,
+        "color": "#f59e0b",
+        "docs": "https://docs.inductiveautomation.com/docs/8.1/ignition-modules/webdev",
+        "label": "REST API",
+        "multiple": true
+      },
+      "standard": {
+        "arrow": false,
+        "color": "var(--neutral-100)",
+        "docs": "https://docs.inductiveautomation.com/docs/8.1/platform/gateway/status/connections",
+        "label": "Standard",
+        "multiple": true
+      }
+    },
+    "lists": {
+      "categories": [
+        "Gateways",
+        "Misc",
+        "Data",
+        "Zones",
+        "Endpoints",
+        "Infrastructure",
+        "Edge"
+      ],
+      "ids": [
+        "container",
+        "standard",
+        "Connector",
+        "server",
+        "Comms",
+        "Device",
+        "Kafka",
+        "ReverseProxy",
+        "Label",
+        "edge-iiot",
+        "LoadBalancer",
+        "Custom",
+        "Usersource",
+        "fourIR",
+        "Firewall",
+        "cloud",
+        "OPCUA",
+        "edge-panel",
+        "Note",
+        "Database",
+        "MongoDB",
+        "Client"
+      ],
+      "labels": [
+        "Standard Gateway",
+        "Connector",
+        "Load Balancer",
+        "Server",
+        "Device",
+        "OPC-UA Server",
+        "Kafka",
+        "Label",
+        "Custom",
+        "Edge IIOT Gateway",
+        "Firewall",
+        "Reverse Proxy",
+        "Cloud Gateway",
+        "Area / Site",
+        "Note",
+        "Database",
+        "MongoDB",
+        "Edge Panel Gateway",
+        "Client",
+        "4IR",
+        "Communication",
+        "User Source"
+      ]
+    }
+  },
+  "propConfig": {
+    "custom.category": {
+      "persistent": true
+    },
+    "custom.defaultConfigs": {
+      "persistent": true
+    },
+    "custom.id": {
+      "persistent": true
+    },
+    "custom.key": {
+      "persistent": true
+    },
+    "custom.label": {
+      "persistent": true
+    },
+    "custom.style": {
+      "persistent": true
+    },
+    "custom.supportedConnections": {
+      "persistent": true
+    },
+    "custom.svg": {
+      "persistent": true
+    },
+    "custom.tooltip": {
+      "persistent": true
+    },
+    "params.connectionTypes": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.lists": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {},
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "custom": {
+              "fileString": "value"
+            },
+            "events": {
+              "component": {
+                "onFileReceived": {
+                  "config": {
+                    "script": "\tself.view.custom.svg\u003devent.file.getString()"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                }
+              }
+            },
+            "meta": {
+              "name": "FileUpload"
+            },
+            "position": {
+              "basis": "50%"
+            },
+            "props": {
+              "supportedFileTypes": [
+                "svg"
+              ]
+            },
+            "type": "ia.input.fileupload"
+          },
+          {
+            "meta": {
+              "name": "Image"
+            },
+            "position": {
+              "basis": "100px",
+              "grow": 1
+            },
+            "propConfig": {
+              "props.source": {
+                "binding": {
+                  "config": {
+                    "path": "view.custom.svg"
+                  },
+                  "transforms": [
+                    {
+                      "code": "\timport base64\n\t\n\tdef convert_svg_to_markdown(svg_string):\n\t    \"\"\"\n\t    Takes a raw SVG string, encodes it to Base64, and returns \n\t    the fully formatted Markdown image string.\n\t    \"\"\"\n\t    # 1. Encode the raw string into Base64\n\t    # We encode to utf-8 first to ensure any special characters are handled correctly\n\t    encoded_bytes \u003d base64.b64encode(svg_string.encode(\u0027utf-8\u0027))\n\t    \n\t    # In Jython 2.7, b64encode returns a string, but it\u0027s safe to cast just in case\n\t    base64_string \u003d str(encoded_bytes)\n\t    \n\t    # 2. Construct the Data URI and Markdown syntax\n\t    markdown_output \u003d \"data:image/svg+xml;base64,\" + base64_string\n\t    \n\t    return markdown_output\n\t\n\t# --- TEST IT OUT ---\n\t\n\t# Paste your exact SVG string inside the triple quotes\n\tmy_raw_svg \u003d \"\"\"{}\"\"\".format(value)\n\t\n\t# Run the function\n\tfinal_markdown \u003d convert_svg_to_markdown(my_raw_svg)\n\t\n\t# Print the result so you can copy and paste it into your Markdown component\n\treturn final_markdown",
+                      "type": "script"
+                    }
+                  ],
+                  "type": "property"
+                }
+              }
+            },
+            "props": {
+              "fit": {
+                "mode": "contain"
+              }
+            },
+            "type": "ia.display.image"
+          }
+        ],
+        "meta": {
+          "name": "SVG"
+        },
+        "position": {
+          "basis": "200px"
+        },
+        "props": {
+          "style": {
+            "object-fit": "contain"
+          }
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "meta": {
+          "name": "Dropdown"
+        },
+        "position": {
+          "basis": "36px"
+        },
+        "type": "ia.input.dropdown"
+      },
+      {
+        "meta": {
+          "name": "Dropdown_0"
+        },
+        "position": {
+          "basis": "36px"
+        },
+        "type": "ia.input.dropdown"
+      },
+      {
+        "meta": {
+          "name": "Dropdown_1"
+        },
+        "position": {
+          "basis": "36px"
+        },
+        "type": "ia.input.dropdown"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}
