@@ -319,9 +319,10 @@ const mapIgnitionToReactFlowNodes = (ignitionNodes: any, handleGearClick: (id: s
                 label: nodeData.label || 'Unknown', svg: nodeData.svg || '', tooltip: nodeData.tooltip || '', configs: nodeData.configs || {}, 
                 style: nodeData.style || {}, 
                 labelStyle: nodeData.labelStyle || {}, 
-                paletteId: nodeData.paletteId || 'unknown', 
-                hideHandles: nodeData.hideHandles, 
-                globalHideHandles: globalHideHandles, 
+                paletteId: nodeData.paletteId || 'unknown',
+                inactive: nodeData.inactive || false,
+                hideHandles: nodeData.hideHandles,
+                globalHideHandles: globalHideHandles,
                 handleCount: globalHandleCount,
                 onGearClick: handleGearClick, 
                 onResizeEnd: isContainer ? handleResizeEnd : undefined 
@@ -380,7 +381,7 @@ const getNodesInside = (containerId: string, allNodes: any): string[] => {
     return inside;
 };
 
-export interface ArchitectureBuilderProps { hideHandles?: any; handleCount?: any; defaultConnectionType?: string; snapEnabled?: any; snapPixels?: any; style?: any; connectionTypes: any; paletteItems: any[]; nodes: any; edges: any; }
+export interface ArchitectureBuilderProps { enabled?: any; hideHandles?: any; handleCount?: any; defaultConnectionType?: string; snapEnabled?: any; snapPixels?: any; style?: any; connectionTypes: any; paletteItems: any[]; nodes: any; edges: any; }
 
 export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureBuilderProps>) => {
   const reactFlowWrapper = React.useRef<HTMLDivElement>(null);
@@ -412,7 +413,9 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
   const globalHandleCount = Number(props.props.handleCount) || 5; 
   const globalDefaultConnectionType = props.props.defaultConnectionType || '';
   
-  const snapEnabled = props.props.snapEnabled !== false && String(props.props.snapEnabled).toLowerCase() !== 'false'; 
+  const isEnabled = props.props.enabled !== false && String(props.props.enabled).toLowerCase() !== 'false';
+
+  const snapEnabled = props.props.snapEnabled !== false && String(props.props.snapEnabled).toLowerCase() !== 'false';
   const snapPixels = Number(props.props.snapPixels) || 15;
   const snapGrid = React.useMemo<[number, number]>(() => [snapPixels, snapPixels], [snapPixels]);
 
@@ -494,6 +497,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
             return;
         }
 
+        if (!isEnabled) return;
         if ((e.target as HTMLElement).tagName === 'INPUT' || (e.target as HTMLElement).tagName === 'TEXTAREA') return;
 
         if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
@@ -512,7 +516,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [selectedId, rawNodesDict, snapEnabled, snapPixels, props.store, executeCopy, executePaste, closeContextMenu]);
+  }, [isEnabled, selectedId, rawNodesDict, snapEnabled, snapPixels, props.store, executeCopy, executePaste, closeContextMenu]);
 
   const handleGearClick = React.useCallback((id: string) => {
       setSelectedId(id); 
@@ -728,6 +732,38 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
           closeContextMenu(); return;
       }
 
+      if (action === 'toggleGrayscale' && isNode) {
+          if (props.store?.props) {
+              const nextNodes = { ...rawNodesDict };
+              const target = nextNodes[contextMenu.id];
+              if (target) {
+                  const newInactive = !target.inactive;
+                  nextNodes[contextMenu.id] = { ...target, inactive: newInactive };
+
+                  const nextEdges = { ...rawEdgesDict };
+                  let edgesChanged = false;
+                  Object.keys(nextEdges).forEach(edgeId => {
+                      const edge = nextEdges[edgeId];
+                      if (edge.source === contextMenu.id || edge.target === contextMenu.id) {
+                          if (newInactive) {
+                              nextEdges[edgeId] = { ...edge, dashed: true };
+                          } else {
+                              const otherNodeId = edge.source === contextMenu.id ? edge.target : edge.source;
+                              if (!nextNodes[otherNodeId]?.inactive) {
+                                  nextEdges[edgeId] = { ...edge, dashed: false };
+                              }
+                          }
+                          edgesChanged = true;
+                      }
+                  });
+
+                  props.store.props.write('nodes', nextNodes);
+                  if (edgesChanged) props.store.props.write('edges', nextEdges);
+              }
+          }
+          closeContextMenu(); return;
+      }
+
       if (action === 'copy' && isNode) {
           executeCopy(contextMenu.id);
           closeContextMenu(); return;
@@ -896,6 +932,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
         if (paletteItem.id === 'container') {
             newNodeData.width = 300;
             newNodeData.height = 300;
+            newNodeData.zIndex = -1;
         }
         
         const nextNodes = { ...rawNodesDict }; nextNodes[newNodeId] = newNodeData;
@@ -1003,22 +1040,24 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       </style>
 
       <div className="arch-theme-wrapper">
-        <Sidebar paletteItems={paletteItems} isOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} onDragStartItem={(item) => { draggedItemRef.current = item; }} />
+        {isEnabled && <Sidebar paletteItems={paletteItems} isOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} onDragStartItem={(item) => { draggedItemRef.current = item; }} />}
         
         <div style={{ flexGrow: 1, height: '100%', position: 'relative', overflow: 'hidden' }} ref={reactFlowWrapper}>
           <ReactFlowProvider>
-            <ReactFlow 
-              nodes={localNodes} edges={flowEdges} nodeTypes={nodeTypes} edgeTypes={edgeTypes} 
-              isValidConnection={isValidConnection} onInit={setReactFlowInstance} 
-              onDrop={onDrop} onDragOver={onDragOver} onConnect={onConnect} onEdgeUpdate={onEdgeUpdate}
-              onEdgeUpdateStart={(event: any, edge: any) => { updatingEdgeRef.current = edge?.id || null; }}
-              onEdgeUpdateEnd={() => { updatingEdgeRef.current = null; }}
-              onNodeDragStart={onNodeDragStart} onNodeDrag={onNodeDrag} onNodeDragStop={onNodeDragStop} 
-              onNodesChange={onNodesChange} 
-              onNodeClick={onNodeClick} onEdgeClick={onEdgeClick}
-              onNodesDelete={onNodesDelete} onEdgesDelete={onEdgesDelete}
-              onNodeContextMenu={onNodeContextMenu} onEdgeContextMenu={onEdgeContextMenu} 
-              onPaneClick={onPaneClick} onPaneContextMenu={onPaneContextMenu}
+            <ReactFlow
+              nodes={localNodes} edges={flowEdges} nodeTypes={nodeTypes} edgeTypes={edgeTypes}
+              isValidConnection={isValidConnection} onInit={setReactFlowInstance}
+              onDrop={isEnabled ? onDrop : undefined} onDragOver={isEnabled ? onDragOver : undefined}
+              onConnect={isEnabled ? onConnect : undefined} onEdgeUpdate={isEnabled ? onEdgeUpdate : undefined}
+              onEdgeUpdateStart={isEnabled ? (event: any, edge: any) => { updatingEdgeRef.current = edge?.id || null; } : undefined}
+              onEdgeUpdateEnd={isEnabled ? () => { updatingEdgeRef.current = null; } : undefined}
+              onNodeDragStart={isEnabled ? onNodeDragStart : undefined} onNodeDrag={isEnabled ? onNodeDrag : undefined} onNodeDragStop={isEnabled ? onNodeDragStop : undefined}
+              onNodesChange={onNodesChange}
+              onNodeClick={isEnabled ? onNodeClick : undefined} onEdgeClick={isEnabled ? onEdgeClick : undefined}
+              onNodesDelete={isEnabled ? onNodesDelete : undefined} onEdgesDelete={isEnabled ? onEdgesDelete : undefined}
+              onNodeContextMenu={isEnabled ? onNodeContextMenu : undefined} onEdgeContextMenu={isEnabled ? onEdgeContextMenu : undefined}
+              onPaneClick={onPaneClick} onPaneContextMenu={isEnabled ? onPaneContextMenu : undefined}
+              nodesDraggable={isEnabled} nodesConnectable={isEnabled} elementsSelectable={isEnabled}
               connectionMode={ConnectionMode.Loose} snapToGrid={snapEnabled} snapGrid={snapGrid}
               elevateNodesOnSelect={false}
               minZoom={0.05}
@@ -1060,6 +1099,12 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
                           {contextMenu.type === 'node' && ( 
                               <>
                                   <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--callToAction)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('editStyle')}>🎨 Edit Style</div>
+                                  {!contextMenu.isContainer && (
+                                      <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', justifyContent: 'space-between', gap: '12px' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('toggleGrayscale')}>
+                                          <span>⬜ Toggle Inactive</span>
+                                          <span>{rawNodesDict[contextMenu.id]?.inactive ? '✓' : ''}</span>
+                                      </div>
+                                  )}
 
                                   <div style={{ borderTop: '1px solid var(--neutral-40)', margin: '4px 0' }} />
                                   

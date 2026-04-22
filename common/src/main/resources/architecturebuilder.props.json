@@ -299,7 +299,11 @@
             "svg": { "type": "string" },
             "x": { "type": "number" },
             "y": { "type": "number" },
+            "inactive": { "type": "boolean", "description": "When true, renders the node with a grayscale filter to indicate an offline or pending state.", "default": false },
             "hideHandles": { "type": "boolean", "description": "Overrides global hideHandles if set." },
+            "width": { "type": "number", "description": "Width in pixels; only used for container nodes." },
+            "height": { "type": "number", "description": "Height in pixels; only used for container nodes." },
+            "zIndex": { "type": "number", "description": "Z-order for container layering; lower values render behind." },
             "configs": { "type": "object" },
             "supportedConnections": { "type": "array", "items": { "type": "string" } },
             "style": { "$ref": "urn:ignition-schema:schemas/style-properties.schema.json" },
@@ -330,6 +334,11 @@
         }
       },
       "default": {}
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "When false, hides the component palette and prevents all editing interactions. Pan and zoom remain functional.",
+      "default": true
     },
     "snapEnabled": {
       "type": "boolean",

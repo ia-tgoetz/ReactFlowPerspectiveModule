@@ -10,6 +10,7 @@ export interface ArchitectureNodeData {
     style?: any;
     labelStyle?: any;
     paletteId: string;
+    inactive?: boolean;
     hideHandles?: boolean;
     globalHideHandles?: boolean;
     handleCount?: number; 
@@ -38,6 +39,7 @@ export const ArchitectureNode = ({ id, data, selected }: NodeProps<ArchitectureN
         boxSizing: 'border-box',
         position: 'relative',
         ...(data.style || {}),
+        filter: data.inactive ? 'grayscale(100%)' : (data.style?.filter || undefined),
         boxShadow: selected ? '0 0 0 2px rgba(0, 123, 255, 0.25)' : (data.style?.boxShadow || '0 2px 4px rgba(0,0,0,0.1)')
     };
 
