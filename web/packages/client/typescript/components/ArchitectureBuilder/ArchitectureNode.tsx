@@ -58,49 +58,11 @@ export const ArchitectureNode = ({ id, data, selected }: NodeProps<ArchitectureN
 
     return (
         <div style={combinedStyle} title={data.tooltip}>
-            <style>
-                {`
-                .arch-node-gear { transform-origin: 50% 50%; transition: transform 0.75s ease-in-out; }
-                .arch-node-gear:hover { transform: rotate(360deg); }
-                .arch-node-gear:active { transform: translateX(-100%) rotate(-360deg); }
-                
-                .arch-node-svg-wrapper svg {
-                    width: 100%;
-                    height: 100%;
-                    max-width: 100%;
-                    max-height: 100%;
-                    object-fit: contain;
-                }
-
-                /* --- INVISIBLE HIT-BOX MAGIC --- */
-                /* Projects a 20px invisible bubble around the tiny physical handle */
-                .arch-node-handle::after {
-                    content: '';
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    width: 20px;  /* <-- FIXED: Reduced from 30px to prevent neighbor overlap */
-                    height: 20px; /* <-- FIXED: Reduced from 30px to prevent neighbor overlap */
-                    background: transparent;
-                    cursor: crosshair;
-                }
-
-                /* Visually pop the tiny dot when the mouse enters the invisible bubble */
-                .arch-node-handle:hover {
-                    background-color: var(--callToAction) !important;
-                    border-color: var(--callToAction) !important;
-                    transform: scale(1.5);
-                }
-                `}
-            </style>
-
-            <>
-                {positions.map((pos, i) => <Handle className="arch-node-handle" key={`top-${i}`} type="source" position={Position.Top} id={`top-${i}`} style={{ ...handleStyle, left: pos }} />)}
-                {positions.map((pos, i) => <Handle className="arch-node-handle" key={`right-${i}`} type="source" position={Position.Right} id={`right-${i}`} style={{ ...handleStyle, top: pos }} />)}
-                {positions.map((pos, i) => <Handle className="arch-node-handle" key={`bottom-${i}`} type="source" position={Position.Bottom} id={`bottom-${i}`} style={{ ...handleStyle, left: pos }} />)}
-                {positions.map((pos, i) => <Handle className="arch-node-handle" key={`left-${i}`} type="source" position={Position.Left} id={`left-${i}`} style={{ ...handleStyle, top: pos }} />)}
-            </>
+            {/* All handles are type="source"; ConnectionMode.Loose in the parent allows source-to-source connections */}
+            {positions.map((pos, i) => <Handle className="arch-node-handle" key={`top-${i}`} type="source" position={Position.Top} id={`top-${i}`} style={{ ...handleStyle, left: pos }} />)}
+            {positions.map((pos, i) => <Handle className="arch-node-handle" key={`right-${i}`} type="source" position={Position.Right} id={`right-${i}`} style={{ ...handleStyle, top: pos }} />)}
+            {positions.map((pos, i) => <Handle className="arch-node-handle" key={`bottom-${i}`} type="source" position={Position.Bottom} id={`bottom-${i}`} style={{ ...handleStyle, left: pos }} />)}
+            {positions.map((pos, i) => <Handle className="arch-node-handle" key={`left-${i}`} type="source" position={Position.Left} id={`left-${i}`} style={{ ...handleStyle, top: pos }} />)}
 
             <div
                 style={{

@@ -10,7 +10,8 @@ export interface PaletteItem {
     configs?: any;
     defaultConfigs?: any;
     style?: any;
-    labelStyle?: any; // <-- ADD THIS LINE
+    labelStyle?: any;
+    swappableWith?: string[];
 }
 
 export interface SidebarProps {
@@ -75,7 +76,7 @@ export const Sidebar = ({ paletteItems, isOpen, toggleSidebar, onDragStartItem }
                         return (
                             <div key={category} style={{ marginBottom: '15px' }}>
                                 <div onClick={() => toggleCategory(category)} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', backgroundColor: 'var(--neutral-30)', padding: '8px 10px', borderRadius: '4px', marginBottom: '8px', fontWeight: 'bold', color: 'var(--neutral-90)', userSelect: 'none' }}>
-                                    <span>{category}</span><span style={{ fontSize: '12px' }}>{isCollapsed ? '▼' : '▲'}</span>
+                                    <span>{category}</span><span style={{ fontSize: '12px' }}>{isCollapsed ? '▶' : '▼'}</span>
                                 </div>
                                 {!isCollapsed && (
                                     <div style={{ paddingLeft: '5px' }}>

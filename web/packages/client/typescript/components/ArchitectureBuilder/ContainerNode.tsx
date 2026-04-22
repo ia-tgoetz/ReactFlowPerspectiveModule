@@ -1,6 +1,6 @@
 import React from 'react';
 // @ts-ignore
-import { NodeProps, NodeResizer } from 'reactflow'; 
+import { NodeProps, NodeResizer } from 'reactflow';
 
 export interface ContainerNodeData {
     label: string;
@@ -19,7 +19,7 @@ export const ContainerNode = ({ id, data, selected }: NodeProps<ContainerNodeDat
     const combinedStyle: React.CSSProperties = {
         width: '100%',
         height: '100%',
-        backgroundColor: data.style?.fill || 'rgba(128, 128, 128, 0.2)', 
+        backgroundColor: data.style?.backgroundColor || data.style?.fill || 'rgba(128, 128, 128, 0.2)',
         border: '2px dashed var(--neutral-50)', 
         borderRadius: '8px',
         position: 'relative',
@@ -31,15 +31,7 @@ export const ContainerNode = ({ id, data, selected }: NodeProps<ContainerNodeDat
 
     return (
         <>
-            <style>
-                {`
-                .arch-node-gear { transform-origin: 50% 50%; transition: transform 0.75s ease-in-out; }
-                .arch-node-gear:hover { transform: rotate(360deg); }
-                .arch-node-gear:active { transform: translateX(-100%) rotate(-360deg); }
-                `}
-            </style>
-
-            <NodeResizer 
+<NodeResizer 
                 color="var(--callToAction)" 
                 isVisible={selected} 
                 minWidth={150} 
