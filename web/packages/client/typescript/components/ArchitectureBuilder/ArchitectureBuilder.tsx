@@ -332,7 +332,18 @@ const mapIgnitionToReactFlowNodes = (ignitionNodes: any, handleGearClick: (id: s
 
 const mapIgnitionToReactFlowEdges = (ignitionEdges: any, connectionTypes: any, selectedId: string | null) => {
     if (!ignitionEdges) return [];
-    return Object.entries(ignitionEdges).filter(([id, edgeData]: any) => edgeData !== null && edgeData !== undefined).map(([id, edgeData]: any) => { const typeConfig = connectionTypes[edgeData.connectionType] || {}; const isSelected = id === selectedId; const strokeStyle: any = { stroke: typeConfig.color || '#888', strokeWidth: isSelected ? 5 : 3 }; if (edgeData.dashed) strokeStyle.strokeDasharray = '8 5'; const arrowMarker = edgeData.arrow !== false ? { type: MarkerType.ArrowClosed, width: 20, height: 20, color: strokeStyle.stroke } : undefined; return { id, ...edgeData, type: 'custom', data: { lineType: edgeData.lineType || 'smoothstep', offsetX: edgeData.offsetX || 0, offsetY: edgeData.offsetY || 0, showLabel: edgeData.showLabel === true }, label: typeConfig.label || edgeData.connectionType || '', style: strokeStyle, markerEnd: arrowMarker, interactionWidth: 20, updatable: true }; });
+    return Object.entries(ignitionEdges).filter(([id, edgeData]: any) => edgeData !== null && edgeData !== undefined).map(([id, edgeData]: any) => { 
+        const typeConfig = connectionTypes[edgeData.connectionType] || {}; 
+        const isSelected = id === selectedId; 
+        
+        const strokeStyle: any = { stroke: typeConfig.color || '#888', strokeWidth: isSelected ? 6 : 4 }; 
+        
+        if (edgeData.dashed) strokeStyle.strokeDasharray = '8 5'; 
+        
+        const arrowMarker = edgeData.arrow !== false ? { type: MarkerType.ArrowClosed, width: 10, height: 10, color: strokeStyle.stroke } : undefined; 
+        
+        return { id, ...edgeData, type: 'custom', data: { lineType: edgeData.lineType || 'smoothstep', offsetX: edgeData.offsetX || 0, offsetY: edgeData.offsetY || 0, showLabel: edgeData.showLabel === true }, label: typeConfig.label || edgeData.connectionType || '', style: strokeStyle, markerEnd: arrowMarker, interactionWidth: 20, updatable: true }; 
+    });
 };
 
 const getNodesInside = (containerId: string, allNodes: any): string[] => {
@@ -586,7 +597,8 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
   }, [props.store, rawEdgesDict, getValidIntersection]);
 
   const onNodeDragStart = React.useCallback((event: any, node: any) => {
-      if (rawNodesDict[node.id]?.paletteId === 'container') {
+      const rawNode = rawNodesDict[node.id];
+      if (rawNode?.paletteId === 'container' && !rawNode?.configs?.unlinked) {
           const insideIds = getNodesInside(node.id, rawNodesDict);
           const startPositions: any = {};
           insideIds.forEach(id => { startPositions[id] = { x: rawNodesDict[id].x, y: rawNodesDict[id].y }; });
@@ -693,6 +705,25 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
 
       if (props.componentEvents) { props.componentEvents.fireComponentEvent('onContextMenuAction', { id: contextMenu.id, paletteId: currentPaletteId, type: contextMenu.type, action: action }); }
 
+      // <-- FIXED: Added Reverse Edge Action! -->
+      if (action === 'reverseEdge' && isEdge) {
+          if (props.store?.props) {
+              const nextEdges = { ...rawEdgesDict };
+              const currentEdge = nextEdges[contextMenu.id];
+              if (currentEdge) {
+                  nextEdges[contextMenu.id] = {
+                      ...currentEdge,
+                      source: currentEdge.target,
+                      target: currentEdge.source,
+                      sourceHandle: currentEdge.targetHandle,
+                      targetHandle: currentEdge.sourceHandle
+                  };
+                  props.store.props.write('edges', nextEdges);
+              }
+          }
+          closeContextMenu(); return;
+      }
+
       if (action === 'editStyle' && isNode) {
           setStyleEditorNodeId(contextMenu.id);
           closeContextMenu(); return;
@@ -700,6 +731,18 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
 
       if (action === 'copy' && isNode) {
           executeCopy(contextMenu.id);
+          closeContextMenu(); return;
+      }
+
+      if (action === 'toggleLink' && contextMenu.isContainer) {
+          if (props.store?.props) {
+              const nextNodes = { ...rawNodesDict };
+              const target = nextNodes[contextMenu.id];
+              if (target) {
+                  target.configs = { ...target.configs, unlinked: !target.configs?.unlinked };
+                  props.store.props.write('nodes', nextNodes);
+              }
+          }
           closeContextMenu(); return;
       }
 
@@ -944,6 +987,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
               onPaneClick={onPaneClick} onPaneContextMenu={onPaneContextMenu}
               connectionMode={ConnectionMode.Loose} snapToGrid={snapEnabled} snapGrid={snapGrid}
               elevateNodesOnSelect={false}
+              minZoom={0.05}
             >
               <Background gap={snapPixels} />
               <Controls />
@@ -990,6 +1034,10 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
                                   {contextMenu.isContainer && (
                                       <>
                                           <div style={{ padding: '5px 8px', cursor: clipboardRef.current ? 'pointer' : 'not-allowed', color: clipboardRef.current ? 'var(--neutral-90)' : 'var(--neutral-50)' }} onClick={() => { if(clipboardRef.current) handleContextMenuAction('paste'); }}>📋 Paste</div>
+                                          
+                                          <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', borderTop: '1px solid var(--neutral-40)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('toggleLink')}>
+                                              {rawNodesDict[contextMenu.id]?.configs?.unlinked ? '🔗 Link Contents' : '🔓 Unlink Contents'}
+                                          </div>
 
                                           <div style={{ position: 'relative' }} onMouseEnter={() => setActiveSubMenu('order')}>
                                               <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', justifyContent: 'space-between', backgroundColor: activeSubMenu === 'order' ? 'var(--neutral-30)' : 'transparent' }}> 
@@ -1029,6 +1077,10 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
 
                           {contextMenu.type === 'edge' && (
                               <>
+                                  {/* <-- FIXED: Added Reverse Edge Action! --> */}
+                                  <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('reverseEdge')}> 
+                                      🔄 Reverse Direction 
+                                  </div>
                                   <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('toggleArrow')}> 
                                       {rawEdgesDict[contextMenu.id]?.arrow !== false ? '❌ Remove Arrow' : '➡️ Add Arrow'} 
                                   </div>
