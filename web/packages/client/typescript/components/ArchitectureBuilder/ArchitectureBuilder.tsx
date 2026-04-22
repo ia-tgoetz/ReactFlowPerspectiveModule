@@ -306,28 +306,29 @@ const edgeTypes = { custom: CustomEdge };
 const generateShortId = () => 'I' + Math.random().toString(16).substring(2, 10);
 const extractDeep = (obj: any): any => { if (obj === null || obj === undefined) return undefined; if (typeof obj !== 'object') return obj; if (Array.isArray(obj) || typeof obj.map === 'function') { return obj.map((item: any) => extractDeep(item)); } const plain: any = {}; for (const key in obj) plain[key] = extractDeep(obj[key]); return plain; };
 
-const mapIgnitionToReactFlowNodes = (ignitionNodes: any, handleGearClick: (id: string) => void, handleResizeEnd: (id: string, x: number, y: number, w: number, h: number) => void, selectedId: string | null, globalHideHandles: boolean, globalHandleCount: number) => {
+const mapIgnitionToReactFlowNodes = (ignitionNodes: any, handleGearClick: (id: string) => void, handleResizeEnd: (id: string, x: number, y: number, w: number, h: number) => void, handleTextChange: (id: string, text: string) => void, selectedId: string | null, globalHideHandles: boolean, globalHandleCount: number) => {
     if (!ignitionNodes) return [];
-    return Object.entries(ignitionNodes).filter(([id, nodeData]: any) => nodeData !== null && nodeData !== undefined).map(([id, nodeData]: any) => { 
+    return Object.entries(ignitionNodes).filter(([id, nodeData]: any) => nodeData !== null && nodeData !== undefined).map(([id, nodeData]: any) => {
         const isContainer = nodeData.paletteId === 'container';
-        return { 
-            id, type: isContainer ? 'container' : 'architecture', selected: id === selectedId, 
-            position: { x: nodeData.x || 0, y: nodeData.y || 0 }, 
-            zIndex: isContainer ? (nodeData.zIndex ?? -1) : 1000, 
-            style: isContainer ? { width: nodeData.width || 300, height: nodeData.height || 300 } : undefined, 
-            data: { 
-                label: nodeData.label || 'Unknown', svg: nodeData.svg || '', tooltip: nodeData.tooltip || '', configs: nodeData.configs || {}, 
-                style: nodeData.style || {}, 
-                labelStyle: nodeData.labelStyle || {}, 
+        return {
+            id, type: isContainer ? 'container' : 'architecture', selected: id === selectedId,
+            position: { x: nodeData.x || 0, y: nodeData.y || 0 },
+            zIndex: isContainer ? (nodeData.zIndex ?? -1) : 1000,
+            style: isContainer ? { width: nodeData.width || 300, height: nodeData.height || 300 } : undefined,
+            data: {
+                label: nodeData.label || 'Unknown', svg: nodeData.svg || '', text: nodeData.text || '', tooltip: nodeData.tooltip || '', configs: nodeData.configs || {},
+                style: nodeData.style || {},
+                labelStyle: nodeData.labelStyle || {},
                 paletteId: nodeData.paletteId || 'unknown',
                 inactive: nodeData.inactive || false,
                 hideHandles: nodeData.hideHandles,
                 globalHideHandles: globalHideHandles,
                 handleCount: globalHandleCount,
-                onGearClick: handleGearClick, 
-                onResizeEnd: isContainer ? handleResizeEnd : undefined 
-            } 
-        }; 
+                onGearClick: handleGearClick,
+                onTextChange: handleTextChange,
+                onResizeEnd: isContainer ? handleResizeEnd : undefined
+            }
+        };
     });
 };
 
@@ -539,7 +540,17 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       }
   }, [props.store, rawNodesDict]);
 
-  const flowNodes = React.useMemo(() => mapIgnitionToReactFlowNodes(rawNodesDict, handleGearClick, handleResizeEnd, selectedId, globalHideHandles, globalHandleCount), [rawNodesDict, handleGearClick, handleResizeEnd, selectedId, globalHideHandles, globalHandleCount]);
+  const handleTextChange = React.useCallback((id: string, text: string) => {
+      if (props.store?.props) {
+          const nextNodes = { ...rawNodesDict };
+          if (nextNodes[id]) {
+              nextNodes[id] = { ...nextNodes[id], text };
+              props.store.props.write('nodes', nextNodes);
+          }
+      }
+  }, [props.store, rawNodesDict]);
+
+  const flowNodes = React.useMemo(() => mapIgnitionToReactFlowNodes(rawNodesDict, handleGearClick, handleResizeEnd, handleTextChange, selectedId, globalHideHandles, globalHandleCount), [rawNodesDict, handleGearClick, handleResizeEnd, handleTextChange, selectedId, globalHideHandles, globalHandleCount]);
   const flowEdges = React.useMemo(() => mapIgnitionToReactFlowEdges(rawEdgesDict, connectionTypes, selectedId), [rawEdgesDict, connectionTypes, selectedId]);
 
   React.useEffect(() => { setLocalNodes(flowNodes); }, [flowNodes]);
@@ -867,6 +878,11 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
           if (props.store?.props) { const nextEdges = { ...rawEdgesDict }; if (nextEdges[contextMenu.id]) { nextEdges[contextMenu.id].showLabel = nextEdges[contextMenu.id].showLabel !== true; props.store.props.write('edges', nextEdges); } }
           closeContextMenu(); return;
       }
+
+      if (action === 'toggleDashed' && isEdge) {
+          if (props.store?.props) { const nextEdges = { ...rawEdgesDict }; if (nextEdges[contextMenu.id]) { nextEdges[contextMenu.id].dashed = !nextEdges[contextMenu.id].dashed; props.store.props.write('edges', nextEdges); } }
+          closeContextMenu(); return;
+      }
       closeContextMenu();
   }, [contextMenu, rawNodesDict, rawEdgesDict, selectedId, snapEnabled, snapPixels, reactFlowInstance, props.store, executeCopy, executePaste, closeContextMenu]);
 
@@ -917,7 +933,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
     let dropX = Math.round(position.x); let dropY = Math.round(position.y);
     if (snapEnabled) { dropX = Math.round(dropX / snapPixels) * snapPixels; dropY = Math.round(dropY / snapPixels) * snapPixels; }
     
-    const initialConfigs = JSON.parse(JSON.stringify(paletteItem.defaultConfigs || paletteItem.configs || {}));
+    const initialConfigs = JSON.parse(JSON.stringify(paletteItem.defaultConfigs || {}));
     const initialStyle = JSON.parse(JSON.stringify(paletteItem.style || { classes: "" }));
     const initialLabelStyle = JSON.parse(JSON.stringify(paletteItem.labelStyle || { classes: "" })); 
 
@@ -1162,8 +1178,11 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
                                   <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('toggleArrow')}> 
                                       {rawEdgesDict[contextMenu.id]?.arrow !== false ? '❌ Remove Arrow' : '➡️ Add Arrow'} 
                                   </div>
-                                  <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('toggleLabel')}> 
-                                      {rawEdgesDict[contextMenu.id]?.showLabel === true ? '👁️ Hide Label' : '👁️ Show Label'} 
+                                  <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('toggleLabel')}>
+                                      {rawEdgesDict[contextMenu.id]?.showLabel === true ? '👁️ Hide Label' : '👁️ Show Label'}
+                                  </div>
+                                  <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('toggleDashed')}>
+                                      {rawEdgesDict[contextMenu.id]?.dashed ? '─── Solid Line' : '- - - Dashed Line'}
                                   </div>
                                   <div style={{ borderTop: '1px solid var(--neutral-40)', margin: '4px 0' }} />
                                   

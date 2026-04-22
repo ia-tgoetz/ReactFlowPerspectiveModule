@@ -5,6 +5,7 @@ import { Handle, Position, NodeProps } from 'reactflow';
 export interface ArchitectureNodeData {
     label: string;
     svg: string;
+    text?: string;
     tooltip?: string;
     configs?: any;
     style?: any;
@@ -13,12 +14,19 @@ export interface ArchitectureNodeData {
     inactive?: boolean;
     hideHandles?: boolean;
     globalHideHandles?: boolean;
-    handleCount?: number; 
+    handleCount?: number;
     onGearClick?: (id: string, event: React.MouseEvent) => void;
+    onTextChange?: (id: string, text: string) => void;
 }
+
+const TEXT_PALETTE_IDS = new Set(['Note', 'Label']);
 
 export const ArchitectureNode = ({ id, data, selected }: NodeProps<ArchitectureNodeData>) => {
     const showHandles = !data.globalHideHandles && !data.hideHandles;
+    const isTextNode = TEXT_PALETTE_IDS.has(data.paletteId);
+
+    const [localText, setLocalText] = React.useState(data.text || '');
+    React.useEffect(() => { setLocalText(data.text || ''); }, [data.text]);
 
     const finalLabelBg = data.labelStyle?.backgroundColor || 'var(--neutral-30)';
     const finalLabelColor = data.labelStyle?.color || 'var(--neutral-90)';
@@ -96,12 +104,30 @@ export const ArchitectureNode = ({ id, data, selected }: NodeProps<ArchitectureN
                 </span>
             </div>
 
-            {data.svg && (
-                <div 
-                    className="arch-node-svg-wrapper" 
-                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', minHeight: 0, zIndex: 1 }} 
-                    dangerouslySetInnerHTML={{ __html: data.svg }} 
+            {isTextNode ? (
+                <textarea
+                    className="nodrag nopan"
+                    value={localText}
+                    onChange={e => setLocalText(e.target.value)}
+                    onBlur={() => { if (data.onTextChange) data.onTextChange(id, localText); }}
+                    onMouseDown={e => e.stopPropagation()}
+                    placeholder="Type here..."
+                    style={{
+                        flex: 1, width: '100%', minHeight: 0, marginTop: '28px',
+                        background: 'transparent', border: 'none', outline: 'none', resize: 'none',
+                        color: data.labelStyle?.color || 'var(--neutral-90)',
+                        fontSize: data.labelStyle?.fontSize || '12px',
+                        fontFamily: 'inherit', padding: '6px', boxSizing: 'border-box', cursor: 'text'
+                    }}
                 />
+            ) : (
+                data.svg && (
+                    <div
+                        className="arch-node-svg-wrapper"
+                        style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', minHeight: 0, zIndex: 1 }}
+                        dangerouslySetInnerHTML={{ __html: data.svg }}
+                    />
+                )
             )}
         </div>
     );

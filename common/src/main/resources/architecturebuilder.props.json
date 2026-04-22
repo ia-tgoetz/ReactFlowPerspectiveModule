@@ -14,7 +14,6 @@
           "svg": { "type": "string" },
           "supportedConnections": { "type": "array", "items": { "type": "string" } },
           "swappableWith": { "type": "array", "items": { "type": "string" }, "description": "Palette IDs this node can swap into." },
-          "configs": { "type": "object", "default": {} },
           "defaultConfigs": { "type": "object", "description": "Configs assigned when dropped.", "default": {} },
           "style": { "$ref": "urn:ignition-schema:schemas/style-properties.schema.json" },
           "labelStyle": { "$ref": "urn:ignition-schema:schemas/style-properties.schema.json" }
@@ -300,6 +299,7 @@
             "x": { "type": "number" },
             "y": { "type": "number" },
             "inactive": { "type": "boolean", "description": "When true, renders the node with a grayscale filter to indicate an offline or pending state.", "default": false },
+            "text": { "type": "string", "description": "Editable text content for Note and Label nodes. Ignored by all other node types." },
             "hideHandles": { "type": "boolean", "description": "Overrides global hideHandles if set." },
             "width": { "type": "number", "description": "Width in pixels; only used for container nodes." },
             "height": { "type": "number", "description": "Height in pixels; only used for container nodes." },
