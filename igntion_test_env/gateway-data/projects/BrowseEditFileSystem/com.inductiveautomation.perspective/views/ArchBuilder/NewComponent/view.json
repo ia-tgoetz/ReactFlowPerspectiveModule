@@ -175,38 +175,18 @@
       ]
     },
     "paletteItem": {
-      "category": "Gateways",
-      "configs": {},
-      "defaultConfigs": {},
-      "id": "standard",
-      "label": "Standard Gateway",
-      "labelStyle": {
-        "classes": ""
-      },
-      "style": {
-        "classes": "",
-        "paddingTop": "30px"
-      },
+      "b64Image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJMYXllcl8yIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMTc0LjA4IDE3Mi4yMyI+PGRlZnM+PHN0eWxlPi5jbHMtMSwuY2xzLTIsLmNscy0ze2ZpbGw6bm9uZTt9LmNscy0ye2NsaXAtcGF0aDp1cmwoI2NsaXBwYXRoLTEpO30uY2xzLTR7ZmlsbDojZmZmO30uY2xzLTV7ZmlsbDojYWNjZGUzO30uY2xzLTZ7ZmlsbDojMzY1NzdmO30uY2xzLTd7ZmlsbDojMmY0NTY2O30uY2xzLTN7Y2xpcC1wYXRoOnVybCgjY2xpcHBhdGgpO308L3N0eWxlPjxjbGlwUGF0aCBpZD0iY2xpcHBhdGgiPjxyZWN0IGNsYXNzPSJjbHMtMSIgd2lkdGg9IjE3NC4wOCIgaGVpZ2h0PSIxNzIuMjMiLz48L2NsaXBQYXRoPjxjbGlwUGF0aCBpZD0iY2xpcHBhdGgtMSI+PHJlY3QgY2xhc3M9ImNscy0xIiB3aWR0aD0iMTc0LjA4IiBoZWlnaHQ9IjE3Mi4yMyIvPjwvY2xpcFBhdGg+PC9kZWZzPjxnIGlkPSJMYXllcl8xLTIiPjxnIGlkPSJQTENfQmx1ZV8tX0xlZnQiPjxnIGNsYXNzPSJjbHMtMyI+PHBvbHlnb24gY2xhc3M9ImNscy01IiBwb2ludHM9IjEzMS4zNSAwIDAgNzUuODMgMCAxNDguNTcgNDIuNzUgMTcyLjIzIDE3NC4wOCA5Ni40MiAxNzQuMDggMjMuNjYgMTMxLjM1IDAiLz48cG9seWdvbiBjbGFzcz0iY2xzLTYiIHBvaW50cz0iNDIuNzUgOTkuNDkgNDIuNzUgMTcyLjIzIDE3NC4wOCA5Ni40MiAxNzQuMDggMjMuNjYgNDIuNzUgOTkuNDkiLz48ZyBjbGFzcz0iY2xzLTIiPjxwYXRoIGNsYXNzPSJjbHMtNCIgZD0ibTExNS43LDExOS42MWMtMS41OSwwLTIuODktMS4yOS0yLjg5LTIuODl2LTQ1Ljk2YzAtMS41OSwxLjI5LTIuODksMi44OS0yLjg5czIuODksMS4yOSwyLjg5LDIuODl2NDUuOTZjMCwxLjU5LTEuMjksMi44OS0yLjg5LDIuODkiLz48cGF0aCBjbGFzcz0iY2xzLTQiIGQ9Im04OC43OCwxMzUuMTRjLTEuNTksMC0yLjg5LTEuMjktMi44OS0yLjg5di00NS45NWMwLTEuNTksMS4yOS0yLjg5LDIuODktMi44OXMyLjg5LDEuMjksMi44OSwyLjg5djQ1Ljk1YzAsMS41OS0xLjI5LDIuODktMi44OSwyLjg5Ii8+PHBhdGggY2xhc3M9ImNscy00IiBkPSJtMTQzLjk2LDEwMy4yOGMtMS41OSwwLTIuODktMS4yOS0yLjg5LTIuODl2LTQ1Ljk1YzAtMS41OSwxLjI5LTIuODksMi44OS0yLjg5czIuODksMS4yOSwyLjg5LDIuODl2NDUuOTVjMCwxLjU5LTEuMjksMi44OS0yLjg5LDIuODkiLz48cGF0aCBjbGFzcz0iY2xzLTQiIGQ9Im02My43NSwxMDQuNDZjMCwzLjEtMi40OSw3LjAyLTUuNTYsOC44LTMuMTIsMS44LTUuNjQuNzYtNS42NC0yLjM1czIuNTItNy4wNiw1LjY0LTguODNjMy4wNy0xLjgsNS41Ni0uNzQsNS41NiwyLjM4Ii8+PHBhdGggY2xhc3M9ImNscy00IiBkPSJtNzYuODcsOTYuODZjMCwzLjExLTIuNDksNy4wNS01LjU5LDguODItMy4xMSwxLjgtNS42MS43Ni01LjYxLTIuMzRzMi41LTcuMDQsNS42MS04Ljg0YzMuMS0xLjc5LDUuNTktLjczLDUuNTksMi4zNiIvPjxwb2x5Z29uIGNsYXNzPSJjbHMtNyIgcG9pbnRzPSIwIDc1LjgzIDQyLjc1IDk5LjQ5IDQyLjc1IDE3Mi4yMyAwIDE0OC41NyAwIDc1LjgzIi8+PC9nPjwvZz48L2c+PC9nPjwvc3ZnPg\u003d\u003d",
+      "category": "Databases",
+      "id": "SQLDB",
+      "label": "SQL DB",
       "supportedConnections": [
-        "gateway-network",
-        "db",
-        "mqtt",
-        "rest",
-        "client",
-        "standard",
-        "device-driver",
-        "opc-ua",
-        "opc-com",
-        "mongodb",
-        "kafka"
+        "db"
       ],
-      "svg": "\u003c?xml version\u003d\"1.0\" encoding\u003d\"UTF-8\"?\u003e\u003csvg id\u003d\"Layer_2\" xmlns\u003d\"http://www.w3.org/2000/svg\" xmlns:xlink\u003d\"http://www.w3.org/1999/xlink\" viewBox\u003d\"0 0 126.84 178.36\"\u003e\u003cdefs\u003e\u003cstyle\u003e.cls-1,.cls-2,.cls-3{fill:none;}.cls-2{clip-path:url(#clippath-1);}.cls-4{fill:#96979a;}.cls-5{fill:#bfc0c2;}.cls-6{fill:#2f4566;}.cls-7{fill:#778fab;}.cls-3{clip-path:url(#clippath);}\u003c/style\u003e\u003cclipPath id\u003d\"clippath\"\u003e\u003crect class\u003d\"cls-1\" width\u003d\"126.84\" height\u003d\"178.36\"/\u003e\u003c/clipPath\u003e\u003cclipPath id\u003d\"clippath-1\"\u003e\u003crect class\u003d\"cls-1\" width\u003d\"126.84\" height\u003d\"178.36\"/\u003e\u003c/clipPath\u003e\u003c/defs\u003e\u003cg id\u003d\"Layer_1-2\"\u003e\u003cg id\u003d\"Client_Panel_Blue_-_Left\"\u003e\u003cg class\u003d\"cls-3\"\u003e\u003cpolygon class\u003d\"cls-5\" points\u003d\"109.79 0 .03 60.7 .03 64.38 0 64.41 0 174.85 6.28 178.36 115.48 115.22 115.7 115.51 115.52 3.28 109.79 0\"/\u003e\u003cpolygon class\u003d\"cls-4\" points\u003d\"6.28 64.46 6.28 178.36 115.62 115.14 115.62 3.27 6.28 64.46\"/\u003e\u003cpolygon class\u003d\"cls-6\" points\u003d\"108.45 15.27 13.57 68.36 13.57 165.25 108.45 110.51 108.45 15.27\"/\u003e\u003cg class\u003d\"cls-2\"\u003e\u003cpath class\u003d\"cls-5\" d\u003d\"m102.26,67.13l7.71,6.81-1.5,1.29-6.04-5.33c-1.62-1.43-4.12-1.27-5.55.35l8.58,7.56-1.52,1.29-6.89-6.08c-1.62-1.43-4.11-1.28-5.55.35l9.43,8.32-1.5,1.29-15.28-13.49c-1.35-1.18-3.41-1.05-4.59.29-1.18,1.35-1.06,3.4.29,4.59l20.87,18.42c.51.45.56,1.24.11,1.75-.45.51-1.23.56-1.75.11l-5.64-4.98.62,6.62s0,.09,0,.14v.06h.01c.22,1.76,1.62,3.21,3.45,3.42l9.92,1.12,4.11.46s.07,0,.11.02h.17s0,0,0,0c1.17.07,2.38-.36,3.22-1.31l10.81-12.24c1.43-1.62,1.28-4.13-.34-5.56l-17.71-15.64c-1.62-1.43-4.12-1.27-5.55.35\"/\u003e\u003cpath class\u003d\"cls-7\" d\u003d\"m49.02,113.87c1.26-1.62,2.69-2.8,4.28-3.52,1.59-.72,2.94-.79,4.02-.21,1.09.57,1.57,1.6,1.45,3.09-.13,1.5-.81,3.01-2.07,4.55-1.26,1.53-2.69,2.66-4.28,3.37-1.6.73-2.94.84-4.03.36-1.1-.47-1.58-1.45-1.47-2.95.13-1.5.82-3.05,2.09-4.69\"/\u003e\u003cpath class\u003d\"cls-7\" d\u003d\"m86.98,50.51c-.54-.79-1.37-1.17-2.53-1.16-1.15.01-2.35.42-3.63,1.22-1.29.79-2.39,2.17-3.32,4.12-.17.35-.61,1.41-1.33,3.17-.72,1.77-1.62,3.99-2.73,6.7-1.1,2.69-2.35,5.73-3.75,9.1-1.39,3.38-2.84,6.92-4.32,10.62-1.49,3.7-3,7.44-4.52,11.22-1.49,3.69-2.92,7.2-4.25,10.53.64-.09,1.25-.09,1.82,0,2.77-5.05,5.72-10.45,8.85-16.18,3.18-5.8,6.13-11.22,8.86-16.26,2.73-5.04,5.06-9.31,6.96-12.84,1.92-3.53,3.02-5.57,3.29-6.15.93-1.95,1.12-3.31.6-4.09\"/\u003e\u003cpath class\u003d\"cls-7\" d\u003d\"m48.94,110.07c-.87-2.66-1.58-4.81-2.13-6.43-.55-1.64-1.02-2.92-1.38-3.86-.36-.94-.65-1.61-.87-2.02-.21-.42-.41-.76-.6-1.02-.47-.63-1.17-.86-2.07-.66-.92.21-1.89.8-2.93,1.78-1.03.98-1.71,1.97-2.06,2.95-.34.98-.28,1.79.2,2.44.18.26.44.55.77.86.31.32.85.75,1.6,1.33.74.57,1.77,1.31,3.09,2.23,1.32.91,3.07,2.1,5.25,3.56.36-.4.75-.79,1.13-1.16\"/\u003e\u003c/g\u003e\u003c/g\u003e\u003c/g\u003e\u003c/g\u003e\u003c/svg\u003e",
       "swappableWith": [
-        "edge-iiot",
-        "edge-panel",
-        "cloud"
+        "Oracle",
+        "Kafka"
       ],
-      "tooltip": "Standard Gateway"
+      "tooltip": ""
     }
   },
   "propConfig": {
@@ -235,7 +215,14 @@
               "component": {
                 "onFileReceived": {
                   "config": {
-                    "script": "\tself.view.params.paletteItem.svg\u003devent.file.getString()"
+                    "script": "\t\n\timport base64\n\t\n\tdef convert_svg_to_markdown(svg_string):\n\t    \"\"\"\n\t    Takes a raw SVG string, encodes it to Base64, and returns \n\t    the fully formatted Markdown image string.\n\t    \"\"\"\n\t    # 1. Encode the raw string into Base64\n\t    # We encode to utf-8 first to ensure any special characters are handled correctly\n\t    encoded_bytes \u003d base64.b64encode(svg_string.encode(\u0027utf-8\u0027))\n\t    \n\t    # In Jython 2.7, b64encode returns a string, but it\u0027s safe to cast just in case\n\t    base64_string \u003d str(encoded_bytes)\n\t    \n\t    # 2. Construct the Data URI and Markdown syntax\n\t    markdown_output \u003d \"data:image/svg+xml;base64,\" + base64_string\n\t    \n\t    return markdown_output\n\t\n\t# --- TEST IT OUT ---\n\t\n\t# Paste your exact SVG string inside the triple quotes\n\tmy_raw_svg \u003d \"\"\"{}\"\"\".format(event.file.getString())\n\t\n\t# Run the function\n\tself.view.params.paletteItem.b64Image\u003dconvert_svg_to_markdown(my_raw_svg)\n\t\n\t# Print the result so you can copy and paste it into your Markdown component\n"
+                  },
+                  "scope": "G",
+                  "type": "script"
+                },
+                "onUploadsCleared": {
+                  "config": {
+                    "script": "\tself.view.params.paletteItem.b64Image\u003d\"\""
                   },
                   "scope": "G",
                   "type": "script"
@@ -257,34 +244,23 @@
           },
           {
             "meta": {
-              "name": "Image"
+              "name": "TextArea"
             },
             "position": {
-              "basis": "100px",
+              "basis": "240px",
               "grow": 1
             },
             "propConfig": {
-              "props.source": {
+              "props.text": {
                 "binding": {
                   "config": {
-                    "path": "view.params.paletteItem.svg"
+                    "path": "view.params.paletteItem.b64Image"
                   },
-                  "transforms": [
-                    {
-                      "code": "\timport base64\n\t\n\tdef convert_svg_to_markdown(svg_string):\n\t    \"\"\"\n\t    Takes a raw SVG string, encodes it to Base64, and returns \n\t    the fully formatted Markdown image string.\n\t    \"\"\"\n\t    # 1. Encode the raw string into Base64\n\t    # We encode to utf-8 first to ensure any special characters are handled correctly\n\t    encoded_bytes \u003d base64.b64encode(svg_string.encode(\u0027utf-8\u0027))\n\t    \n\t    # In Jython 2.7, b64encode returns a string, but it\u0027s safe to cast just in case\n\t    base64_string \u003d str(encoded_bytes)\n\t    \n\t    # 2. Construct the Data URI and Markdown syntax\n\t    markdown_output \u003d \"data:image/svg+xml;base64,\" + base64_string\n\t    \n\t    return markdown_output\n\t\n\t# --- TEST IT OUT ---\n\t\n\t# Paste your exact SVG string inside the triple quotes\n\tmy_raw_svg \u003d \"\"\"{}\"\"\".format(value)\n\t\n\t# Run the function\n\tfinal_markdown \u003d convert_svg_to_markdown(my_raw_svg)\n\t\n\t# Print the result so you can copy and paste it into your Markdown component\n\treturn final_markdown",
-                      "type": "script"
-                    }
-                  ],
                   "type": "property"
                 }
               }
             },
-            "props": {
-              "fit": {
-                "mode": "contain"
-              }
-            },
-            "type": "ia.display.image"
+            "type": "ia.input.text-area"
           }
         ],
         "meta": {
@@ -311,7 +287,7 @@
               "shrink": 0
             },
             "props": {
-              "text": "Supported Connection Types:",
+              "text": "Component Type:",
               "textStyle": {
                 "textAlign": "right"
               }
@@ -320,7 +296,7 @@
           },
           {
             "meta": {
-              "name": "Connection Types"
+              "name": "TypeID"
             },
             "position": {
               "grow": 1
@@ -329,46 +305,42 @@
               "props.options": {
                 "binding": {
                   "config": {
-                    "path": "view.params.lists.connectionTypes"
+                    "path": "view.params.lists.ids"
                   },
                   "transforms": [
                     {
-                      "code": "\tkeys\u003dsorted(value.keys())\n\treturn [{\"value\": item, \"label\": item} for item in keys]\n",
+                      "code": "\treturn [{\"value\": item, \"label\": item} for item in sorted(value)]\n",
                       "type": "script"
                     }
                   ],
                   "type": "property"
                 }
+              },
+              "props.value": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.paletteItem.id"
+                  },
+                  "type": "property"
+                }
               }
             },
             "props": {
-              "multiSelect": true,
+              "allowCustomOptions": true,
               "placeholder": {
-                "text": "Select Supported Connection Types..."
+                "text": "Select or Create Component Type..."
               },
               "showClearIcon": true,
               "style": {
                 "marginLeft": "4px"
-              },
-              "value": [
-                "client",
-                "db",
-                "device-driver",
-                "mqtt",
-                "gateway-network",
-                "opc-com",
-                "kafka",
-                "opc-ua",
-                "mongodb",
-                "rest",
-                "standard"
-              ]
+              }
             },
             "type": "ia.input.dropdown"
           }
         ],
         "meta": {
-          "name": "Connection"
+          "name": "TypeId"
         },
         "props": {
           "alignItems": "flex-start",
@@ -419,6 +391,15 @@
                   ],
                   "type": "property"
                 }
+              },
+              "props.value": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.paletteItem.category"
+                  },
+                  "type": "property"
+                }
               }
             },
             "props": {
@@ -429,8 +410,7 @@
               "showClearIcon": true,
               "style": {
                 "marginLeft": "4px"
-              },
-              "value": null
+              }
             },
             "type": "ia.input.dropdown"
           }
@@ -459,7 +439,7 @@
               "shrink": 0
             },
             "props": {
-              "text": "Component Type:",
+              "text": "Supported Connection Types:",
               "textStyle": {
                 "textAlign": "right"
               }
@@ -468,7 +448,7 @@
           },
           {
             "meta": {
-              "name": "TypeID"
+              "name": "Connection Types"
             },
             "position": {
               "grow": 1
@@ -477,34 +457,42 @@
               "props.options": {
                 "binding": {
                   "config": {
-                    "path": "view.params.lists.ids"
+                    "path": "view.params.lists.connectionTypes"
                   },
                   "transforms": [
                     {
-                      "code": "\treturn [{\"value\": item, \"label\": item} for item in sorted(value)]\n",
+                      "code": "\tkeys\u003dsorted(value.keys())\n\treturn [{\"value\": item, \"label\": item} for item in keys]\n",
                       "type": "script"
                     }
                   ],
                   "type": "property"
                 }
+              },
+              "props.value": {
+                "binding": {
+                  "config": {
+                    "bidirectional": true,
+                    "path": "view.params.paletteItem.supportedConnections"
+                  },
+                  "type": "property"
+                }
               }
             },
             "props": {
-              "allowCustomOptions": true,
+              "multiSelect": true,
               "placeholder": {
-                "text": "Select or Create Component Type..."
+                "text": "Select Supported Connection Types..."
               },
               "showClearIcon": true,
               "style": {
                 "marginLeft": "4px"
-              },
-              "value": null
+              }
             },
             "type": "ia.input.dropdown"
           }
         ],
         "meta": {
-          "name": "TypeId"
+          "name": "Connection"
         },
         "props": {
           "alignItems": "flex-start",
@@ -559,6 +547,14 @@
                   ],
                   "type": "expr-struct"
                 }
+              },
+              "props.value": {
+                "binding": {
+                  "config": {
+                    "path": "view.params.paletteItem.swappableWith"
+                  },
+                  "type": "property"
+                }
               }
             },
             "props": {
@@ -569,8 +565,7 @@
               "showClearIcon": true,
               "style": {
                 "marginLeft": "4px"
-              },
-              "value": null
+              }
             },
             "type": "ia.input.dropdown"
           }
