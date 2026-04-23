@@ -7,14 +7,16 @@
       "items": {
         "type": "object",
         "properties": {
-          "id": { "type": "string" },
+          "id": { "type": "string", "description": "Unique identifier for this palette item. Referenced in swappableWith arrays on other items." },
+          "typeId": { "type": "string", "description": "Secondary identifier for this palette item, stored on nodes when dropped. Independent from id — can be used for grouping or external references." },
           "category": { "type": "string" },
           "label": { "type": "string" },
           "tooltip": { "type": "string" },
-          "svg": { "type": "string" },
+          "b64Image": { "type": "string", "description": "Image for this palette item. Accepts a base64 data URL (data:image/png;base64,... or data:image/svg+xml;base64,...) or any other image format." },
           "supportedConnections": { "type": "array", "items": { "type": "string" } },
-          "swappableWith": { "type": "array", "items": { "type": "string" }, "description": "Palette IDs this node can swap into." },
+          "swappableWith": { "type": "array", "items": { "type": "string" }, "description": "List of palette item ids this node can swap into." },
           "defaultConfigs": { "type": "object", "description": "Configs assigned when dropped.", "default": {} },
+          "hideHandles": { "type": "boolean", "description": "When true, hides connection handles on nodes dropped from this palette item.", "default": false },
           "style": { "$ref": "urn:ignition-schema:schemas/style-properties.schema.json" },
           "labelStyle": { "$ref": "urn:ignition-schema:schemas/style-properties.schema.json" }
         }
@@ -22,183 +24,210 @@
       "default": [
         {
           "id": "container",
+          "typeId": "container",
           "category": "Zoning",
           "label": "Area / Site",
           "tooltip": "Grouping Container",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"22\" height=\"22\" x=\"1\" y=\"1\" fill=\"transparent\" stroke=\"#888\" stroke-width=\"2\" stroke-dasharray=\"4 2\" rx=\"4\"/></svg>",
+          "b64Image": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"22\" height=\"22\" x=\"1\" y=\"1\" fill=\"transparent\" stroke=\"#888\" stroke-width=\"2\" stroke-dasharray=\"4 2\" rx=\"4\"/></svg>",
           "supportedConnections": [],
           "style": { "backgroundColor": "rgba(128, 128, 128, 0.8)" }
         },
         {
           "id": "standard",
+          "typeId": "standard",
           "category": "Gateways",
           "label": "Standard Gateway",
           "tooltip": "Standard Gateway",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--standard, #F58A4B)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">SG</text></svg>",
+          "b64Image": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--standard, #F58A4B)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">SG</text></svg>",
           "swappableWith": ["edge-iiot", "edge-panel", "cloud"],
           "supportedConnections": ["gateway-network", "db", "mqtt", "rest", "client", "standard", "device-driver", "opc-ua", "opc-com", "mongodb", "kafka"]
         },
         {
           "id": "edge-iiot",
+          "typeId": "edge-iiot",
           "category": "Gateways",
           "label": "Edge IIOT Gateway",
           "tooltip": "Edge IIOT Gateway",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--cirrusLink, #8b5cf6)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">IOT</text></svg>",
+          "b64Image": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--cirrusLink, #8b5cf6)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">IOT</text></svg>",
           "swappableWith": ["standard", "edge-panel", "cloud"],
           "supportedConnections": ["gateway-network", "mqtt", "rest", "standard", "device-driver", "opc-ua", "opc-com"]
         },
         {
           "id": "edge-panel",
+          "typeId": "edge-panel",
           "category": "Gateways",
           "label": "Edge Panel Gateway",
           "tooltip": "Edge Panel Gateway",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--panel, #00ACAC)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">EP</text></svg>",
+          "b64Image": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--panel, #00ACAC)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">EP</text></svg>",
           "swappableWith": ["standard", "edge-iiot", "cloud"],
           "supportedConnections": ["gateway-network", "mqtt", "rest", "client", "standard", "device-driver", "opc-ua", "opc-com"]
         },
         {
           "id": "cloud",
+          "typeId": "cloud",
           "category": "Gateways",
           "label": "Cloud Gateway",
           "tooltip": "Cloud Gateway",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--cloud, #5b21b6)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">CG</text></svg>",
+          "b64Image": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--cloud, #5b21b6)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">CG</text></svg>",
           "swappableWith": ["standard", "edge-iiot", "edge-panel"],
           "supportedConnections": ["gateway-network", "db", "mqtt", "rest", "client", "standard", "mongodb", "kafka"]
         },
         {
           "id": "Database",
+          "typeId": "Database",
           "category": "Data",
           "label": "Database",
           "tooltip": "Database",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"#34A853\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">DB</text></svg>",
+          "b64Image": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"#34A853\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">DB</text></svg>",
+          "swappableWith": ["MongoDB", "Kafka"],
           "supportedConnections": ["db"]
         },
         {
           "id": "MongoDB",
+          "typeId": "MongoDB",
           "category": "Data",
           "label": "MongoDB",
           "tooltip": "MongoDB",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"green\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">MDB</text></svg>",
+          "b64Image": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"green\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">MDB</text></svg>",
+          "swappableWith": ["Database", "Kafka"],
           "supportedConnections": ["mongodb"]
         },
         {
           "id": "Kafka",
+          "typeId": "Kafka",
           "category": "Data",
           "label": "Kafka",
           "tooltip": "Kafka",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">KFK</text></svg>",
+          "b64Image": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">KFK</text></svg>",
+          "swappableWith": ["Database", "MongoDB"],
           "supportedConnections": ["kafka"]
         },
         {
           "id": "Device",
+          "typeId": "Device",
           "category": "Edge",
           "label": "Device",
           "tooltip": "Device",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--seq-3, #f59e0b)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">DEV</text></svg>",
+          "b64Image": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--seq-3, #f59e0b)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">DEV</text></svg>",
           "supportedConnections": ["device-driver"]
         },
         {
           "id": "OPCUA",
+          "typeId": "OPCUA",
           "category": "Edge",
           "label": "OPC-UA Server",
           "tooltip": "OPC-UA Server",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"#FFE7BA\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"#333\" text-anchor=\"middle\" font-family=\"sans-serif\">OPC</text></svg>",
+          "b64Image": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"#FFE7BA\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"#333\" text-anchor=\"middle\" font-family=\"sans-serif\">OPC</text></svg>",
           "supportedConnections": ["opc-ua", "opc-com"]
         },
         {
           "id": "Client",
+          "typeId": "Client",
           "category": "Endpoints",
           "label": "Client",
           "tooltip": "Client",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-60, #9ca3af)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">CLI</text></svg>",
+          "b64Image": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-60, #9ca3af)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">CLI</text></svg>",
           "supportedConnections": ["client", "rest"]
         },
         {
           "id": "Connector",
+          "typeId": "Connector",
           "category": "Infrastructure",
           "label": "Connector",
           "tooltip": "Connector",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">CON</text></svg>",
+          "b64Image": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">CON</text></svg>",
           "supportedConnections": ["standard", "rest"]
         },
         {
           "id": "Comms",
+          "typeId": "Comms",
           "category": "Infrastructure",
           "label": "Communication",
           "tooltip": "Communication",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">COM</text></svg>",
+          "b64Image": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">COM</text></svg>",
           "supportedConnections": ["standard", "gateway-network"]
         },
         {
           "id": "LoadBalancer",
+          "typeId": "LoadBalancer",
           "category": "Infrastructure",
           "label": "Load Balancer",
           "tooltip": "Load Balancer",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">LB</text></svg>",
+          "b64Image": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">LB</text></svg>",
           "supportedConnections": ["standard", "client", "rest"]
         },
         {
           "id": "Firewall",
+          "typeId": "Firewall",
           "category": "Infrastructure",
           "label": "Firewall",
           "tooltip": "Firewall",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"red\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">FW</text></svg>",
+          "b64Image": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"red\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">FW</text></svg>",
           "supportedConnections": ["standard", "gateway-network"]
         },
         {
           "id": "ReverseProxy",
+          "typeId": "ReverseProxy",
           "category": "Infrastructure",
           "label": "Reverse Proxy",
           "tooltip": "Reverse Proxy",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">RP</text></svg>",
+          "b64Image": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">RP</text></svg>",
           "supportedConnections": ["standard", "rest", "client"]
         },
         {
           "id": "Usersource",
+          "typeId": "Usersource",
           "category": "Infrastructure",
           "label": "User Source",
           "tooltip": "User Source",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">USR</text></svg>",
+          "b64Image": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">USR</text></svg>",
           "supportedConnections": ["standard"]
         },
         {
           "id": "server",
+          "typeId": "server",
           "category": "Infrastructure",
           "label": "Server",
           "tooltip": "Server",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">SRV</text></svg>",
+          "b64Image": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">SRV</text></svg>",
           "supportedConnections": ["standard"]
         },
         {
           "id": "fourIR",
+          "typeId": "fourIR",
           "category": "Infrastructure",
           "label": "4IR",
           "tooltip": "4IR",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">4IR</text></svg>",
+          "b64Image": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">4IR</text></svg>",
           "supportedConnections": ["standard", "gateway-network", "mqtt"]
         },
         {
           "id": "Note",
+          "typeId": "Note",
           "category": "Misc",
           "label": "Note",
           "tooltip": "Note",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">NTE</text></svg>",
+          "b64Image": "",
+          "hideHandles": true,
           "supportedConnections": []
         },
         {
           "id": "Label",
+          "typeId": "Label",
           "category": "Misc",
           "label": "Label",
           "tooltip": "Label",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">LBL</text></svg>",
+          "b64Image": "",
+          "hideHandles": true,
           "supportedConnections": []
         },
         {
           "id": "Custom",
+          "typeId": "Custom",
           "category": "Misc",
           "label": "Custom",
           "tooltip": "Custom",
-          "svg": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">CST</text></svg>",
+          "b64Image": "<svg viewBox=\"0 0 24 24\" width=\"100%\" height=\"100%\"><rect width=\"24\" height=\"24\" fill=\"var(--neutral-50, #6b7280)\" rx=\"4\"/><text x=\"12\" y=\"16\" font-size=\"9\" fill=\"white\" text-anchor=\"middle\" font-family=\"sans-serif\">CST</text></svg>",
           "supportedConnections": ["standard", "rest", "db", "mqtt"]
         }
       ]
@@ -293,13 +322,15 @@
           "type": "object",
           "properties": {
             "paletteId": { "type": "string" },
+            "typeId": { "type": "string", "description": "The typeId of the palette item this node was created from. Used for swap matching." },
             "label": { "type": "string" },
             "tooltip": { "type": "string" },
-            "svg": { "type": "string" },
+            "b64Image": { "type": "string", "description": "Image for this node. Accepts a base64 data URL (data:image/png;base64,... or data:image/svg+xml;base64,...) or any other image format." },
             "x": { "type": "number" },
             "y": { "type": "number" },
             "inactive": { "type": "boolean", "description": "When true, renders the node with a grayscale filter to indicate an offline or pending state.", "default": false },
             "text": { "type": "string", "description": "Editable text content for Note and Label nodes. Ignored by all other node types." },
+            "textStyle": { "$ref": "urn:ignition-schema:schemas/style-properties.schema.json", "description": "Style for the body text of Note and Label nodes." },
             "hideHandles": { "type": "boolean", "description": "Overrides global hideHandles if set." },
             "width": { "type": "number", "description": "Width in pixels; only used for container nodes." },
             "height": { "type": "number", "description": "Height in pixels; only used for container nodes." },

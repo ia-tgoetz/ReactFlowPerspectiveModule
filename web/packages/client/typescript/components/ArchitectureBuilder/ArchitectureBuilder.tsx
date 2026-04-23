@@ -165,38 +165,47 @@ const ColorInput = ({ value, onChange, placeholder }: { value: string, onChange:
     );
 };
 
-const StyleEditorModal = ({ node, onSave, onCancel }: { node: any, onSave: (style: any, labelStyle: any) => void, onCancel: () => void }) => {
+const TEXT_NODE_PALETTE_IDS = new Set(['Note', 'Label']);
+
+const StyleEditorModal = ({ node, onSave, onCancel }: { node: any, onSave: (style: any, labelStyle: any, textStyle: any) => void, onCancel: () => void }) => {
+    const isTextNode = TEXT_NODE_PALETTE_IDS.has(node.paletteId);
+
     const [compBg, setCompBg] = React.useState(node.style?.backgroundColor || node.style?.fill || '');
     const [borderWidth, setBorderWidth] = React.useState(node.style?.borderWidth || '');
     const [borderStyle, setBorderStyle] = React.useState(node.style?.borderStyle || '');
     const [borderColor, setBorderColor] = React.useState(node.style?.borderColor || '');
     const [borderRadius, setBorderRadius] = React.useState(node.style?.borderRadius || '');
-    
+
     const [labelBg, setLabelBg] = React.useState(node.labelStyle?.backgroundColor || '');
     const [labelColor, setLabelColor] = React.useState(node.labelStyle?.color || '');
     const [labelFontSize, setLabelFontSize] = React.useState(node.labelStyle?.fontSize || '');
     const [iconColor, setIconColor] = React.useState(node.labelStyle?.fill || '');
 
+    const [textColor, setTextColor] = React.useState(node.textStyle?.color || '');
+    const [textFontSize, setTextFontSize] = React.useState(node.textStyle?.fontSize || '');
+
     const handleSave = () => {
         const newStyle: any = { ...node.style };
         if (compBg) newStyle.backgroundColor = compBg; else delete newStyle.backgroundColor;
-        
-        if (borderWidth || borderStyle || borderColor) {
-            delete newStyle.border; 
-        }
+
+        if (borderWidth || borderStyle || borderColor) delete newStyle.border;
 
         if (borderWidth) newStyle.borderWidth = borderWidth; else delete newStyle.borderWidth;
         if (borderStyle) newStyle.borderStyle = borderStyle; else delete newStyle.borderStyle;
         if (borderColor) newStyle.borderColor = borderColor; else delete newStyle.borderColor;
         if (borderRadius) newStyle.borderRadius = borderRadius; else delete newStyle.borderRadius;
-        
+
         const newLabelStyle: any = { ...node.labelStyle };
         if (labelBg) newLabelStyle.backgroundColor = labelBg; else delete newLabelStyle.backgroundColor;
         if (labelColor) newLabelStyle.color = labelColor; else delete newLabelStyle.color;
         if (labelFontSize) newLabelStyle.fontSize = labelFontSize; else delete newLabelStyle.fontSize;
         if (iconColor) newLabelStyle.fill = iconColor; else delete newLabelStyle.fill;
 
-        onSave(newStyle, newLabelStyle);
+        const newTextStyle: any = { ...node.textStyle };
+        if (textColor) newTextStyle.color = textColor; else delete newTextStyle.color;
+        if (textFontSize) newTextStyle.fontSize = textFontSize; else delete newTextStyle.fontSize;
+
+        onSave(newStyle, newLabelStyle, newTextStyle);
     };
 
     const labelRowStyle: React.CSSProperties = { marginBottom: '10px', display: 'flex', flexDirection: 'column' };
@@ -258,6 +267,20 @@ const StyleEditorModal = ({ node, onSave, onCancel }: { node: any, onSave: (styl
                             <input type="text" value={labelFontSize} onChange={e => setLabelFontSize(e.target.value)} placeholder="e.g. 14px" style={{...sharedInputStyle, marginTop: '4px'}} />
                         </div>
                     </div>
+
+                    {isTextNode && (
+                        <div style={{ flex: 1 }}>
+                            <div style={sectionTitleStyle}>Text Content</div>
+                            <div style={labelRowStyle}>
+                                <span style={{ fontSize: '12px', color: 'var(--neutral-80)' }}>Text Color</span>
+                                <ColorInput value={textColor} onChange={setTextColor} placeholder="e.g. #ffffff" />
+                            </div>
+                            <div style={labelRowStyle}>
+                                <span style={{ fontSize: '12px', color: 'var(--neutral-80)' }}>Text Size</span>
+                                <input type="text" value={textFontSize} onChange={e => setTextFontSize(e.target.value)} placeholder="e.g. 14px" style={{...sharedInputStyle, marginTop: '4px'}} />
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
@@ -316,9 +339,10 @@ const mapIgnitionToReactFlowNodes = (ignitionNodes: any, handleGearClick: (id: s
             zIndex: isContainer ? (nodeData.zIndex ?? -1) : 1000,
             style: isContainer ? { width: nodeData.width || 300, height: nodeData.height || 300 } : undefined,
             data: {
-                label: nodeData.label || 'Unknown', svg: nodeData.svg || '', text: nodeData.text || '', tooltip: nodeData.tooltip || '', configs: nodeData.configs || {},
+                label: nodeData.label || 'Unknown', b64Image: nodeData.b64Image || '', text: nodeData.text || '', tooltip: nodeData.tooltip || '', configs: nodeData.configs || {},
                 style: nodeData.style || {},
                 labelStyle: nodeData.labelStyle || {},
+                textStyle: nodeData.textStyle || {},
                 paletteId: nodeData.paletteId || 'unknown',
                 inactive: nodeData.inactive || false,
                 hideHandles: nodeData.hideHandles,
@@ -520,12 +544,18 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
   }, [isEnabled, selectedId, rawNodesDict, snapEnabled, snapPixels, props.store, executeCopy, executePaste, closeContextMenu]);
 
   const handleGearClick = React.useCallback((id: string) => {
-      setSelectedId(id); 
+      setSelectedId(id);
       const node = rawNodesDict[id];
       if (props.componentEvents && node) {
-          props.componentEvents.fireComponentEvent('onGearClick', { id, paletteId: node.paletteId, type: 'node', action: 'config' });
+          props.componentEvents.fireComponentEvent('onGearClick', { id, paletteId: node.paletteId, typeId: node.typeId, type: 'node', action: 'config' });
       }
   }, [props.componentEvents, rawNodesDict]);
+
+  const handlePaletteItemClick = React.useCallback((item: any) => {
+      if (props.componentEvents) {
+          props.componentEvents.fireComponentEvent('onPaletteItemClick', { id: item.id, typeId: item.typeId, label: item.label, category: item.category, tooltip: item.tooltip, b64Image: item.b64Image, supportedConnections: item.supportedConnections, swappableWith: item.swappableWith, defaultConfigs: item.defaultConfigs, hideHandles: item.hideHandles, style: item.style, labelStyle: item.labelStyle });
+      }
+  }, [props.componentEvents]);
 
   const handleResizeEnd = React.useCallback((id: string, x: number, y: number, width: number, height: number) => {
       if (props.store?.props) { 
@@ -886,14 +916,14 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       closeContextMenu();
   }, [contextMenu, rawNodesDict, rawEdgesDict, selectedId, snapEnabled, snapPixels, reactFlowInstance, props.store, executeCopy, executePaste, closeContextMenu]);
 
-  const handleNodeSwap = (newPaletteId: string) => {
+  const handleNodeSwap = (newId: string) => {
       if (!contextMenu || contextMenu.type !== 'node') return;
-      const newItem = paletteItems.find((p: any) => p.id === newPaletteId);
+      const newItem = paletteItems.find((p: any) => p.id === newId);
       if (!newItem) return;
-      if (props.componentEvents) { props.componentEvents.fireComponentEvent('onContextMenuAction', { id: contextMenu.id, paletteId: rawNodesDict[contextMenu.id]?.paletteId, type: contextMenu.type, action: `swapNode:${newPaletteId}` }); }
+      if (props.componentEvents) { props.componentEvents.fireComponentEvent('onContextMenuAction', { id: contextMenu.id, paletteId: rawNodesDict[contextMenu.id]?.paletteId, type: contextMenu.type, action: `swapNode:${newId}` }); }
       if (props.store?.props) {
           const nextNodes = { ...rawNodesDict }; const existingNode = nextNodes[contextMenu.id];
-          nextNodes[contextMenu.id] = { ...existingNode, paletteId: newItem.id, label: newItem.label, svg: newItem.svg, tooltip: newItem.tooltip, supportedConnections: newItem.supportedConnections || [] };
+          nextNodes[contextMenu.id] = { ...existingNode, paletteId: newItem.id, typeId: newItem.typeId, label: newItem.label, b64Image: newItem.b64Image, tooltip: newItem.tooltip, supportedConnections: newItem.supportedConnections || [] };
           const nextEdges = { ...rawEdgesDict }; let edgesChanged = false;
           Object.keys(nextEdges).forEach(edgeId => {
               const e = nextEdges[edgeId];
@@ -939,10 +969,10 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
 
     if (props.store?.props) {
         const newNodeId = generateShortId();
-        const newNodeData: any = { 
-            paletteId: paletteItem.id, label: paletteItem.label, svg: paletteItem.svg, tooltip: paletteItem.tooltip, 
-            x: dropX, y: dropY, 
-            hideHandles: false, style: initialStyle, labelStyle: initialLabelStyle, configs: initialConfigs, supportedConnections: paletteItem.supportedConnections || [] 
+        const newNodeData: any = {
+            paletteId: paletteItem.id, typeId: paletteItem.typeId, label: paletteItem.label, b64Image: paletteItem.b64Image, tooltip: paletteItem.tooltip,
+            x: dropX, y: dropY,
+            hideHandles: paletteItem.hideHandles === true, style: initialStyle, labelStyle: initialLabelStyle, configs: initialConfigs, supportedConnections: paletteItem.supportedConnections || []
         };
         
         if (paletteItem.id === 'container') {
@@ -957,7 +987,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
     draggedItemRef.current = null;
   }, [reactFlowInstance, props.store, rawNodesDict, snapEnabled, snapPixels]);
 
-  const onNodeClick = React.useCallback((event: any, node: any) => { setSelectedId(node.id); const rawNode = rawNodesDict[node.id]; if (props.componentEvents) props.componentEvents.fireComponentEvent('onNodeClick', { id: node.id, paletteId: rawNode?.paletteId, type: 'node' }); }, [props.componentEvents, rawNodesDict]);
+  const onNodeClick = React.useCallback((event: any, node: any) => { setSelectedId(node.id); const rawNode = rawNodesDict[node.id]; if (props.componentEvents) props.componentEvents.fireComponentEvent('onNodeClick', { id: node.id, paletteId: rawNode?.paletteId, typeId: rawNode?.typeId, type: 'node' }); }, [props.componentEvents, rawNodesDict]);
   const onEdgeClick = React.useCallback((event: any, edge: any) => { setSelectedId(edge.id); const rawEdge = rawEdgesDict[edge.id]; if (props.componentEvents) props.componentEvents.fireComponentEvent('onEdgeClick', { id: edge.id, paletteId: rawEdge?.connectionType, type: 'edge' }); }, [props.componentEvents, rawEdgesDict]);
   const onPaneClick = React.useCallback(() => { setSelectedId(null); closeContextMenu(); }, [closeContextMenu]);
 
@@ -1056,7 +1086,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       </style>
 
       <div className="arch-theme-wrapper">
-        {isEnabled && <Sidebar paletteItems={paletteItems} isOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} onDragStartItem={(item) => { draggedItemRef.current = item; }} />}
+        {isEnabled && <Sidebar paletteItems={paletteItems} isOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} onDragStartItem={(item) => { draggedItemRef.current = item; }} onItemClick={handlePaletteItemClick} />}
         
         <div style={{ flexGrow: 1, height: '100%', position: 'relative', overflow: 'hidden' }} ref={reactFlowWrapper}>
           <ReactFlowProvider>
@@ -1086,11 +1116,12 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
           {styleEditorNodeId && rawNodesDict[styleEditorNodeId] && (
               <StyleEditorModal 
                   node={rawNodesDict[styleEditorNodeId]}
-                  onSave={(newStyle, newLabelStyle) => {
+                  onSave={(newStyle, newLabelStyle, newTextStyle) => {
                       if (props.store?.props) {
                           const nextNodes = { ...rawNodesDict };
                           nextNodes[styleEditorNodeId].style = newStyle;
                           nextNodes[styleEditorNodeId].labelStyle = newLabelStyle;
+                          nextNodes[styleEditorNodeId].textStyle = newTextStyle;
                           props.store.props.write('nodes', nextNodes);
                       }
                       setStyleEditorNodeId(null);
@@ -1159,7 +1190,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
                                               <div style={{ ...flyoutStyle, backgroundColor: 'var(--neutral-20)', border: '1px solid var(--neutral-50)', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', padding: '4px', minWidth: '150px' }}>
                                                   {validSwapItems.map(targetItem => (
                                                       <div key={targetItem.id} style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', alignItems: 'center' }} onClick={() => handleNodeSwap(targetItem.id)}>
-                                                          <div style={{ width: '16px', height: '16px', marginRight: '6px', display: 'flex', alignItems: 'center' }} dangerouslySetInnerHTML={{ __html: targetItem.svg }} />
+                                                          <div style={{ width: '16px', height: '16px', marginRight: '6px', display: 'flex', alignItems: 'center' }}>{targetItem.b64Image && <img src={targetItem.b64Image.startsWith('data:') ? targetItem.b64Image : `data:image/svg+xml,${encodeURIComponent(targetItem.b64Image)}`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />}</div>
                                                           <span>{targetItem.label}</span>
                                                       </div>
                                                   ))}

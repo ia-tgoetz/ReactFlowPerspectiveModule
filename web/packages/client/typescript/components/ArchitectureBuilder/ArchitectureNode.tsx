@@ -4,12 +4,13 @@ import { Handle, Position, NodeProps } from 'reactflow';
 
 export interface ArchitectureNodeData {
     label: string;
-    svg: string;
+    b64Image: string;
     text?: string;
     tooltip?: string;
     configs?: any;
     style?: any;
     labelStyle?: any;
+    textStyle?: any;
     paletteId: string;
     inactive?: boolean;
     hideHandles?: boolean;
@@ -20,6 +21,19 @@ export interface ArchitectureNodeData {
 }
 
 const TEXT_PALETTE_IDS = new Set(['Note', 'Label']);
+
+const toImgSrc = (value: string): string | null => {
+    if (!value) return null;
+    if (value.startsWith('data:')) return value;
+    if (/^\s*</.test(value)) return `data:image/svg+xml,${encodeURIComponent(value)}`;
+    return null;
+};
+
+const NodeImage = ({ src }: { src: string }) => {
+    const imgSrc = toImgSrc(src);
+    if (!imgSrc) return null;
+    return <img src={imgSrc} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />;
+};
 
 export const ArchitectureNode = ({ id, data, selected }: NodeProps<ArchitectureNodeData>) => {
     const showHandles = !data.globalHideHandles && !data.hideHandles;
@@ -32,23 +46,25 @@ export const ArchitectureNode = ({ id, data, selected }: NodeProps<ArchitectureN
     const finalLabelColor = data.labelStyle?.color || 'var(--neutral-90)';
     const finalGearColor = data.labelStyle?.fill || finalLabelColor; 
 
+    const { backgroundColor: imageBg, ...restStyle } = data.style || {};
+
     const combinedStyle: React.CSSProperties = {
-        padding: '10px', 
+        padding: '10px',
         borderRadius: '8px',
         backgroundColor: 'var(--neutral-10)',
-        border: '1px solid var(--neutral-50)', 
+        border: '1px solid var(--neutral-50)',
         color: 'var(--neutral-90)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        width: '150px', 
-        height: '150px', 
+        width: '150px',
+        height: '150px',
         boxSizing: 'border-box',
         position: 'relative',
-        ...(data.style || {}),
-        filter: data.inactive ? 'grayscale(100%)' : (data.style?.filter || undefined),
-        boxShadow: selected ? '0 0 0 2px rgba(0, 123, 255, 0.25)' : (data.style?.boxShadow || '0 2px 4px rgba(0,0,0,0.1)')
+        ...restStyle,
+        filter: data.inactive ? 'grayscale(100%)' : (restStyle.filter || undefined),
+        boxShadow: selected ? '0 0 0 2px rgba(0, 123, 255, 0.25)' : (restStyle.boxShadow || '0 2px 4px rgba(0,0,0,0.1)')
     };
 
     const handleStyle: React.CSSProperties = { 
@@ -115,18 +131,19 @@ export const ArchitectureNode = ({ id, data, selected }: NodeProps<ArchitectureN
                     style={{
                         flex: 1, width: '100%', minHeight: 0, marginTop: '28px',
                         background: 'transparent', border: 'none', outline: 'none', resize: 'none',
-                        color: data.labelStyle?.color || 'var(--neutral-90)',
-                        fontSize: data.labelStyle?.fontSize || '12px',
+                        color: data.textStyle?.color || 'var(--neutral-90)',
+                        fontSize: data.textStyle?.fontSize || '12px',
                         fontFamily: 'inherit', padding: '6px', boxSizing: 'border-box', cursor: 'text'
                     }}
                 />
             ) : (
-                data.svg && (
+                data.b64Image && (
                     <div
                         className="arch-node-svg-wrapper"
-                        style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', minHeight: 0, zIndex: 1 }}
-                        dangerouslySetInnerHTML={{ __html: data.svg }}
-                    />
+                        style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', minHeight: 0, zIndex: 1, backgroundColor: imageBg || undefined }}
+                    >
+                        <NodeImage src={data.b64Image} />
+                    </div>
                 )
             )}
         </div>
