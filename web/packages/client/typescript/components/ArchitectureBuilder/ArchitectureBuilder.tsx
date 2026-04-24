@@ -384,7 +384,7 @@ const CustomEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
 
     // Use ReactFlow's built-in auto-routing until the user drags a segment for the first time.
     // Switching only on drag-start (not on selection) means clicking never causes a visual jump.
-    const useAutoPath = isStepType && storedWaypoints.length === 0 && !isDraggingSegment;
+    const useAutoPath = isStepType && data?.autoRoute !== false && !isDraggingSegment;
 
     // Pin first/last waypoints so the edge always exits/enters perpendicular to the handle,
     // even when the connected node moves after waypoints were stored.
@@ -567,7 +567,7 @@ const mapIgnitionToReactFlowEdges = (ignitionEdges: any, connectionTypes: any, s
 
         const arrowMarker = edgeData.arrow !== false ? { type: MarkerType.ArrowClosed, width: 10, height: 10, color: strokeStyle.stroke } : undefined;
 
-        return { id, ...edgeData, type: 'custom', data: { lineType: edgeData.lineType || 'smoothstep', waypoints: edgeData.waypoints || [], showLabel: edgeData.showLabel === true, isSelected, snapEnabled: snapEnabled ?? true, snapPixels: snapPixels ?? 15, onWaypointsChange: onWaypointsChange ? (wps: { x: number; y: number }[]) => onWaypointsChange(id, wps) : undefined }, label: typeConfig.label || edgeData.connectionType || '', style: strokeStyle, markerEnd: arrowMarker, interactionWidth: 20, updatable: true };
+        return { id, ...edgeData, type: 'custom', data: { lineType: edgeData.lineType || 'smoothstep', waypoints: edgeData.waypoints || [], autoRoute: edgeData.autoRoute !== false, showLabel: edgeData.showLabel === true, isSelected, snapEnabled: snapEnabled ?? true, snapPixels: snapPixels ?? 15, onWaypointsChange: onWaypointsChange ? (wps: { x: number; y: number }[]) => onWaypointsChange(id, wps) : undefined }, label: typeConfig.label || edgeData.connectionType || '', style: strokeStyle, markerEnd: arrowMarker, interactionWidth: 20, updatable: true };
     });
 };
 
@@ -883,7 +883,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       if (!props.store?.props) return;
       const nextEdges = { ...rawEdgesDict };
       if (nextEdges[edgeId]) {
-          nextEdges[edgeId] = { ...nextEdges[edgeId], waypoints };
+          nextEdges[edgeId] = { ...nextEdges[edgeId], waypoints, autoRoute: false };
           props.store.props.write('edges', nextEdges);
       }
   }, [props.store, rawEdgesDict]);
@@ -932,9 +932,12 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       const typeDef = connectionTypes[selectedType] || {};
 
       if (props.store?.props) {
-          props.store.props.write('edges', { ...rawEdgesDict, [generateShortId()]: { ...connectionParams, lineType: 'smoothstep', dashed: false, arrow: typeDef.arrow !== false, showLabel: false, connectionType: selectedType } });
+          const src = getHandlePixelPos(connectionParams.source, connectionParams.sourceHandle || '', rawNodesDict, globalHandleCount);
+          const tgt = getHandlePixelPos(connectionParams.target, connectionParams.targetHandle || '', rawNodesDict, globalHandleCount);
+          const waypoints = src && tgt ? computeAutoWaypoints(src.x, src.y, src.position, tgt.x, tgt.y, tgt.position) : [];
+          props.store.props.write('edges', { ...rawEdgesDict, [generateShortId()]: { ...connectionParams, lineType: 'smoothstep', dashed: false, arrow: typeDef.arrow !== false, showLabel: false, connectionType: selectedType, waypoints, autoRoute: true } });
       }
-  }, [props.store, rawEdgesDict, getValidIntersection, connectionTypes, globalDefaultConnectionType]);
+  }, [props.store, rawEdgesDict, rawNodesDict, globalHandleCount, getValidIntersection, connectionTypes, globalDefaultConnectionType]);
 
   const onEdgeUpdate = React.useCallback((oldEdge: Edge, newConnection: Connection) => {
       if (!newConnection.source || !newConnection.target) return;
@@ -948,7 +951,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
           const src = getHandlePixelPos(newConnection.source, newConnection.sourceHandle || '', rawNodesDict, globalHandleCount);
           const tgt = getHandlePixelPos(newConnection.target, newConnection.targetHandle || '', rawNodesDict, globalHandleCount);
           const waypoints = src && tgt ? computeAutoWaypoints(src.x, src.y, src.position, tgt.x, tgt.y, tgt.position) : [];
-          nextEdges[oldEdge.id] = { ...oldData, source: newConnection.source, target: newConnection.target, sourceHandle: newConnection.sourceHandle, targetHandle: newConnection.targetHandle, waypoints };
+          nextEdges[oldEdge.id] = { ...oldData, source: newConnection.source, target: newConnection.target, sourceHandle: newConnection.sourceHandle, targetHandle: newConnection.targetHandle, waypoints, autoRoute: true };
           props.store.props.write('edges', nextEdges);
       }
   }, [props.store, rawEdgesDict, rawNodesDict, globalHandleCount, getValidIntersection]);
@@ -1230,7 +1233,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
           if (props.store?.props) {
               const nextEdges = { ...rawEdgesDict };
               if (nextEdges[contextMenu.id]) {
-                  nextEdges[contextMenu.id] = { ...nextEdges[contextMenu.id], waypoints: [] };
+                  nextEdges[contextMenu.id] = { ...nextEdges[contextMenu.id], waypoints: [], autoRoute: true };
                   props.store.props.write('edges', nextEdges);
               }
           }
