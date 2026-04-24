@@ -381,7 +381,21 @@ const CustomEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
 
     const isStepType = data?.lineType === 'step' || data?.lineType === 'smoothstep' || !data?.lineType;
 
-    const allPts = [{ x: sourceX, y: sourceY }, ...liveWaypoints, { x: targetX, y: targetY }];
+    // Pin first/last waypoints so the edge always exits/enters perpendicular to the handle,
+    // even when the connected node moves after waypoints were stored.
+    const isHorizSrc = sourcePosition === 'right' || sourcePosition === 'left';
+    const isHorizTgt = targetPosition === 'right' || targetPosition === 'left';
+    const pinnedWaypoints = isStepType && liveWaypoints.length > 0
+        ? liveWaypoints.map((wp, i) => {
+            if (i === 0)
+                return isHorizSrc ? { ...wp, y: sourceY } : { ...wp, x: sourceX };
+            if (i === liveWaypoints.length - 1)
+                return isHorizTgt ? { ...wp, y: targetY } : { ...wp, x: targetX };
+            return wp;
+        })
+        : liveWaypoints;
+
+    const allPts = [{ x: sourceX, y: sourceY }, ...pinnedWaypoints, { x: targetX, y: targetY }];
 
     let edgePath = '', labelX = (sourceX + targetX) / 2, labelY = (sourceY + targetY) / 2;
 
@@ -448,7 +462,7 @@ const CustomEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
         document.addEventListener('mouseup', onMouseUp);
     }, [data, getZoom]);
 
-    const segHandleWps = liveWaypoints;
+    const segHandleWps = pinnedWaypoints;
     const segHandlePts = [{ x: sourceX, y: sourceY }, ...segHandleWps, { x: targetX, y: targetY }];
 
     return (
