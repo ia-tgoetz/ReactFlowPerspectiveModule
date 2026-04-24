@@ -1,14 +1,28 @@
 import React, { useState, useMemo } from 'react';
 
+const toImgSrc = (value: string): string | null => {
+    if (!value) return null;
+    if (value.startsWith('data:')) return value;
+    if (/^\s*</.test(value)) return `data:image/svg+xml,${encodeURIComponent(value)}`;
+    return null;
+};
+
+const PaletteThumb = ({ src }: { src: string }) => {
+    const imgSrc = toImgSrc(src);
+    if (!imgSrc) return null;
+    return <img src={imgSrc} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />;
+};
+
 export interface PaletteItem {
     id: string;
+    typeId?: string;
     category?: string;
     label: string;
     tooltip?: string;
-    svg: string;
+    b64Image: string;
     supportedConnections?: string[];
-    configs?: any;
     defaultConfigs?: any;
+    hideHandles?: boolean;
     style?: any;
     labelStyle?: any;
     swappableWith?: string[];
@@ -19,9 +33,10 @@ export interface SidebarProps {
     isOpen: boolean;
     toggleSidebar: () => void;
     onDragStartItem: (item: PaletteItem) => void;
+    onItemClick: (item: PaletteItem) => void;
 }
 
-export const Sidebar = ({ paletteItems, isOpen, toggleSidebar, onDragStartItem }: SidebarProps) => {
+export const Sidebar = ({ paletteItems, isOpen, toggleSidebar, onDragStartItem, onItemClick }: SidebarProps) => {
     const [collapsedCategories, setCollapsedCategories] = useState<Record<string, boolean>>({});
 
     const { containerItems, groupedItems } = useMemo(() => {
@@ -41,7 +56,7 @@ export const Sidebar = ({ paletteItems, isOpen, toggleSidebar, onDragStartItem }
     }, [paletteItems]);
 
     const toggleCategory = (category: string) => {
-        setCollapsedCategories((prev) => ({ ...prev, [category]: !prev[category] }));
+        setCollapsedCategories((prev) => ({ ...prev, [category]: prev[category] === false }));
     };
 
     const onDragStart = (event: React.DragEvent<HTMLDivElement>, item: PaletteItem) => {
@@ -57,22 +72,27 @@ export const Sidebar = ({ paletteItems, isOpen, toggleSidebar, onDragStartItem }
                     
                     {containerItems.length > 0 && (
                         <div style={{ marginBottom: '20px', paddingBottom: '15px', borderBottom: '1px solid var(--neutral-40)' }}>
-                            {containerItems.map((item) => (
-                                <div 
-                                    key={item.id} 
-                                    draggable 
-                                    onDragStart={(e) => onDragStart(e, item)} 
-                                    style={{ border: '1px dashed var(--neutral-50)', backgroundColor: 'var(--neutral-30)', padding: '10px', marginBottom: '8px', cursor: 'grab', display: 'flex', alignItems: 'center', borderRadius: '4px', fontWeight: 'bold' }}
-                                >
-                                    <div style={{ width: '20px', height: '20px', marginRight: '10px' }} dangerouslySetInnerHTML={{ __html: item.svg }} />
-                                    <span style={{ color: 'var(--neutral-90)', fontSize: '14px' }}>{item.label}</span>
-                                </div>
-                            ))}
+                            {containerItems.map((item) => {
+                                const { classes: _c, backgroundColor: imageBg, ...itemStyle } = item.style || {};
+                                const { classes: _lc, ...labelStyle } = item.labelStyle || {};
+                                return (
+                                    <div
+                                        key={item.id}
+                                        draggable
+                                        onDragStart={(e) => onDragStart(e, item)}
+                                        onClick={() => onItemClick(item)}
+                                        style={{ border: '1px dashed var(--neutral-50)', backgroundColor: 'var(--neutral-30)', padding: '10px', marginBottom: '8px', cursor: 'grab', display: 'flex', alignItems: 'center', borderRadius: '4px', fontWeight: 'bold', ...itemStyle }}
+                                    >
+                                        <div style={{ width: '20px', height: '20px', marginRight: '10px', backgroundColor: imageBg || undefined }}><PaletteThumb src={item.b64Image} /></div>
+                                        <span style={{ color: 'var(--neutral-90)', fontSize: '14px', ...labelStyle }}>{item.label}</span>
+                                    </div>
+                                );
+                            })}
                         </div>
                     )}
 
                     {Object.entries(groupedItems).map(([category, items]) => {
-                        const isCollapsed = collapsedCategories[category];
+                        const isCollapsed = collapsedCategories[category] !== false;
                         return (
                             <div key={category} style={{ marginBottom: '15px' }}>
                                 <div onClick={() => toggleCategory(category)} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', backgroundColor: 'var(--neutral-30)', padding: '8px 10px', borderRadius: '4px', marginBottom: '8px', fontWeight: 'bold', color: 'var(--neutral-90)', userSelect: 'none' }}>
@@ -80,17 +100,22 @@ export const Sidebar = ({ paletteItems, isOpen, toggleSidebar, onDragStartItem }
                                 </div>
                                 {!isCollapsed && (
                                     <div style={{ paddingLeft: '5px' }}>
-                                        {items.map((item) => (
-                                            <div 
-                                                key={item.id} 
-                                                draggable 
-                                                onDragStart={(e) => onDragStart(e, item)} 
-                                                style={{ border: '1px solid var(--neutral-40)', backgroundColor: 'var(--neutral-10)', padding: '8px', marginBottom: '8px', cursor: 'grab', display: 'flex', alignItems: 'center', borderRadius: '4px' }}
-                                            >
-                                                <div style={{ width: '20px', height: '20px', marginRight: '10px' }} dangerouslySetInnerHTML={{ __html: item.svg }} />
-                                                <span style={{ color: 'var(--neutral-90)', fontSize: '14px' }}>{item.label}</span>
-                                            </div>
-                                        ))}
+                                        {items.map((item) => {
+                                            const { classes: _c, backgroundColor: imageBg, ...itemStyle } = item.style || {};
+                                            const { classes: _lc, ...labelStyle } = item.labelStyle || {};
+                                            return (
+                                                <div
+                                                    key={item.id}
+                                                    draggable
+                                                    onDragStart={(e) => onDragStart(e, item)}
+                                                    onClick={() => onItemClick(item)}
+                                                    style={{ border: '1px solid var(--neutral-40)', backgroundColor: 'var(--neutral-10)', padding: '8px', marginBottom: '8px', cursor: 'grab', display: 'flex', alignItems: 'center', borderRadius: '4px', ...itemStyle }}
+                                                >
+                                                    <div style={{ width: '20px', height: '20px', marginRight: '10px', backgroundColor: imageBg || undefined }}><PaletteThumb src={item.b64Image} /></div>
+                                                    <span style={{ color: 'var(--neutral-90)', fontSize: '14px', ...labelStyle }}>{item.label}</span>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 )}
                             </div>

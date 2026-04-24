@@ -2,7 +2,11 @@
   "pages": {
     "/": {
       "title": "",
-      "viewPath": "All Components"
+      "viewPath": "ArchBuilder/Main"
+    },
+    "/images": {
+      "title": "",
+      "viewPath": "Images"
     }
   },
   "sharedDocks": {

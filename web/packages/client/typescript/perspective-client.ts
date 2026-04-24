@@ -89,6 +89,7 @@ export class ArchitectureBuilderMeta implements ComponentMeta {
             connectionTypes: tree.read('connectionTypes'),
             
             // These must exactly match the keys in your architecturebuilder.props.json
+            enabled: tree.read('enabled', true),
             snapEnabled: tree.read('snapEnabled', true),
             snapPixels: tree.read('snapPixels', 15),
             hideHandles: tree.read('hideHandles', false),
