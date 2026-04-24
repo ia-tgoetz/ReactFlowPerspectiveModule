@@ -13,6 +13,10 @@
 - **Module Guide:** [Official Ignition SDK Guide](https://github.com/inductiveautomation/ignition-sdk-guide)
 - **Community Extensions:** [Ignition Extensions (Phil Turmel)](https://github.com/pturmel/ignition-extensions)
 - **React Flow Docs:** [React Flow Developer Portal](https://reactflow.dev/learn)
+- **React Flow API Reference:** [React Flow API Docs](https://reactflow.dev/api-reference)
+- **React Flow v11 Migration:** [Migrating to v11](https://reactflow.dev/learn/troubleshooting/migrate-to-v11)
+- **React Flow Edge Examples:** [Edge Types & Custom Edges](https://reactflow.dev/examples/edges)
+- **React Flow What's New:** [2024-04-11 Editable Edges](https://reactflow.dev/whats-new/2024-04-11)
 
 ## UI/UX & Legacy Reference
 - **Legacy Tool:** [Ignition Architecture Builder Demo](https://m.youtube.com/watch?v=bjYgvSPyJYs)
