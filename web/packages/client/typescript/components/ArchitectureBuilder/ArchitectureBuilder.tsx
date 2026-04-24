@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ComponentProps } from '@inductiveautomation/perspective-client';
 import { observer } from 'mobx-react';
 // @ts-ignore
-import ReactFlow, { ReactFlowProvider, Background, Controls, ConnectionMode, Edge, Connection, applyNodeChanges, NodeChange, MarkerType, BaseEdge, getSmoothStepPath, getBezierPath, getStraightPath, EdgeLabelRenderer } from 'reactflow';
+import ReactFlow, { ReactFlowProvider, Background, Controls, ConnectionMode, Edge, Connection, applyNodeChanges, NodeChange, MarkerType, BaseEdge, getSmoothStepPath, getBezierPath, getStraightPath, EdgeLabelRenderer, useReactFlow } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { Sidebar, PaletteItem } from './Sidebar';
 import { ArchitectureNode } from './ArchitectureNode';
@@ -292,31 +292,207 @@ const StyleEditorModal = ({ node, onSave, onCancel }: { node: any, onSave: (styl
     );
 };
 
-const CustomEdge = ({ sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, data, markerEnd, style, label }: any) => {
-    const offsetX = Number(data?.offsetX) || 0;
-    const offsetY = Number(data?.offsetY) || 0;
+const getHandlePixelPos = (nodeId: string, handleId: string, nodes: any, handleCount: number): { x: number; y: number; position: string } | null => {
+    const node = nodes[nodeId];
+    if (!node || !handleId) return null;
+    const parts = handleId.split('-');
+    if (parts.length < 2) return null;
+    const side = parts[0];
+    const idx = parseInt(parts[1]);
+    if (isNaN(idx)) return null;
+    const pos = (idx + 0.5) / handleCount;
+    const isContainer = node.paletteId === 'container';
+    const nw = isContainer ? (node.width || 300) : 150;
+    const nh = isContainer ? (node.height || 300) : 150;
+    switch (side) {
+        case 'top':    return { x: node.x + pos * nw, y: node.y,      position: 'top' };
+        case 'bottom': return { x: node.x + pos * nw, y: node.y + nh, position: 'bottom' };
+        case 'left':   return { x: node.x,            y: node.y + pos * nh, position: 'left' };
+        case 'right':  return { x: node.x + nw,       y: node.y + pos * nh, position: 'right' };
+        default: return null;
+    }
+};
+
+const buildPolylinePath = (pts: { x: number; y: number }[], borderRadius: number): string => {
+    if (pts.length < 2) return '';
+    if (borderRadius === 0 || pts.length === 2)
+        return `M ${pts[0].x} ${pts[0].y} ` + pts.slice(1).map(p => `L ${p.x} ${p.y}`).join(' ');
+    let d = `M ${pts[0].x} ${pts[0].y}`;
+    for (let i = 1; i < pts.length - 1; i++) {
+        const prev = pts[i - 1], curr = pts[i], next = pts[i + 1];
+        const d1 = Math.hypot(curr.x - prev.x, curr.y - prev.y);
+        const d2 = Math.hypot(next.x - curr.x, next.y - curr.y);
+        if (d1 === 0 || d2 === 0) { d += ` L ${curr.x} ${curr.y}`; continue; }
+        const r = Math.min(borderRadius, d1 / 2, d2 / 2);
+        const bx = curr.x + (prev.x - curr.x) * r / d1, by = curr.y + (prev.y - curr.y) * r / d1;
+        const ax = curr.x + (next.x - curr.x) * r / d2, ay = curr.y + (next.y - curr.y) * r / d2;
+        d += ` L ${bx} ${by} Q ${curr.x} ${curr.y} ${ax} ${ay}`;
+    }
+    return d + ` L ${pts[pts.length - 1].x} ${pts[pts.length - 1].y}`;
+};
+
+// Returns waypoints that guarantee every segment — including the first and last — exits
+// perpendicular to its handle. Same-axis pairs use a 2-waypoint Z; mixed-axis pairs use
+// a 3-waypoint S so that dragging the middle segment(s) can never create a diagonal.
+const computeAutoWaypoints = (sx: number, sy: number, sp: string, tx: number, ty: number, tp: string): { x: number; y: number }[] => {
+    const isHorizSrc = sp === 'right' || sp === 'left';
+    const isHorizTgt = tp === 'right' || tp === 'left';
+    const midX = (sx + tx) / 2;
+    const midY = (sy + ty) / 2;
+    if (isHorizSrc && isHorizTgt) {
+        // H → V → H  (1 draggable vertical segment)
+        return [{ x: midX, y: sy }, { x: midX, y: ty }];
+    }
+    if (!isHorizSrc && !isHorizTgt) {
+        // V → H → V  (1 draggable horizontal segment)
+        return [{ x: sx, y: midY }, { x: tx, y: midY }];
+    }
+    if (isHorizSrc) {
+        // Source exits H, target enters V  →  H → V → H → V  (2 draggable segments)
+        return [{ x: midX, y: sy }, { x: midX, y: midY }, { x: tx, y: midY }];
+    }
+    // Source exits V, target enters H  →  V → H → V → H  (2 draggable segments)
+    return [{ x: sx, y: midY }, { x: midX, y: midY }, { x: midX, y: ty }];
+};
+
+const CustomEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, data, markerEnd, style, label }: any) => {
+    const storedWaypoints: { x: number; y: number }[] = data?.waypoints || [];
     const showLabel = data?.showLabel === true;
+    const { getZoom } = useReactFlow();
 
-    let edgePath = ''; let labelX = 0; let labelY = 0;
+    const autoWaypoints = React.useMemo(
+        () => computeAutoWaypoints(sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition]
+    );
 
-    if (data?.lineType === 'step' || data?.lineType === 'smoothstep' || !data?.lineType) {
-        const defaultCenterX = (sourceX + targetX) / 2;
-        const defaultCenterY = (sourceY + targetY) / 2;
-        [edgePath, labelX, labelY] = getSmoothStepPath({ sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, borderRadius: data?.lineType === 'step' ? 0 : 15, centerX: defaultCenterX + offsetX, centerY: defaultCenterY + offsetY });
+    const [liveWaypoints, setLiveWaypoints] = React.useState<{ x: number; y: number }[]>(
+        storedWaypoints.length > 0 ? storedWaypoints : autoWaypoints
+    );
+    const isDragging = React.useRef(false);
+    const dragRef = React.useRef<any>(null);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    React.useEffect(() => {
+        if (!isDragging.current) {
+            setLiveWaypoints(storedWaypoints.length > 0 ? storedWaypoints : autoWaypoints);
+        }
+    }, [JSON.stringify(storedWaypoints), JSON.stringify(autoWaypoints)]);
+
+    const isStepType = data?.lineType === 'step' || data?.lineType === 'smoothstep' || !data?.lineType;
+
+    const allPts = [{ x: sourceX, y: sourceY }, ...liveWaypoints, { x: targetX, y: targetY }];
+
+    let edgePath = '', labelX = (sourceX + targetX) / 2, labelY = (sourceY + targetY) / 2;
+
+    if (isStepType) {
+        edgePath = buildPolylinePath(allPts, data?.lineType === 'step' ? 0 : 12);
+        if (allPts.length >= 2) {
+            const mid = Math.floor(allPts.length / 2);
+            labelX = (allPts[mid - 1].x + allPts[mid].x) / 2;
+            labelY = (allPts[mid - 1].y + allPts[mid].y) / 2;
+        }
     } else if (data?.lineType === 'straight') {
         [edgePath, labelX, labelY] = getStraightPath({ sourceX, sourceY, targetX, targetY });
-    } else if (data?.lineType === 'default') { 
+    } else if (data?.lineType === 'default') {
         [edgePath, labelX, labelY] = getBezierPath({ sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition });
+    } else {
+        [edgePath, labelX, labelY] = getSmoothStepPath({ sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, borderRadius: 15 });
     }
+
+    const canEdit = data?.isSelected && isStepType;
+
+    // Core drag engine — takes explicit startWps so it works for both stored and auto-waypoints
+    const startSegmentDragWith = React.useCallback((e: React.MouseEvent, startWps: { x: number; y: number }[], segIdx: number, isH: boolean) => {
+        e.stopPropagation();
+        e.preventDefault();
+        isDragging.current = true;
+        setLiveWaypoints(startWps);
+
+        const wp0Idx = segIdx - 1;
+        const wp1Idx = segIdx;
+        const startCoord = isH ? startWps[wp0Idx].y : startWps[wp0Idx].x;
+
+        dragRef.current = { mx: e.clientX, my: e.clientY, startCoord, wp0Idx, wp1Idx, isH, startWps, snapEnabled: data?.snapEnabled ?? true, snapPixels: data?.snapPixels ?? 15 };
+
+        const onMouseMove = (ev: MouseEvent) => {
+            if (!dragRef.current) return;
+            const ref = dragRef.current;
+            const zoom = getZoom();
+            const rawDelta = ref.isH ? (ev.clientY - ref.my) / zoom : (ev.clientX - ref.mx) / zoom;
+            let newCoord = ref.startCoord + rawDelta;
+            if (ref.snapEnabled && ref.snapPixels) newCoord = Math.round(newCoord / ref.snapPixels) * ref.snapPixels;
+            setLiveWaypoints(ref.startWps.map((wp: any, i: number) =>
+                (i === ref.wp0Idx || i === ref.wp1Idx) ? (ref.isH ? { ...wp, y: newCoord } : { ...wp, x: newCoord }) : wp
+            ));
+        };
+
+        const onMouseUp = (ev: MouseEvent) => {
+            if (!dragRef.current) return;
+            const ref = dragRef.current;
+            const zoom = getZoom();
+            const rawDelta = ref.isH ? (ev.clientY - ref.my) / zoom : (ev.clientX - ref.mx) / zoom;
+            let newCoord = ref.startCoord + rawDelta;
+            if (ref.snapEnabled && ref.snapPixels) newCoord = Math.round(newCoord / ref.snapPixels) * ref.snapPixels;
+            const finalWps = ref.startWps.map((wp: any, i: number) =>
+                (i === ref.wp0Idx || i === ref.wp1Idx) ? (ref.isH ? { ...wp, y: newCoord } : { ...wp, x: newCoord }) : wp
+            );
+            data?.onWaypointsChange?.(finalWps);
+            dragRef.current = null;
+            isDragging.current = false;
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        };
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    }, [data, getZoom]);
+
+    const segHandleWps = liveWaypoints;
+    const segHandlePts = [{ x: sourceX, y: sourceY }, ...segHandleWps, { x: targetX, y: targetY }];
 
     return (
         <>
-            <BaseEdge path={edgePath} markerEnd={markerEnd} style={{...style, fill: 'none'}} />
+            <BaseEdge path={edgePath} markerEnd={markerEnd} style={{ ...style, fill: 'none' }} />
             {label && showLabel && (
                 <EdgeLabelRenderer>
                     <div style={{ position: 'absolute', transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`, backgroundColor: 'var(--neutral-10)', padding: '2px 8px', borderRadius: '4px', border: `1px solid var(--neutral-40)`, fontSize: '12px', fontWeight: 'bold', color: style?.stroke || 'var(--neutral-90)', pointerEvents: 'none' }} className="nodrag nopan">
                         {label}
                     </div>
+                </EdgeLabelRenderer>
+            )}
+            {canEdit && segHandlePts.length >= 4 && (
+                <EdgeLabelRenderer>
+                    {segHandlePts.slice(0, -1).map((pt, i) => {
+                        const next = segHandlePts[i + 1];
+                        if (i === 0 || i === segHandlePts.length - 2) return null;
+                        const dx = Math.abs(next.x - pt.x);
+                        const dy = Math.abs(next.y - pt.y);
+                        if (dx + dy < 10) return null;
+                        const isH = dx > dy;
+                        const mx = (pt.x + next.x) / 2;
+                        const my = (pt.y + next.y) / 2;
+                        return (
+                            <div
+                                key={`seg-${i}`}
+                                className="nodrag nopan"
+                                onMouseDown={(e) => startSegmentDragWith(e, segHandleWps, i, isH)}
+                                title={isH ? 'Drag up/down' : 'Drag left/right'}
+                                style={{
+                                    position: 'absolute',
+                                    transform: `translate(-50%, -50%) translate(${mx}px, ${my}px)`,
+                                    width: isH ? '36px' : '14px',
+                                    height: isH ? '14px' : '36px',
+                                    borderRadius: '7px',
+                                    backgroundColor: 'var(--callToAction)',
+                                    opacity: 0.85,
+                                    cursor: isH ? 'ns-resize' : 'ew-resize',
+                                    zIndex: 10, pointerEvents: 'all',
+                                    boxShadow: '0 1px 3px rgba(0,0,0,0.4)',
+                                }}
+                            />
+                        );
+                    })}
                 </EdgeLabelRenderer>
             )}
         </>
@@ -356,19 +532,19 @@ const mapIgnitionToReactFlowNodes = (ignitionNodes: any, handleGearClick: (id: s
     });
 };
 
-const mapIgnitionToReactFlowEdges = (ignitionEdges: any, connectionTypes: any, selectedId: string | null) => {
+const mapIgnitionToReactFlowEdges = (ignitionEdges: any, connectionTypes: any, selectedId: string | null, onWaypointsChange?: (id: string, wps: { x: number; y: number }[]) => void, snapEnabled?: boolean, snapPixels?: number) => {
     if (!ignitionEdges) return [];
-    return Object.entries(ignitionEdges).filter(([id, edgeData]: any) => edgeData !== null && edgeData !== undefined).map(([id, edgeData]: any) => { 
-        const typeConfig = connectionTypes[edgeData.connectionType] || {}; 
-        const isSelected = id === selectedId; 
-        
+    return Object.entries(ignitionEdges).filter(([id, edgeData]: any) => edgeData !== null && edgeData !== undefined).map(([id, edgeData]: any) => {
+        const typeConfig = connectionTypes[edgeData.connectionType] || {};
+        const isSelected = id === selectedId;
+
         const strokeStyle: any = { stroke: typeConfig.color || '#888', strokeWidth: isSelected ? 8 : 6 };
-        
-        if (edgeData.dashed) strokeStyle.strokeDasharray = '8 5'; 
-        
-        const arrowMarker = edgeData.arrow !== false ? { type: MarkerType.ArrowClosed, width: 10, height: 10, color: strokeStyle.stroke } : undefined; 
-        
-        return { id, ...edgeData, type: 'custom', data: { lineType: edgeData.lineType || 'smoothstep', offsetX: edgeData.offsetX || 0, offsetY: edgeData.offsetY || 0, showLabel: edgeData.showLabel === true }, label: typeConfig.label || edgeData.connectionType || '', style: strokeStyle, markerEnd: arrowMarker, interactionWidth: 20, updatable: true }; 
+
+        if (edgeData.dashed) strokeStyle.strokeDasharray = '8 5';
+
+        const arrowMarker = edgeData.arrow !== false ? { type: MarkerType.ArrowClosed, width: 10, height: 10, color: strokeStyle.stroke } : undefined;
+
+        return { id, ...edgeData, type: 'custom', data: { lineType: edgeData.lineType || 'smoothstep', waypoints: edgeData.waypoints || [], showLabel: edgeData.showLabel === true, isSelected, snapEnabled: snapEnabled ?? true, snapPixels: snapPixels ?? 15, onWaypointsChange: onWaypointsChange ? (wps: { x: number; y: number }[]) => onWaypointsChange(id, wps) : undefined }, label: typeConfig.label || edgeData.connectionType || '', style: strokeStyle, markerEnd: arrowMarker, interactionWidth: 20, updatable: true };
     });
 };
 
@@ -406,7 +582,84 @@ const getNodesInside = (containerId: string, allNodes: any): string[] => {
     return inside;
 };
 
-export interface ArchitectureBuilderProps { enabled?: any; hideHandles?: any; handleCount?: any; defaultConnectionType?: string; snapEnabled?: any; snapPixels?: any; style?: any; connectionTypes: any; paletteItems: any[]; nodes: any; edges: any; }
+const isInsideContainer = (item: any, container: any): boolean => {
+    const iw = item.paletteId === 'container' ? (item.width || 300) : 150;
+    const ih = item.paletteId === 'container' ? (item.height || 300) : 150;
+    const cw = container.width || 300;
+    const ch = container.height || 300;
+    if (iw >= cw || ih >= ch) return false;
+    return item.x >= container.x && item.y >= container.y &&
+           item.x + iw <= container.x + cw && item.y + ih <= container.y + ch;
+};
+
+const computeHierarchyData = (nodesDict: any, edgesDict: any) => {
+    const allEntries: [string, any][] = Object.entries(nodesDict).filter(([, n]) => n) as [string, any][];
+    const containerEntries = allEntries.filter(([, n]) => n.paletteId === 'container');
+    const containers = containerEntries.map(([id, n]) => ({ id, ...n }));
+
+    // Build per-node connection lists (sorted for determinism)
+    const connectionsByNode: Record<string, string[]> = {};
+    Object.entries(edgesDict).forEach(([edgeId, edge]: any) => {
+        if (!edge) return;
+        [edge.source, edge.target].forEach((nodeId: string) => {
+            if (!nodeId) return;
+            if (!connectionsByNode[nodeId]) connectionsByNode[nodeId] = [];
+            if (!connectionsByNode[nodeId].includes(edgeId)) connectionsByNode[nodeId].push(edgeId);
+        });
+    });
+    Object.values(connectionsByNode).forEach(arr => arr.sort());
+
+    // Containers containing a given item, sorted outermost (largest area) first
+    const getChain = (item: any): any[] =>
+        containers
+            .filter(c => c.id !== item.id && isInsideContainer(item, c))
+            .sort((a, b) => ((b.width || 300) * (b.height || 300)) - ((a.width || 300) * (a.height || 300)));
+
+    // Direct parent = innermost container (last in chain)
+    const getDirectParent = (item: any): string | null => {
+        const chain = getChain(item);
+        return chain.length > 0 ? chain[chain.length - 1].id : null;
+    };
+
+    // Per-node enrichments
+    const nodeEnrichments: Record<string, { hierarchy: string[]; connections: string[] }> = {};
+    allEntries.forEach(([id, n]) => {
+        nodeEnrichments[id] = {
+            hierarchy: getChain({ id, ...n }).map(c => c.id),
+            connections: connectionsByNode[id] || []
+        };
+    });
+
+    // Root hierarchy tree — build container tree nodes
+    const treeMap: Record<string, any> = {};
+    containers.forEach(c => {
+        treeMap[c.id] = { id: c.id, typeId: c.typeId || 'container', label: c.label || '', areas: [], nodes: [] };
+    });
+
+    // Assign containers to their direct parent container
+    containers.forEach(c => {
+        const parent = getDirectParent(c);
+        if (parent && treeMap[parent]) treeMap[parent].areas.push(treeMap[c.id]);
+    });
+
+    // Assign regular nodes to their direct parent container (hierarchy only carries id/typeId/label)
+    allEntries.filter(([, n]) => n.paletteId !== 'container').forEach(([id, n]) => {
+        const entry = { id, typeId: n.typeId || n.paletteId || '', label: n.label || '' };
+        const parent = getDirectParent({ id, ...n });
+        if (parent && treeMap[parent]) treeMap[parent].nodes.push(entry);
+    });
+
+    const rootHierarchy = {
+        areas: containers.filter(c => getDirectParent(c) === null).map(c => treeMap[c.id]),
+        nodes: allEntries
+            .filter(([id, n]) => n.paletteId !== 'container' && getDirectParent({ id, ...n }) === null)
+            .map(([id, n]) => ({ id, typeId: n.typeId || n.paletteId || '', label: n.label || '' }))
+    };
+
+    return { nodeEnrichments, rootHierarchy };
+};
+
+export interface ArchitectureBuilderProps { enabled?: any; hideHandles?: any; handleCount?: any; defaultConnectionType?: string; snapEnabled?: any; snapPixels?: any; style?: any; connectionTypes: any; paletteItems: any[]; nodes: any; edges: any; hierarchy?: any; }
 
 export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureBuilderProps>) => {
   const reactFlowWrapper = React.useRef<HTMLDivElement>(null);
@@ -421,6 +674,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
   const [activeSubMenu, setActiveSubMenu] = React.useState<'lineType' | 'connectionType' | 'swapNode' | 'order' | null>(null); 
   
   const draggedItemRef = React.useRef<PaletteItem | null>(null);
+  const hierarchyWriteRef = React.useRef<string>('');
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
   const [localNodes, setLocalNodes] = React.useState<any[]>([]);
   const [isUpdatingEdge, setIsUpdatingEdge] = React.useState(false);
@@ -445,6 +699,26 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
   const snapEnabled = props.props.snapEnabled !== false && String(props.props.snapEnabled).toLowerCase() !== 'false';
   const snapPixels = Number(props.props.snapPixels) || 15;
   const snapGrid = React.useMemo<[number, number]>(() => [snapPixels, snapPixels], [snapPixels]);
+
+  // Recompute and write hierarchy data whenever nodes or edges change.
+  // hierarchyWriteRef prevents infinite loops: writing enriched nodes back causes rawNodesDict
+  // to re-trigger this effect, but the serialized output is identical so the write is skipped.
+  React.useEffect(() => {
+      if (!props.store?.props) return;
+      const { nodeEnrichments, rootHierarchy } = computeHierarchyData(rawNodesDict, rawEdgesDict);
+      const serialized = JSON.stringify({ rootHierarchy, nodeEnrichments });
+      if (serialized === hierarchyWriteRef.current) return;
+      hierarchyWriteRef.current = serialized;
+
+      props.store.props.write('hierarchy', rootHierarchy);
+
+      const enrichedNodes: any = {};
+      Object.keys(rawNodesDict).forEach(id => {
+          if (!rawNodesDict[id]) return;
+          enrichedNodes[id] = { ...rawNodesDict[id], ...nodeEnrichments[id] };
+      });
+      props.store.props.write('nodes', enrichedNodes);
+  }, [rawNodesDict, rawEdgesDict, props.store]);
 
   const closeContextMenu = React.useCallback(() => { setContextMenu(null); setActiveSubMenu(null); }, []);
 
@@ -582,8 +856,17 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       }
   }, [props.store, rawNodesDict]);
 
+  const handleWaypointsChange = React.useCallback((edgeId: string, waypoints: { x: number; y: number }[]) => {
+      if (!props.store?.props) return;
+      const nextEdges = { ...rawEdgesDict };
+      if (nextEdges[edgeId]) {
+          nextEdges[edgeId] = { ...nextEdges[edgeId], waypoints };
+          props.store.props.write('edges', nextEdges);
+      }
+  }, [props.store, rawEdgesDict]);
+
   const flowNodes = React.useMemo(() => mapIgnitionToReactFlowNodes(rawNodesDict, handleGearClick, handleResizeEnd, handleTextChange, selectedId, globalHideHandles, globalHandleCount), [rawNodesDict, handleGearClick, handleResizeEnd, handleTextChange, selectedId, globalHideHandles, globalHandleCount]);
-  const flowEdges = React.useMemo(() => mapIgnitionToReactFlowEdges(rawEdgesDict, connectionTypes, selectedId), [rawEdgesDict, connectionTypes, selectedId]);
+  const flowEdges = React.useMemo(() => mapIgnitionToReactFlowEdges(rawEdgesDict, connectionTypes, selectedId, handleWaypointsChange, snapEnabled, snapPixels), [rawEdgesDict, connectionTypes, selectedId, handleWaypointsChange, snapEnabled, snapPixels]);
 
   React.useEffect(() => { setLocalNodes(flowNodes); }, [flowNodes]);
 
@@ -626,7 +909,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       const typeDef = connectionTypes[selectedType] || {};
 
       if (props.store?.props) {
-          props.store.props.write('edges', { ...rawEdgesDict, [generateShortId()]: { ...connectionParams, lineType: 'smoothstep', dashed: false, arrow: typeDef.arrow !== false, showLabel: false, connectionType: selectedType, offsetX: 0, offsetY: 0 } });
+          props.store.props.write('edges', { ...rawEdgesDict, [generateShortId()]: { ...connectionParams, lineType: 'smoothstep', dashed: false, arrow: typeDef.arrow !== false, showLabel: false, connectionType: selectedType } });
       }
   }, [props.store, rawEdgesDict, getValidIntersection, connectionTypes, globalDefaultConnectionType]);
 
@@ -636,12 +919,16 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       if (validTypes.length === 0) return;
 
       if (props.store?.props) {
-          const nextEdges = { ...rawEdgesDict }; const oldData = nextEdges[oldEdge.id];
+          const nextEdges = { ...rawEdgesDict };
+          const oldData = nextEdges[oldEdge.id];
           if (!validTypes.includes(oldData.connectionType)) { return; }
-          nextEdges[oldEdge.id] = { ...oldData, source: newConnection.source, target: newConnection.target, sourceHandle: newConnection.sourceHandle, targetHandle: newConnection.targetHandle };
+          const src = getHandlePixelPos(newConnection.source, newConnection.sourceHandle || '', rawNodesDict, globalHandleCount);
+          const tgt = getHandlePixelPos(newConnection.target, newConnection.targetHandle || '', rawNodesDict, globalHandleCount);
+          const waypoints = src && tgt ? computeAutoWaypoints(src.x, src.y, src.position, tgt.x, tgt.y, tgt.position) : [];
+          nextEdges[oldEdge.id] = { ...oldData, source: newConnection.source, target: newConnection.target, sourceHandle: newConnection.sourceHandle, targetHandle: newConnection.targetHandle, waypoints };
           props.store.props.write('edges', nextEdges);
       }
-  }, [props.store, rawEdgesDict, getValidIntersection]);
+  }, [props.store, rawEdgesDict, rawNodesDict, globalHandleCount, getValidIntersection]);
 
   const onNodeDragStart = React.useCallback((event: any, node: any) => {
       const rawNode = rawNodesDict[node.id];
@@ -913,6 +1200,17 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
 
       if (action === 'toggleDashed' && isEdge) {
           if (props.store?.props) { const nextEdges = { ...rawEdgesDict }; if (nextEdges[contextMenu.id]) { nextEdges[contextMenu.id].dashed = !nextEdges[contextMenu.id].dashed; props.store.props.write('edges', nextEdges); } }
+          closeContextMenu(); return;
+      }
+
+      if (action === 'clearWaypoints' && isEdge) {
+          if (props.store?.props) {
+              const nextEdges = { ...rawEdgesDict };
+              if (nextEdges[contextMenu.id]) {
+                  nextEdges[contextMenu.id] = { ...nextEdges[contextMenu.id], waypoints: [] };
+                  props.store.props.write('edges', nextEdges);
+              }
+          }
           closeContextMenu(); return;
       }
       closeContextMenu();
@@ -1263,8 +1561,13 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
                                   <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('toggleDashed')}>
                                       {rawEdgesDict[contextMenu.id]?.dashed ? '─── Solid Line' : '- - - Dashed Line'}
                                   </div>
+                                  {(() => { const e = rawEdgesDict[contextMenu.id]; const lt = e?.lineType; const canClear = (!lt || lt === 'smoothstep' || lt === 'step') && e?.waypoints?.length > 0; return canClear ? (
+                                      <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)' }} onMouseEnter={() => setActiveSubMenu(null)} onClick={() => handleContextMenuAction('clearWaypoints')}>
+                                          ⊙ Clear Path ({e.waypoints.length} pt{e.waypoints.length !== 1 ? 's' : ''})
+                                      </div>
+                                  ) : null; })()}
                                   <div style={{ borderTop: '1px solid var(--neutral-40)', margin: '4px 0' }} />
-                                  
+
                                   <div style={{ position: 'relative' }} onMouseEnter={() => setActiveSubMenu('lineType')}>
                                       <div style={{ padding: '5px 8px', cursor: 'pointer', color: 'var(--neutral-90)', display: 'flex', justifyContent: 'space-between', backgroundColor: activeSubMenu === 'lineType' ? 'var(--neutral-30)' : 'transparent' }}> 
                                           <span>〰️ Line Type</span><span>▶</span> 

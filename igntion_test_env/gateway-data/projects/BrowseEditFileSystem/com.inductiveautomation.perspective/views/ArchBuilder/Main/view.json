@@ -62,9 +62,207 @@
           "basis": "800px"
         },
         "props": {
-          "connectionTypes": {
-            "rest": {
-              "color": "lightblue"
+          "edges": {
+            "I1e98f198": {
+              "arrow": false,
+              "connectionType": "db",
+              "dashed": false,
+              "lineType": "smoothstep",
+              "offsetX": 0,
+              "offsetY": 0,
+              "showLabel": true,
+              "source": "I64382657",
+              "sourceHandle": "top-0",
+              "target": "I1a155e20",
+              "targetHandle": "bottom-1"
+            },
+            "I3146374f": {
+              "arrow": true,
+              "connectionType": "gateway-network",
+              "dashed": false,
+              "lineType": "smoothstep",
+              "offsetX": 0,
+              "offsetY": 0,
+              "showLabel": true,
+              "source": "Iffbf119d",
+              "sourceHandle": "top-4",
+              "target": "I1a155e20",
+              "targetHandle": "bottom-3"
+            },
+            "Ieb6efc21": {
+              "arrow": false,
+              "connectionType": "mqtt",
+              "dashed": false,
+              "lineType": "smoothstep",
+              "offsetX": 0,
+              "offsetY": 0,
+              "showLabel": false,
+              "source": "I1a155e20",
+              "sourceHandle": "bottom-4",
+              "target": "Iffbf119d",
+              "targetHandle": "top-0"
+            }
+          },
+          "hierarchy": {
+            "areas": [
+              {
+                "areas": [],
+                "id": "I280874bc",
+                "label": "Area / Site",
+                "nodes": [
+                  {
+                    "connections": [
+                      "I1e98f198",
+                      "I3146374f",
+                      "Ieb6efc21"
+                    ],
+                    "id": "I1a155e20",
+                    "label": "Standard",
+                    "typeId": "standard"
+                  }
+                ],
+                "typeId": "container"
+              }
+            ],
+            "nodes": [
+              {
+                "connections": [
+                  "I3146374f",
+                  "Ieb6efc21"
+                ],
+                "id": "Iffbf119d",
+                "label": "Edge Panel Gateway",
+                "typeId": "edge-panel"
+              },
+              {
+                "connections": [
+                  "I1e98f198"
+                ],
+                "id": "I64382657",
+                "label": "SQLite",
+                "typeId": "Database"
+              }
+            ]
+          },
+          "nodes": {
+            "I1a155e20": {
+              "b64Image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJMYXllcl8yIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMjIxLjQzIDMxNC4zOSI+PGRlZnM+PHN0eWxlPi5jbHMtMSwuY2xzLTIsLmNscy0ze2ZpbGw6bm9uZTt9LmNscy0ye2NsaXAtcGF0aDp1cmwoI2NsaXBwYXRoLTEpO30uY2xzLTR7ZmlsbDojZjc5NDM1O30uY2xzLTV7ZmlsbDojZmZmO30uY2xzLTZ7ZmlsbDojYWNjY2UyO30uY2xzLTd7ZmlsbDojMzU1OTgwO30uY2xzLTh7ZmlsbDojMmY0NjY2O30uY2xzLTN7Y2xpcC1wYXRoOnVybCgjY2xpcHBhdGgpO308L3N0eWxlPjxjbGlwUGF0aCBpZD0iY2xpcHBhdGgiPjxyZWN0IGNsYXNzPSJjbHMtMSIgd2lkdGg9IjIyMS40MyIgaGVpZ2h0PSIzMTQuMzkiLz48L2NsaXBQYXRoPjxjbGlwUGF0aCBpZD0iY2xpcHBhdGgtMSI+PHJlY3QgY2xhc3M9ImNscy0xIiB3aWR0aD0iMjIxLjQzIiBoZWlnaHQ9IjMxNC4zOSIvPjwvY2xpcFBhdGg+PC9kZWZzPjxnIGlkPSJMYXllcl8xLTIiPjxnIGlkPSJTZXJ2ZXJfQmx1ZV8tX0xlZnQiPjxnIGNsYXNzPSJjbHMtMyI+PHBvbHlnb24gY2xhc3M9ImNscy03IiBwb2ludHM9IjcyLjEyIDEyNy44NSA3Mi4xMyAzMTQuMzkgMjIxLjQzIDIyOC4xOSAyMjEuNDMgNDEuNjQgNzIuMTIgMTI3Ljg1Ii8+PHBvbHlnb24gY2xhc3M9ImNscy02IiBwb2ludHM9IjE0OS4zMiAwIDAgODYuMjEgNzIuMTIgMTI3Ljg1IDIyMS40MyA0MS42NCAxNDkuMzIgMCIvPjxwb2x5Z29uIGNsYXNzPSJjbHMtOCIgcG9pbnRzPSIwIDI3Mi43NCA3Mi4xMiAzMTQuMzkgNzIuMTIgMTI3Ljg1IDAgODYuMjEgMCAyNzIuNzQiLz48ZyBjbGFzcz0iY2xzLTIiPjxwYXRoIGNsYXNzPSJjbHMtNCIgZD0ibTEzNS4xNCwyMDkuOWMxLjY1LTIuMzcsMy41MS00LjA3LDUuNTctNS4xLDIuMDctMS4wNCwzLjgyLTEuMTUsNS4yMy0uMzEsMS40Mi44MywyLjA0LDIuMzIsMS44OSw0LjQ4LS4xNiwyLjE3LTEuMDUsNC4zNS0yLjcsNi41OC0xLjYzLDIuMjItMy40OSwzLjg1LTUuNTUsNC44OC0yLjA4LDEuMDQtMy44MywxLjIyLTUuMjQuNTItMS40Mi0uNy0yLjA2LTIuMTEtMS45LTQuMjguMTYtMi4xNiwxLjA2LTQuNDMsMi43MS02Ljc4Ii8+PHBhdGggY2xhc3M9ImNscy00IiBkPSJtMTg0LjUyLDExOC4wOGMtLjctMS4xMy0xLjc5LTEuNjktMy4yOC0xLjY4LTEuNS4wMy0zLjA3LjYxLTQuNzQsMS43Ny0xLjY3LDEuMTYtMy4xLDMuMTUtNC4zMiw1Ljk3LS4yMS41Mi0uNzgsMi4wNS0xLjcyLDQuNTktLjk0LDIuNTYtMi4xMSw1Ljc5LTMuNTUsOS43LTEuNDMsMy45MS0zLjA1LDguMzEtNC44NywxMy4yMS0xLjgxLDQuODktMy42OSwxMC4wMi01LjYzLDE1LjM5LTEuOTQsNS4zNi0zLjksMTAuNzctNS44OCwxNi4yNS0xLjk0LDUuMzUtMy43OSwxMC40NC01LjUzLDE1LjI2LjgzLS4xMiwxLjYzLS4xMiwyLjM3LDAsMy42LTcuMzMsNy40NC0xNS4xNSwxMS41Mi0yMy40NSw0LjEzLTguNCw3Ljk3LTE2LjI1LDExLjUyLTIzLjU1LDMuNTUtNy4zMSw2LjU3LTEzLjUxLDkuMDUtMTguNjIsMi41LTUuMTEsMy45Mi04LjA4LDQuMjgtOC45MSwxLjIxLTIuODIsMS40Ni00LjguNzctNS45MyIvPjxwYXRoIGNsYXNzPSJjbHMtNCIgZD0ibTEzNS4wNSwyMDQuMzljLTEuMTQtMy44Ny0yLjA2LTYuOTctMi43OC05LjMyLS43MS0yLjM2LTEuMzItNC4yMy0xLjc4LTUuNTgtLjQ4LTEuMzYtLjg1LTIuMzMtMS4xMy0yLjkzLS4yNy0uNi0uNTMtMS4xLS43OS0xLjQ3LS42MS0uOTMtMS41LTEuMjQtMi42OS0uOTYtMS4xOS4zMS0yLjQ2LDEuMTctMy44LDIuNTgtMS4zNCwxLjQyLTIuMjQsMi44NS0yLjY4LDQuMjctLjQ1LDEuNDItLjM2LDIuNi4yNCwzLjUyLjI2LjM4LjU5LjgsMS4wMSwxLjI0LjQxLjQ2LDEuMTEsMS4xLDIuMDgsMS45My45Ny44MywyLjMxLDEuOTEsNC4wMywzLjIzLDEuNzEsMS4zMiwzLjk5LDMuMDUsNi44Myw1LjE3LjQ4LS41OS45Ny0xLjE1LDEuNDgtMS42OCIvPjxwYXRoIGNsYXNzPSJjbHMtNSIgZD0ibTU4LjYyLDE1Mi4yNWMtLjQ5LDAtLjk5LS4xMi0xLjQ0LS4zOWwtNDUuMjUtMjYuMTRjLTEuMzgtLjgtMS44NS0yLjU2LTEuMDYtMy45NC44LTEuMzgsMi41Ni0xLjg1LDMuOTQtMS4wNmw0NS4yNSwyNi4xNGMxLjM4LjgsMS44NSwyLjU2LDEuMDYsMy45NC0uNTMuOTMtMS41MSwxLjQ0LTIuNSwxLjQ0Ii8+PHBhdGggY2xhc3M9ImNscy01IiBkPSJtNTguNjIsMTY3LjIxYy0uNDksMC0uOTktLjEyLTEuNDQtLjM5bC00NS4yNS0yNi4xM2MtMS4zOC0uOC0xLjg1LTIuNTYtMS4wNi0zLjk0LjgtMS4zOCwyLjU2LTEuODUsMy45NC0xLjA2bDQ1LjI1LDI2LjEzYzEuMzguOCwxLjg1LDIuNTYsMS4wNiwzLjk0LS41My45My0xLjUxLDEuNDQtMi41LDEuNDQiLz48cGF0aCBjbGFzcz0iY2xzLTUiIGQ9Im01OC42MiwxODIuMTdjLS40OSwwLS45OS0uMTItMS40NC0uMzlsLTQ1LjI1LTI2LjEyYy0xLjM4LS44LTEuODUtMi41Ni0xLjA2LTMuOTQuOC0xLjM4LDIuNTYtMS44NSwzLjk0LTEuMDZsNDUuMjUsMjYuMTJjMS4zOC44LDEuODUsMi41NiwxLjA2LDMuOTQtLjUzLjkzLTEuNTEsMS40NC0yLjUsMS40NCIvPjwvZz48L2c+PC9nPjwvZz48L3N2Zz4\u003d",
+              "configs": {},
+              "connections": [
+                "I1e98f198",
+                "I3146374f",
+                "Ieb6efc21"
+              ],
+              "hideHandles": false,
+              "hierarchy": [
+                "I280874bc"
+              ],
+              "label": "Standard",
+              "labelStyle": {
+                "classes": ""
+              },
+              "paletteId": "standard",
+              "style": {
+                "classes": ""
+              },
+              "supportedConnections": [
+                "gateway-network",
+                "mqtt",
+                "rest",
+                "standard",
+                "device-driver",
+                "opc-ua",
+                "opc-com",
+                "mongodb",
+                "kafka",
+                "db",
+                "client"
+              ],
+              "tooltip": "Edge IIOT Gateway",
+              "typeId": "standard",
+              "x": 270,
+              "y": 165
+            },
+            "I280874bc": {
+              "b64Image": "",
+              "configs": {},
+              "connections": [],
+              "height": 300,
+              "hideHandles": false,
+              "hierarchy": [],
+              "label": "Area / Site",
+              "labelStyle": {
+                "classes": ""
+              },
+              "paletteId": "container",
+              "style": {
+                "backgroundColor": "rgba(128, 128, 128, 0.8)",
+                "classes": "",
+                "padding": "10px"
+              },
+              "supportedConnections": [],
+              "tooltip": "Grouping Container",
+              "typeId": "container",
+              "width": 300,
+              "x": 195,
+              "y": 90,
+              "zIndex": -1
+            },
+            "I64382657": {
+              "b64Image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIiB2aWV3Qm94PSIwIDAgNDEgNTMiPg0KICA8ZGVmcy8+DQogIDxyZWN0IGZpbGw9IiNlNWU1ZTUiIGhlaWdodD0iMTciIHJ4PSI1IiBzdHJva2U9IiM0ZTRlNGUiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMnB4IiB3aWR0aD0iMzkiIHg9IjEiIHk9IjM1Ii8+DQogIDxjaXJjbGUgY3g9IjEwIiBjeT0iNDMuNSIgZmlsbD0iIzRlNGU0ZSIgcj0iMS41Ii8+DQogIDxyZWN0IGZpbGw9IiNlNWU1ZTUiIGhlaWdodD0iMTciIHJ4PSI1IiBzdHJva2U9IiM0ZTRlNGUiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMnB4IiB3aWR0aD0iMzkiIHg9IjEiIHk9IjE4Ii8+DQogIDxjaXJjbGUgY3g9IjkuNSIgY3k9IjI2LjUiIGZpbGw9IiM0ZTRlNGUiIHI9IjEuNSIvPg0KICA8cmVjdCBmaWxsPSIjZTVlNWU1IiBoZWlnaHQ9IjE3IiByeD0iNSIgc3Ryb2tlPSIjNGU0ZTRlIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjJweCIgd2lkdGg9IjM5IiB4PSIxIiB5PSIxIi8+DQogIDxjaXJjbGUgY3g9IjkuNSIgY3k9IjkuNSIgZmlsbD0iIzRlNGU0ZSIgcj0iMS41Ii8+DQo8c3ZnIGhlaWdodD0iMjYuNSIgd2lkdGg9IjIwLjUiIHg9IjIwLjUiIHk9IjI2LjUiPjxyZWN0IGZpbGw9InJnYmEoODUsIDg1LCA4NSwgMC44NikiIGhlaWdodD0iMTAwJSIgcng9IjUiIHJ5PSI1IiB3aWR0aD0iMTAwJSIvPjxzdmcgaGVpZ2h0PSIyNC41IiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJ4TWlkWU1pZCIgdmlld0JveD0iMCAwIDMyIDMyIiB3aWR0aD0iMTguNSIgeD0iMSIgeT0iMSI+DQogIDxkZWZzPg0KICAgIDxsaW5lYXJHcmFkaWVudCBncmFkaWVudFRyYW5zZm9ybT0ibWF0cml4KDAsIDExLjQ4NiwgMTEuNDg2LCAwLCAtNTEwLjg4OSwgMTM2My4zMDcpIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgaWQ9ImEiIHgxPSItMTE4LjMxOCIgeDI9Ii0xMTYuNzUxIiB5MT0iNDUuNjM4IiB5Mj0iNDUuNjM4Ij4NCiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzk3ZDlmNiIvPg0KICAgICAgPHN0b3Agb2Zmc2V0PSIwLjkyIiBzdG9wLWNvbG9yPSIjMGY4MGNjIi8+DQogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwZjgwY2MiLz4NCiAgICA8L2xpbmVhckdyYWRpZW50Pg0KICA8L2RlZnM+DQogIDxwYXRoIGQ9Ik0yMy4xOTIsMy4yNDJINS42MjNBMi4xNDcsMi4xNDcsMCwwLDAsMy40ODIsNS4zODNWMjQuNzU5QTIuMTQ3LDIuMTQ3LDAsMCwwLDUuNjIzLDI2LjlIMTcuMTk1QzE3LjA2MywyMS4xNDIsMTkuMDMsOS45NjgsMjMuMTkyLDMuMjQyWiIgZmlsbD0iIzBmODBjYyIvPg0KICA8cGF0aCBkPSJNMjIuNTU0LDMuODY3SDUuNjIzQTEuNTE4LDEuNTE4LDAsMCwwLDQuMTA3LDUuMzgzVjIzLjM0NWE0Mi4wMSw0Mi4wMSwwLDAsMSwxMy41NjktMi42ODRBMTIzLjU1NSwxMjMuNTU1LDAsMCwxLDIyLjU1NCwzLjg2N1oiIGZpbGw9InVybCgjYSkiLz4NCiAgPHBhdGggZD0iTTI3LjI5LDIuNjA4Yy0xLjItMS4wNzMtMi42Ni0uNjQyLTQuMS42MzQtLjIxMy4xOS0uNDI2LjQtLjYzOC42MjVBMjUuNCwyNS40LDAsMCwwLDE3LjEsMTVhMTAuMTc4LDEwLjE3OCwwLDAsMSwuNjM0LDEuODIyYy4wMzYuMTQuMDY5LjI3Mi4xLjM4NC4wNjIuMjY1LjEuNDM3LjEuNDM3cy0uMDIyLS4wODMtLjExMy0uMzQ2bC0uMDU5LS4xN2MtLjAxLS4wMjctLjAyMy0uMDU5LS4wMzgtLjA5NC0uMTYtLjM3My0uNi0xLjE2LS44LTEuNS0uMTY3LjQ5My0uMzE1Ljk1NC0uNDM4LDEuMzcxYTEyLjEzMSwxMi4xMzEsMCwwLDEsLjkwOCwyLjhzLS4wMy0uMTE1LS4xNzEtLjUxNWExOS4wMzcsMTkuMDM3LDAsMCwwLS45LTEuNzA4LDQuMDM3LDQuMDM3LDAsMCwwLS4yNjQsMS43MjQsNi4wMDksNi4wMDksMCwwLDEsLjQ5MywxLjM4M2MuMzM0LDEuMjgzLjU2NiwyLjg0Ni41NjYsMi44NDZzLjAwOC4xLjAyLjI2M2EyNi4xNDUsMjYuMTQ1LDAsMCwwLC4wNjUsMy4yMDUsMTEuMzYyLDExLjM2MiwwLDAsMCwuNTg0LDMuMWwuMTgtLjFhMTMuODU5LDEzLjg1OSwwLDAsMS0uNDc4LTQuNjI4LDM1LjI2OSwzNS4yNjksMCwwLDEsMS45MzgtOS42ODhjMi4wMS01LjMwOCw0LjgtOS41NjgsNy4zNS0xMS42LTIuMzI2LDIuMS01LjQ3NCw4LjktNi40MTcsMTEuNDE4YTQ1LjY1Niw0NS42NTYsMCwwLDAtMi4yNTQsOEE2LjIxMSw2LjIxMSwwLDAsMSwyMS4zOSwyMHMxLjIzMy0xLjUyMSwyLjY3NC0zLjY5M2EyNi4yMDYsMjYuMjA2LDAsMCwwLTIuNzU1LjczM2MtLjcuMjk0LS44ODkuMzk0LS44ODkuMzk0YTIzLjkzOSwyMy45MzksMCwwLDEsNC4yMTUtMi4wMDdjMi42NzYtNC4yMTUsNS41OTItMTAuMiwyLjY1Ni0xMi44MjQiIGZpbGw9IiMwMDNiNTciLz4NCjwvc3ZnPjwvc3ZnPjwvc3ZnPg\u003d\u003d",
+              "configs": {},
+              "connections": [
+                "I1e98f198"
+              ],
+              "hideHandles": false,
+              "hierarchy": [],
+              "label": "SQLite",
+              "labelStyle": {
+                "classes": ""
+              },
+              "paletteId": "SQLite",
+              "style": {
+                "classes": ""
+              },
+              "supportedConnections": [
+                "db"
+              ],
+              "tooltip": "",
+              "typeId": "Database",
+              "x": 60,
+              "y": 540
+            },
+            "Iffbf119d": {
+              "b64Image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJMYXllcl8yIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMTE1LjE3IDE3OC4zNiI+PGRlZnM+PHN0eWxlPi5jbHMtMSwuY2xzLTIsLmNscy0zLC5jbHMtNCwuY2xzLTUsLmNscy02e2ZpbGw6bm9uZTt9LmNscy0ye2NsaXAtcGF0aDp1cmwoI2NsaXBwYXRoLTMpO30uY2xzLTN7Y2xpcC1wYXRoOnVybCgjY2xpcHBhdGgtMik7fS5jbHMtNHtjbGlwLXBhdGg6dXJsKCNjbGlwcGF0aC0xKTt9LmNscy01e2lzb2xhdGlvbjppc29sYXRlO30uY2xzLTd7ZmlsbDojOTA5Mjk1O30uY2xzLTh7ZmlsbDojYmNiY2JlO30uY2xzLTl7ZmlsbDojMjgzNDM5O30uY2xzLTEwe2ZpbGw6IzVhNTk1Yzt9LmNscy0xMXtmaWxsOiM3OGQxNzU7fS5jbHMtNntjbGlwLXBhdGg6dXJsKCNjbGlwcGF0aCk7fTwvc3R5bGU+PGNsaXBQYXRoIGlkPSJjbGlwcGF0aCI+PHJlY3QgY2xhc3M9ImNscy0xIiB3aWR0aD0iMTE1LjE3IiBoZWlnaHQ9IjE3OC4zNiIvPjwvY2xpcFBhdGg+PGNsaXBQYXRoIGlkPSJjbGlwcGF0aC0xIj48cmVjdCBjbGFzcz0iY2xzLTEiIHdpZHRoPSIxMTUuMTciIGhlaWdodD0iMTc4LjM2Ii8+PC9jbGlwUGF0aD48Y2xpcFBhdGggaWQ9ImNsaXBwYXRoLTIiPjxyZWN0IGNsYXNzPSJjbHMtMSIgeD0iMjYuMzkiIHk9IjQzLjQ1IiB3aWR0aD0iNjguNjYiIGhlaWdodD0iOTQuMzYiLz48L2NsaXBQYXRoPjxjbGlwUGF0aCBpZD0iY2xpcHBhdGgtMyI+PHBvbHlnb24gY2xhc3M9ImNscy0xIiBwb2ludHM9IjI2LjM5IDEzNy44IDI2LjY4IDc5LjE3IDk0LjgyIDQzLjQ1IDk0LjUyIDEwMi4wOCAyNi4zOSAxMzcuOCIvPjwvY2xpcFBhdGg+PC9kZWZzPjxnIGlkPSJMYXllcl8xLTIiPjxnIGlkPSJFZGdlX1RvdWNoX1BhbmVsXy1fTGVmdCI+PGcgY2xhc3M9ImNscy02Ij48cG9seWdvbiBjbGFzcz0iY2xzLTgiIHBvaW50cz0iMTA4LjkgMCAuMDUgNjIuODUgLjAxIDE3NC44NSA2LjI5IDE3OC4zNiA2LjI5IDE3OC4zNiAxMTUuMTcgMTE1LjM5IDExNS4xNyAzLjYyIDEwOC45IDAiLz48cG9seWdvbiBjbGFzcz0iY2xzLTciIHBvaW50cz0iNi4yOSA2Ni40OCA2LjI5IDE3OC4zNiA2LjI5IDE3OC4zNiAxMTUuMTcgMTE1LjM5IDExNS4xNyAzLjYyIDYuMjkgNjYuNDgiLz48cG9seWdvbiBjbGFzcz0iY2xzLTkiIHBvaW50cz0iMTA4LjAyIDE1Ljk1IDEzLjUzIDcwLjUgMTMuNTMgMTY1LjMgMTA4LjAyIDExMC43OCAxMDguMDIgMTUuOTUiLz48cG9seWdvbiBjbGFzcz0iY2xzLTEwIiBwb2ludHM9Ii4wMSAxNzQuODUgNi4yOSAxNzguMzYgNi4yOSAxNzguMzYgNi4yOSA2Ni40OCAwIDYyLjg1IC4wMSAxNzQuODUiLz48ZyBjbGFzcz0iY2xzLTQiPjxnIGNsYXNzPSJjbHMtNSI+PGcgY2xhc3M9ImNscy0zIj48ZyBjbGFzcz0iY2xzLTIiPjxwYXRoIGNsYXNzPSJjbHMtMTEiIGQ9Im01Mi44OSw2Ni4wOWMtMTEuNDcsNi4wMS0yMS43NSwxOC41Mi0yNi4xOSwzMS44Ni0uMzMsMSwuMDQsMS43NS44MywxLjY3LjItLjAzLjQtLjA5LjU5LS4xOS42MS0uMzIsMS4xOS0xLDEuNDQtMS43NSwzLjk1LTExLjg4LDEzLjEtMjMsMjMuMzEtMjguMzYsMi40My0xLjI3LDQuODItMi4xNyw3LjEyLTIuNjcuMTUtLjAzLjI5LS4wOS40NC0uMTcuNjctLjM1LDEuMjktMS4xMywxLjQ5LTEuOTQuMjUtLjk4LS4yMi0xLjYzLTEuMDQtMS40NS0yLjU4LjU2LTUuMjgsMS41Ny04LDMiLz48cGF0aCBjbGFzcz0iY2xzLTExIiBkPSJtNTIuODEsODIuMjRjLTUuMTcsMi43MS05LjgsOC4zNC0xMS44LDE0LjM0LS4zMywxLC4wNCwxLjc0LjgzLDEuNjcuMi0uMDIuNC0uMDguNTktLjE4LjYxLS4zMiwxLjE5LTEsMS40NC0xLjc1LDEuNTEtNC41NCw1LjAyLTguODEsOC45Mi0xMC44NS45NC0uNDksMS44Ny0uODQsMi43Ni0xLjAzLjE1LS4wMy4zLS4wOS40NS0uMTcuNjYtLjM1LDEuMjgtMS4xMywxLjQ4LTEuOTMuMjUtLjk4LS4yMS0xLjY0LTEuMDMtMS40Ny0xLjE4LjI1LTIuNDEuNzEtMy42NSwxLjM2Ii8+PHBhdGggY2xhc3M9ImNscy0xMSIgZD0ibTUyLjg1LDc0LjE3Yy04LjMyLDQuMzYtMTUuNzcsMTMuNDMtMTguOTksMjMuMS0uMzMsMSwuMDQsMS43NC44MywxLjY2LjE5LS4wMS40LS4wOC41OS0uMTguNjEtLjMyLDEuMTgtMSwxLjQ0LTEuNzUsMi43My04LjIsOS4wNi0xNS45LDE2LjExLTE5LjYsMS42OC0uODgsMy4zNC0xLjUsNC45NC0xLjg1LjE1LS4wMy4yOS0uMDkuNDQtLjE2LjY3LS4zNSwxLjI5LTEuMTMsMS41LTEuOTQuMjQtLjk4LS4yMi0xLjYzLTEuMDQtMS40NS0xLjg4LjQxLTMuODQsMS4xNC01LjgyLDIuMTgiLz48cGF0aCBjbGFzcz0iY2xzLTExIiBkPSJtODkuOSw0Ni4wM2MtLjIxLjExLS40My4yNC0uNjUuMzgtMS4xNi43NS0yLjE2LDIuMTEtMyw0LjA4LS4xNi4zNy0uNTYsMS40NC0xLjIxLDMuMjQtLjY2LDEuOC0xLjQ5LDQuMDctMi41LDYuODItMSwyLjc0LTIuMTUsNS44NS0zLjQyLDkuMjktMS4yOCwzLjQ1LTIuNiw3LjA3LTMuOTYsMTAuODQtMS4zNiwzLjc4LTIuNzMsNy41OS00LjEzLDExLjQ0LTEuMzcsMy43OC0yLjY2LDcuMzctMy44OSwxMC43NS41OS0uMDQsMS4xMywwLDEuNjUuMTMsMi41MS01LjEyLDUuMi0xMC41Nyw4LjA2LTE2LjM2LDIuODktNS44Niw1LjU4LTExLjMzLDguMDYtMTYuNDMsMi40OC01LjEsNC42LTkuNDIsNi4zNC0xMi45OSwxLjc1LTMuNTYsMi43NC01LjY0LDIuOTktNi4yMi44NS0xLjk4LDEuMDMtMy4zOS41Ni00LjI1LS40OC0uODUtMS4yMy0xLjMyLTIuMjYtMS4zOS0uODUtLjA1LTEuNzIuMTYtMi42NC42NCIvPjxwYXRoIGNsYXNzPSJjbHMtMTEiIGQ9Im01Mi45OCw5MS43N2MtLjU0LjI4LTEuMS43Mi0xLjY4LDEuMzItLjk0Ljk1LTEuNTcsMS45NC0xLjg3LDIuOTQtLjMyLDEuMDEtLjI2LDEuODcuMTUsMi41Ny4xOC4yOS40MS42MS43Ljk1LjI5LjM1Ljc3Ljg1LDEuNDQsMS41LjY2LjY1LDEuNTksMS41LDIuNzcsMi41NXMyLjc1LDIuNDEsNC43Miw0LjFjLjM0LS4zOS42OC0uNzgsMS4wMy0xLjEzLS43Ny0yLjg2LTEuNC01LjE2LTEuODktNi44OS0uNDktMS43Ni0uOS0zLjE0LTEuMjItNC4xNC0uMzItMS0uNTctMS43My0uNzYtMi4xNy0uMTktLjQ1LS4zOC0uODItLjU1LTEuMTItLjQyLS43LTEuMDQtLjk4LTEuODYtLjgyLS4zMS4wNi0uNjMuMTctLjk1LjM0Ii8+PHBhdGggY2xhc3M9ImNscy0xMSIgZD0ibTYzLjc0LDEwNy4zN2MtMi44OCwxLjUxLTUuMjMsNS4xOC01LjI1LDguMTgtLjAxLDMsMi4zMSw0LjIxLDUuMTksMi43LDIuODktMS41MSw1LjIzLTUuMTcsNS4yNS04LjE3LjAyLTMuMDEtMi4zMS00LjIyLTUuMTktMi43MSIvPjwvZz48L2c+PC9nPjwvZz48L2c+PC9nPjwvZz48L3N2Zz4\u003d",
+              "configs": {},
+              "connections": [
+                "I3146374f",
+                "Ieb6efc21"
+              ],
+              "hideHandles": false,
+              "hierarchy": [],
+              "label": "Edge Panel Gateway",
+              "labelStyle": {
+                "classes": ""
+              },
+              "paletteId": "edge-panel",
+              "style": {
+                "classes": ""
+              },
+              "supportedConnections": [
+                "gateway-network",
+                "mqtt",
+                "rest",
+                "client",
+                "standard",
+                "device-driver",
+                "opc-ua",
+                "opc-com"
+              ],
+              "tooltip": "Edge Panel Gateway",
+              "typeId": "edge-panel",
+              "x": 465,
+              "y": 540
             }
           }
         },
