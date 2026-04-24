@@ -704,7 +704,7 @@
             "client",
             "rest"
           ],
-          "hideHandles": true,
+          "hideHandles": false,
           "tooltip": "",
           "typeId": "Client",
           "style": {
@@ -735,7 +735,7 @@
             "client",
             "rest"
           ],
-          "hideHandles": true,
+          "hideHandles": false,
           "tooltip": "",
           "typeId": "Client",
           "style": {
