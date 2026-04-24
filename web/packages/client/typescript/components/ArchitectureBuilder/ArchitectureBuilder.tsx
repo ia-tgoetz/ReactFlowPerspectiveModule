@@ -369,6 +369,7 @@ const CustomEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
     const [liveWaypoints, setLiveWaypoints] = React.useState<{ x: number; y: number }[]>(
         storedWaypoints.length > 0 ? storedWaypoints : autoWaypoints
     );
+    const [isDraggingSegment, setIsDraggingSegment] = React.useState(false);
     const isDragging = React.useRef(false);
     const dragRef = React.useRef<any>(null);
 
@@ -380,6 +381,10 @@ const CustomEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
     }, [JSON.stringify(storedWaypoints), JSON.stringify(autoWaypoints)]);
 
     const isStepType = data?.lineType === 'step' || data?.lineType === 'smoothstep' || !data?.lineType;
+
+    // Use ReactFlow's built-in auto-routing until the user drags a segment for the first time.
+    // Switching only on drag-start (not on selection) means clicking never causes a visual jump.
+    const useAutoPath = isStepType && storedWaypoints.length === 0 && !isDraggingSegment;
 
     // Pin first/last waypoints so the edge always exits/enters perpendicular to the handle,
     // even when the connected node moves after waypoints were stored.
@@ -399,7 +404,9 @@ const CustomEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
 
     let edgePath = '', labelX = (sourceX + targetX) / 2, labelY = (sourceY + targetY) / 2;
 
-    if (isStepType) {
+    if (useAutoPath) {
+        [edgePath, labelX, labelY] = getSmoothStepPath({ sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, borderRadius: data?.lineType === 'step' ? 0 : 12 });
+    } else if (isStepType) {
         edgePath = buildPolylinePath(allPts, data?.lineType === 'step' ? 0 : 12);
         if (allPts.length >= 2) {
             const mid = Math.floor(allPts.length / 2);
@@ -421,6 +428,7 @@ const CustomEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
         e.stopPropagation();
         e.preventDefault();
         isDragging.current = true;
+        setIsDraggingSegment(true);
         setLiveWaypoints(startWps);
 
         const wp0Idx = segIdx - 1;
@@ -454,6 +462,7 @@ const CustomEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
             data?.onWaypointsChange?.(finalWps);
             dragRef.current = null;
             isDragging.current = false;
+            setIsDraggingSegment(false);
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
         };
@@ -462,7 +471,7 @@ const CustomEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
         document.addEventListener('mouseup', onMouseUp);
     }, [data, getZoom]);
 
-    const segHandleWps = pinnedWaypoints;
+    const segHandleWps = useAutoPath ? autoWaypoints : pinnedWaypoints;
     const segHandlePts = [{ x: sourceX, y: sourceY }, ...segHandleWps, { x: targetX, y: targetY }];
 
     return (
