@@ -62,6 +62,19 @@ export const Sidebar = ({ paletteItems, isOpen, toggleSidebar, onDragStartItem, 
     const onDragStart = (event: React.DragEvent<HTMLDivElement>, item: PaletteItem) => {
         onDragStartItem(item);
         event.dataTransfer.effectAllowed = 'move';
+
+        const imgSrc = toImgSrc(item.b64Image);
+        if (imgSrc) {
+            const ghost = document.createElement('div');
+            ghost.style.cssText = 'position:fixed;top:-200px;left:-200px;width:150px;height:150px;pointer-events:none;';
+            const img = document.createElement('img');
+            img.src = imgSrc;
+            img.style.cssText = 'width:150px;height:150px;object-fit:contain;display:block;';
+            ghost.appendChild(img);
+            document.body.appendChild(ghost);
+            event.dataTransfer.setDragImage(ghost, 75, 75);
+            setTimeout(() => { if (document.body.contains(ghost)) document.body.removeChild(ghost); }, 0);
+        }
     };
 
     return (

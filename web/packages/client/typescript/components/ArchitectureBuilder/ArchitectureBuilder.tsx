@@ -362,7 +362,7 @@ const mapIgnitionToReactFlowEdges = (ignitionEdges: any, connectionTypes: any, s
         const typeConfig = connectionTypes[edgeData.connectionType] || {}; 
         const isSelected = id === selectedId; 
         
-        const strokeStyle: any = { stroke: typeConfig.color || '#888', strokeWidth: isSelected ? 6 : 4 }; 
+        const strokeStyle: any = { stroke: typeConfig.color || '#888', strokeWidth: isSelected ? 8 : 6 };
         
         if (edgeData.dashed) strokeStyle.strokeDasharray = '8 5'; 
         
@@ -423,6 +423,8 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
   const draggedItemRef = React.useRef<PaletteItem | null>(null);
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
   const [localNodes, setLocalNodes] = React.useState<any[]>([]);
+  const [isUpdatingEdge, setIsUpdatingEdge] = React.useState(false);
+  const [isConnecting, setIsConnecting] = React.useState(false);
 
   const rawNodesJson = JSON.stringify(extractDeep(props.props.nodes) || {});
   const rawEdgesJson = JSON.stringify(extractDeep(props.props.edges) || {});
@@ -1065,16 +1067,16 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
             object-fit: contain;
         }
 
+        /* Enlarged transparent hit area so handles are easy to grab */
         .arch-node-handle::after {
             content: '';
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 20px;
-            height: 20px;
+            width: 30px;
+            height: 30px;
             background: transparent;
-            cursor: crosshair;
         }
 
         .arch-node-handle:hover {
@@ -1082,21 +1084,66 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
             border-color: var(--callToAction) !important;
             transform: scale(1.5);
         }
+
+        /* Source handle (where the drag started) — blue */
+        .react-flow__handle.connecting {
+            background: #3b82f6 !important;
+            border-color: #2563eb !important;
+            width: 14px !important;
+            height: 14px !important;
+        }
+
+        /* Valid connection target — green */
+        .react-flow__handle.valid {
+            background: #22c55e !important;
+            border-color: #16a34a !important;
+            width: 14px !important;
+            height: 14px !important;
+            cursor: crosshair !important;
+        }
+
+        /* Creating a new connection: crosshair cursor on all handles */
+        .arch-creating-edge .arch-node-handle { cursor: crosshair !important; }
+        .arch-creating-edge .arch-node-handle::after { cursor: crosshair !important; }
+
+        /* Moving an existing edge: grab cursor — visually distinct from create */
+        .arch-moving-edge .arch-node-handle { cursor: grab !important; }
+        .arch-moving-edge .arch-node-handle::after { cursor: grab !important; }
+
+        /*
+         * Invalid target detection.
+         * ReactFlow adds .connecting to BOTH the source handle AND any hovered target.
+         * It adds .valid only when isValidConnection returns true.
+         * So: hovered invalid target = .connecting + no .valid + :hover (CSS hover
+         * distinguishes the hovered target from the non-hovered source handle).
+         */
+        .arch-creating-edge .arch-node-handle.connecting:not(.valid):hover,
+        .arch-moving-edge   .arch-node-handle.connecting:not(.valid):hover {
+            background: #ef4444 !important;
+            border-color: #dc2626 !important;
+            cursor: not-allowed !important;
+        }
+        .arch-creating-edge .arch-node-handle.connecting:not(.valid):hover::after,
+        .arch-moving-edge   .arch-node-handle.connecting:not(.valid):hover::after {
+            cursor: not-allowed !important;
+        }
         `}
       </style>
 
       <div className="arch-theme-wrapper">
         {isEnabled && <Sidebar paletteItems={paletteItems} isOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} onDragStartItem={(item) => { draggedItemRef.current = item; }} onItemClick={handlePaletteItemClick} />}
         
-        <div style={{ flexGrow: 1, height: '100%', position: 'relative', overflow: 'hidden' }} ref={reactFlowWrapper}>
+        <div style={{ flexGrow: 1, height: '100%', position: 'relative', overflow: 'hidden' }} ref={reactFlowWrapper} className={isConnecting ? 'arch-creating-edge' : isUpdatingEdge ? 'arch-moving-edge' : ''}>
           <ReactFlowProvider>
             <ReactFlow
               nodes={localNodes} edges={flowEdges} nodeTypes={nodeTypes} edgeTypes={edgeTypes}
               isValidConnection={isValidConnection} onInit={setReactFlowInstance}
               onDrop={isEnabled ? onDrop : undefined} onDragOver={isEnabled ? onDragOver : undefined}
               onConnect={isEnabled ? onConnect : undefined} onEdgeUpdate={isEnabled ? onEdgeUpdate : undefined}
-              onEdgeUpdateStart={isEnabled ? (event: any, edge: any) => { updatingEdgeRef.current = edge?.id || null; } : undefined}
-              onEdgeUpdateEnd={isEnabled ? () => { updatingEdgeRef.current = null; } : undefined}
+              onEdgeUpdateStart={isEnabled ? (event: any, edge: any) => { updatingEdgeRef.current = edge?.id || null; setIsUpdatingEdge(true); } : undefined}
+              onEdgeUpdateEnd={isEnabled ? () => { updatingEdgeRef.current = null; setIsUpdatingEdge(false); } : undefined}
+              onConnectStart={isEnabled ? () => setIsConnecting(true) : undefined}
+              onConnectEnd={isEnabled ? () => setIsConnecting(false) : undefined}
               onNodeDragStart={isEnabled ? onNodeDragStart : undefined} onNodeDrag={isEnabled ? onNodeDrag : undefined} onNodeDragStop={isEnabled ? onNodeDragStop : undefined}
               onNodesChange={onNodesChange}
               onNodeClick={isEnabled ? onNodeClick : undefined} onEdgeClick={isEnabled ? onEdgeClick : undefined}
@@ -1105,6 +1152,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
               onPaneClick={onPaneClick} onPaneContextMenu={isEnabled ? onPaneContextMenu : undefined}
               nodesDraggable={isEnabled} nodesConnectable={isEnabled} elementsSelectable={isEnabled}
               connectionMode={ConnectionMode.Loose} snapToGrid={snapEnabled} snapGrid={snapGrid}
+              connectionLineStyle={{ stroke: '#cccccc', strokeWidth: 6 }}
               elevateNodesOnSelect={false}
               minZoom={0.05}
             >
