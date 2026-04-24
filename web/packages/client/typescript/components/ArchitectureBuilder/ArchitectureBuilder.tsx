@@ -331,28 +331,20 @@ const buildPolylinePath = (pts: { x: number; y: number }[], borderRadius: number
     return d + ` L ${pts[pts.length - 1].x} ${pts[pts.length - 1].y}`;
 };
 
-// Returns waypoints that guarantee every segment — including the first and last — exits
-// perpendicular to its handle. Same-axis pairs use a 2-waypoint Z; mixed-axis pairs use
-// a 3-waypoint S so that dragging the middle segment(s) can never create a diagonal.
+// Same-axis pairs produce 2 waypoints that exactly match getSmoothStepPath's bend points,
+// giving 1 draggable middle segment. Mixed-axis pairs produce 3 waypoints where the 3rd
+// starts coincident with the target, so the initial path also matches getSmoothStepPath
+// (1 handle, correct visual). After the first segment drag the 3rd waypoint separates
+// from the target and a second handle emerges automatically.
 const computeAutoWaypoints = (sx: number, sy: number, sp: string, tx: number, ty: number, tp: string): { x: number; y: number }[] => {
     const isHorizSrc = sp === 'right' || sp === 'left';
     const isHorizTgt = tp === 'right' || tp === 'left';
     const midX = (sx + tx) / 2;
     const midY = (sy + ty) / 2;
-    if (isHorizSrc && isHorizTgt) {
-        // H → V → H  (1 draggable vertical segment)
-        return [{ x: midX, y: sy }, { x: midX, y: ty }];
-    }
-    if (!isHorizSrc && !isHorizTgt) {
-        // V → H → V  (1 draggable horizontal segment)
-        return [{ x: sx, y: midY }, { x: tx, y: midY }];
-    }
-    if (isHorizSrc) {
-        // Source exits H, target enters V  →  H → V → H → V  (2 draggable segments)
-        return [{ x: midX, y: sy }, { x: midX, y: midY }, { x: tx, y: midY }];
-    }
-    // Source exits V, target enters H  →  V → H → V → H  (2 draggable segments)
-    return [{ x: sx, y: midY }, { x: midX, y: midY }, { x: midX, y: ty }];
+    if (isHorizSrc && isHorizTgt)  return [{ x: midX, y: sy }, { x: midX, y: ty }];
+    if (!isHorizSrc && !isHorizTgt) return [{ x: sx, y: midY }, { x: tx, y: midY }];
+    if (isHorizSrc) return [{ x: midX, y: sy }, { x: midX, y: ty }, { x: tx, y: ty }];
+    return [{ x: sx, y: midY }, { x: tx, y: midY }, { x: tx, y: ty }];
 };
 
 const CustomEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, data, markerEnd, style, label }: any) => {
@@ -369,7 +361,6 @@ const CustomEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
     const [liveWaypoints, setLiveWaypoints] = React.useState<{ x: number; y: number }[]>(
         storedWaypoints.length > 0 ? storedWaypoints : autoWaypoints
     );
-    const [isDraggingSegment, setIsDraggingSegment] = React.useState(false);
     const isDragging = React.useRef(false);
     const dragRef = React.useRef<any>(null);
 
@@ -382,14 +373,13 @@ const CustomEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
 
     const isStepType = data?.lineType === 'step' || data?.lineType === 'smoothstep' || !data?.lineType;
 
-    // Use ReactFlow's built-in auto-routing until the user drags a segment for the first time.
-    // Switching only on drag-start (not on selection) means clicking never causes a visual jump.
-    const useAutoPath = isStepType && data?.autoRoute !== false && !isDraggingSegment;
-
     // Pin first/last waypoints so the edge always exits/enters perpendicular to the handle,
     // even when the connected node moves after waypoints were stored.
     const isHorizSrc = sourcePosition === 'right' || sourcePosition === 'left';
     const isHorizTgt = targetPosition === 'right' || targetPosition === 'left';
+    // Pin first waypoint based on source direction and last waypoint based on target
+    // direction so both endpoints always exit/enter perpendicular to their handle,
+    // even when the connected node moves after waypoints were stored.
     const pinnedWaypoints = isStepType && liveWaypoints.length > 0
         ? liveWaypoints.map((wp, i) => {
             if (i === 0)
@@ -404,9 +394,7 @@ const CustomEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
 
     let edgePath = '', labelX = (sourceX + targetX) / 2, labelY = (sourceY + targetY) / 2;
 
-    if (useAutoPath) {
-        [edgePath, labelX, labelY] = getSmoothStepPath({ sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, borderRadius: data?.lineType === 'step' ? 0 : 12 });
-    } else if (isStepType) {
+    if (isStepType) {
         edgePath = buildPolylinePath(allPts, data?.lineType === 'step' ? 0 : 12);
         if (allPts.length >= 2) {
             const mid = Math.floor(allPts.length / 2);
@@ -428,7 +416,6 @@ const CustomEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
         e.stopPropagation();
         e.preventDefault();
         isDragging.current = true;
-        setIsDraggingSegment(true);
         setLiveWaypoints(startWps);
 
         const wp0Idx = segIdx - 1;
@@ -462,7 +449,6 @@ const CustomEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
             data?.onWaypointsChange?.(finalWps);
             dragRef.current = null;
             isDragging.current = false;
-            setIsDraggingSegment(false);
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
         };
@@ -471,7 +457,7 @@ const CustomEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
         document.addEventListener('mouseup', onMouseUp);
     }, [data, getZoom]);
 
-    const segHandleWps = useAutoPath ? autoWaypoints : pinnedWaypoints;
+    const segHandleWps = pinnedWaypoints;
     const segHandlePts = [{ x: sourceX, y: sourceY }, ...segHandleWps, { x: targetX, y: targetY }];
 
     return (
@@ -567,7 +553,7 @@ const mapIgnitionToReactFlowEdges = (ignitionEdges: any, connectionTypes: any, s
 
         const arrowMarker = edgeData.arrow !== false ? { type: MarkerType.ArrowClosed, width: 10, height: 10, color: strokeStyle.stroke } : undefined;
 
-        return { id, ...edgeData, type: 'custom', data: { lineType: edgeData.lineType || 'smoothstep', waypoints: edgeData.waypoints || [], autoRoute: edgeData.autoRoute !== false, showLabel: edgeData.showLabel === true, isSelected, snapEnabled: snapEnabled ?? true, snapPixels: snapPixels ?? 15, onWaypointsChange: onWaypointsChange ? (wps: { x: number; y: number }[]) => onWaypointsChange(id, wps) : undefined }, label: typeConfig.label || edgeData.connectionType || '', style: strokeStyle, markerEnd: arrowMarker, interactionWidth: 20, updatable: true };
+        return { id, ...edgeData, type: 'custom', data: { lineType: edgeData.lineType || 'smoothstep', waypoints: edgeData.waypoints || [], showLabel: edgeData.showLabel === true, isSelected, snapEnabled: snapEnabled ?? true, snapPixels: snapPixels ?? 15, onWaypointsChange: onWaypointsChange ? (wps: { x: number; y: number }[]) => onWaypointsChange(id, wps) : undefined }, label: typeConfig.label || edgeData.connectionType || '', style: strokeStyle, markerEnd: arrowMarker, interactionWidth: 20, updatable: true };
     });
 };
 
@@ -883,7 +869,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
       if (!props.store?.props) return;
       const nextEdges = { ...rawEdgesDict };
       if (nextEdges[edgeId]) {
-          nextEdges[edgeId] = { ...nextEdges[edgeId], waypoints, autoRoute: false };
+          nextEdges[edgeId] = { ...nextEdges[edgeId], waypoints };
           props.store.props.write('edges', nextEdges);
       }
   }, [props.store, rawEdgesDict]);
@@ -935,7 +921,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
           const src = getHandlePixelPos(connectionParams.source, connectionParams.sourceHandle || '', rawNodesDict, globalHandleCount);
           const tgt = getHandlePixelPos(connectionParams.target, connectionParams.targetHandle || '', rawNodesDict, globalHandleCount);
           const waypoints = src && tgt ? computeAutoWaypoints(src.x, src.y, src.position, tgt.x, tgt.y, tgt.position) : [];
-          props.store.props.write('edges', { ...rawEdgesDict, [generateShortId()]: { ...connectionParams, lineType: 'smoothstep', dashed: false, arrow: typeDef.arrow !== false, showLabel: false, connectionType: selectedType, waypoints, autoRoute: true } });
+          props.store.props.write('edges', { ...rawEdgesDict, [generateShortId()]: { ...connectionParams, lineType: 'smoothstep', dashed: false, arrow: typeDef.arrow !== false, showLabel: false, connectionType: selectedType, waypoints } });
       }
   }, [props.store, rawEdgesDict, rawNodesDict, globalHandleCount, getValidIntersection, connectionTypes, globalDefaultConnectionType]);
 
@@ -951,7 +937,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
           const src = getHandlePixelPos(newConnection.source, newConnection.sourceHandle || '', rawNodesDict, globalHandleCount);
           const tgt = getHandlePixelPos(newConnection.target, newConnection.targetHandle || '', rawNodesDict, globalHandleCount);
           const waypoints = src && tgt ? computeAutoWaypoints(src.x, src.y, src.position, tgt.x, tgt.y, tgt.position) : [];
-          nextEdges[oldEdge.id] = { ...oldData, source: newConnection.source, target: newConnection.target, sourceHandle: newConnection.sourceHandle, targetHandle: newConnection.targetHandle, waypoints, autoRoute: true };
+          nextEdges[oldEdge.id] = { ...oldData, source: newConnection.source, target: newConnection.target, sourceHandle: newConnection.sourceHandle, targetHandle: newConnection.targetHandle, waypoints };
           props.store.props.write('edges', nextEdges);
       }
   }, [props.store, rawEdgesDict, rawNodesDict, globalHandleCount, getValidIntersection]);
@@ -1233,7 +1219,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
           if (props.store?.props) {
               const nextEdges = { ...rawEdgesDict };
               if (nextEdges[contextMenu.id]) {
-                  nextEdges[contextMenu.id] = { ...nextEdges[contextMenu.id], waypoints: [], autoRoute: true };
+                  nextEdges[contextMenu.id] = { ...nextEdges[contextMenu.id], waypoints: [] };
                   props.store.props.write('edges', nextEdges);
               }
           }

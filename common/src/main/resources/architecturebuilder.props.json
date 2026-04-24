@@ -1555,14 +1555,9 @@
               "type": "boolean",
               "default": false
             },
-            "autoRoute": {
-              "type": "boolean",
-              "description": "When true the edge renders via getSmoothStepPath. Cleared to false on first segment drag.",
-              "default": true
-            },
             "waypoints": {
               "type": "array",
-              "description": "Orthogonal routing waypoints computed at placement. Used for drag handles and locking after autoRoute is cleared.",
+              "description": "Explicit orthogonal routing waypoints. Empty means auto-routed from handle positions.",
               "items": {
                 "type": "object",
                 "properties": {

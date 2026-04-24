@@ -42,8 +42,8 @@
 These rules are non-negotiable — never break them when modifying edge logic:
 1. **All segments must be strictly horizontal or vertical.** No diagonal segments ever.
 2. **Edges must always exit/enter perpendicular to the handle's side.** A right/left handle exits horizontally; a top/bottom handle exits vertically.
-3. **New edges use `getSmoothStepPath` auto-routing** until the user drags a segment for the first time. Do not switch away from it on click or selection — only on drag start.
-4. **After the first drag, edges lock to `buildPolylinePath` + stored `waypoints[]`.** `isDraggingSegment` gates the switch; setting it on drag start and clearing it on mouse-up is the only correct trigger.
+3. **All step/smoothstep edges always render via `buildPolylinePath(pinnedWaypoints)`.** Do not introduce a `getSmoothStepPath` rendering branch — it produces a different path shape than the S-shape waypoint structure, causing handles to float off the visible segments.
+4. **Waypoints are computed and stored at placement.** `onConnect` and `onEdgeUpdate` both call `getHandlePixelPos` + `computeAutoWaypoints` to write `waypoints[]` immediately. `buildPolylinePath` renders from the first frame with no deferred switch.
 5. **Pin first/last waypoints every render.** `waypoints[0]`'s perpendicular axis is overridden with the live `sourceY`/`sourceX`; `waypoints[last]` with `targetY`/`targetX`. This keeps exits perpendicular even when nodes move after waypoints were stored.
 6. **Never pass `selected` at the top level of a React Flow edge object.** It makes selection controlled and causes React Flow to abort endpoint drag mid-interaction. Put `isSelected` inside `data` only.
 7. **Segment drag is axis-locked and snap-aware.** Horizontal segments drag vertically only; vertical segments drag horizontally only. Both adjacent waypoints update together. Snap values are captured into `dragRef` at drag start to avoid stale closures.
