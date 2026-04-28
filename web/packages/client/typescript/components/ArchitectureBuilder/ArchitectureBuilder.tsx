@@ -307,6 +307,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
     const [activeSubMenu, setActiveSubMenu] = React.useState<'lineType' | 'connectionType' | 'swapNode' | 'order' | null>(null);
     const [selectedId, setSelectedId] = React.useState<string | null>(null);
     const [localNodes, setLocalNodes] = React.useState<any[]>([]);
+    const [localEdges, setLocalEdges] = React.useState<any[]>([]);
 
     // ─── Prop extraction ───────────────────────────────────────────────────
 
@@ -381,6 +382,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
         selectedId,
         setSelectedId,
         setLocalNodes,
+        setLocalEdges,
         contextMenu,
         setContextMenu,
         setActiveSubMenu,
@@ -401,6 +403,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
     );
 
     React.useEffect(() => { setLocalNodes(flowNodes); }, [flowNodes]);
+    React.useEffect(() => { setLocalEdges(flowEdges); }, [flowEdges]);
 
     // ─── Keyboard shortcuts ────────────────────────────────────────────────
 
@@ -490,7 +493,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
                 <div style={{ flexGrow: 1, height: '100%', position: 'relative', overflow: 'hidden' }} ref={reactFlowWrapper} className={isConnecting ? 'arch-creating-edge' : isUpdatingEdge ? 'arch-moving-edge' : ''}>
                     <ReactFlowProvider>
                         <ReactFlow
-                            nodes={localNodes} edges={flowEdges} nodeTypes={nodeTypes} edgeTypes={edgeTypes}
+                            nodes={localNodes} edges={localEdges} nodeTypes={nodeTypes} edgeTypes={edgeTypes}
                             isValidConnection={isValidConnection} onInit={setReactFlowInstance}
                             onDrop={isEnabled ? onDrop : undefined} onDragOver={isEnabled ? onDragOver : undefined}
                             onConnect={isEnabled ? onConnect : undefined} onEdgeUpdate={isEnabled ? onEdgeUpdate : undefined}

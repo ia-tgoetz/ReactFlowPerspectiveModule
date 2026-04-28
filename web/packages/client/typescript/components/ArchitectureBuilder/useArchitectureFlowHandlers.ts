@@ -42,6 +42,7 @@ export interface UseArchitectureFlowHandlersParams {
     selectedId: string | null;
     setSelectedId: React.Dispatch<React.SetStateAction<string | null>>;
     setLocalNodes: React.Dispatch<React.SetStateAction<any[]>>;
+    setLocalEdges: React.Dispatch<React.SetStateAction<any[]>>;
     contextMenu: any;
     setContextMenu: React.Dispatch<React.SetStateAction<any>>;
     setActiveSubMenu: React.Dispatch<React.SetStateAction<any>>;
@@ -67,6 +68,7 @@ export const useArchitectureFlowHandlers = ({
     selectedId,
     setSelectedId,
     setLocalNodes,
+    setLocalEdges,
     contextMenu,
     setContextMenu,
     setActiveSubMenu,
@@ -262,27 +264,58 @@ export const useArchitectureFlowHandlers = ({
     const onNodeDragStart = React.useCallback((event: any, node: any) => {
         const rawNode = rawNodesDict[node.id];
         if (rawNode?.paletteId === 'container' && !rawNode?.configs?.unlinked) {
+            const cWidth = rawNode.width || 300;
+            const cHeight = rawNode.height || 300;
+            const cx1 = rawNode.x, cy1 = rawNode.y;
+            const cx2 = cx1 + cWidth, cy2 = cy1 + cHeight;
+
             const insideIds = getNodesInside(node.id, rawNodesDict);
-            const startPositions: any = {};
-            insideIds.forEach(id => { startPositions[id] = { x: rawNodesDict[id].x, y: rawNodesDict[id].y }; });
-            dragStartPos.current = startPositions;
+            const nodePositions: Record<string, { x: number; y: number }> = {};
+            insideIds.forEach(id => { nodePositions[id] = { x: rawNodesDict[id].x, y: rawNodesDict[id].y }; });
+
+            // Capture waypoints that fall inside the container bbox so they move with it.
+            const edgeWaypoints: Record<string, { originalWaypoints: { x: number; y: number }[]; moveMask: boolean[] }> = {};
+            Object.entries(rawEdgesDict).forEach(([edgeId, edgeVal]: any) => {
+                if (!edgeVal || !Array.isArray(edgeVal.waypoints) || edgeVal.waypoints.length === 0) return;
+                const mask: boolean[] = edgeVal.waypoints.map((wp: any) =>
+                    wp.x >= cx1 && wp.y >= cy1 && wp.x <= cx2 && wp.y <= cy2
+                );
+                if (mask.some(Boolean)) {
+                    edgeWaypoints[edgeId] = { originalWaypoints: edgeVal.waypoints, moveMask: mask };
+                }
+            });
+
+            dragStartPos.current = { nodes: nodePositions, edges: edgeWaypoints };
         } else {
             dragStartPos.current = null;
         }
-    }, [rawNodesDict]);
+    }, [rawNodesDict, rawEdgesDict]);
 
     const onNodeDrag = React.useCallback((event: any, node: any) => {
         if (dragStartPos.current && rawNodesDict[node.id]?.paletteId === 'container') {
             const dx = node.position.x - rawNodesDict[node.id].x;
             const dy = node.position.y - rawNodesDict[node.id].y;
+
             setLocalNodes(nds => nds.map(n => {
-                if (dragStartPos.current[n.id]) {
-                    return { ...n, position: { x: dragStartPos.current[n.id].x + dx, y: dragStartPos.current[n.id].y + dy } };
+                if (dragStartPos.current!.nodes[n.id]) {
+                    return { ...n, position: { x: dragStartPos.current!.nodes[n.id].x + dx, y: dragStartPos.current!.nodes[n.id].y + dy } };
                 }
                 return n;
             }));
+
+            const edgeDragData = dragStartPos.current.edges;
+            if (Object.keys(edgeDragData).length > 0) {
+                setLocalEdges(edges => edges.map((edge: any) => {
+                    const info = edgeDragData[edge.id];
+                    if (!info) return edge;
+                    const newWaypoints = info.originalWaypoints.map((wp: any, i: number) =>
+                        info.moveMask[i] ? { x: wp.x + dx, y: wp.y + dy } : wp
+                    );
+                    return { ...edge, data: { ...edge.data, waypoints: newWaypoints } };
+                }));
+            }
         }
-    }, [rawNodesDict, setLocalNodes]);
+    }, [rawNodesDict, setLocalNodes, setLocalEdges]);
 
     const onNodeDragStop = React.useCallback((event: any, node: any) => {
         if (store?.props) {
@@ -292,17 +325,34 @@ export const useArchitectureFlowHandlers = ({
             const dx = Math.round(node.position.x) - nextNodes[node.id].x;
             const dy = Math.round(node.position.y) - nextNodes[node.id].y;
             nextNodes[node.id] = { ...nextNodes[node.id], x: Math.round(node.position.x), y: Math.round(node.position.y) };
+
             if (isContainer && dragStartPos.current && (dx !== 0 || dy !== 0)) {
-                Object.keys(dragStartPos.current).forEach(childId => {
+                Object.keys(dragStartPos.current.nodes).forEach(childId => {
                     if (nextNodes[childId]) {
-                        nextNodes[childId] = { ...nextNodes[childId], x: dragStartPos.current[childId].x + dx, y: dragStartPos.current[childId].y + dy };
+                        nextNodes[childId] = { ...nextNodes[childId], x: dragStartPos.current!.nodes[childId].x + dx, y: dragStartPos.current!.nodes[childId].y + dy };
                     }
                 });
+
+                type EdgeDragInfo = { originalWaypoints: { x: number; y: number }[]; moveMask: boolean[] };
+                const edgeDragData = dragStartPos.current.edges as Record<string, EdgeDragInfo>;
+                if (Object.keys(edgeDragData).length > 0) {
+                    const nextEdges = { ...rawEdgesDict };
+                    Object.entries(edgeDragData).forEach(([edgeId, info]) => {
+                        if (nextEdges[edgeId]) {
+                            const newWaypoints = info.originalWaypoints.map((wp, i) =>
+                                info.moveMask[i] ? { x: wp.x + dx, y: wp.y + dy } : wp
+                            );
+                            nextEdges[edgeId] = { ...nextEdges[edgeId], waypoints: newWaypoints };
+                        }
+                    });
+                    store.props.write('edges', nextEdges);
+                }
             }
+
             store.props.write('nodes', nextNodes);
             dragStartPos.current = null;
         }
-    }, [store, rawNodesDict]);
+    }, [store, rawNodesDict, rawEdgesDict]);
 
     const onNodesDelete = React.useCallback((deleted: any[]) => {
         if (!store?.props) return;
