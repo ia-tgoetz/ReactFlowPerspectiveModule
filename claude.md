@@ -14,10 +14,10 @@ This repository is **Repo 3 of a 3-Repo Ecosystem** that powers the Ignition Arc
 - **Frontend Stack:** React 18, TypeScript, Styled Components, React Flow
 
 ## 🔗 Critical Reference Links
+
 - **Official Documentation:** [Ignition 8.3 Online Manual](https://docs.inductiveautomation.com/display/DOC81/Ignition+8.3+Introduction)
 - **SDK Javadocs:** [Ignition 8.3.5 API](https://files.inductiveautomation.com/sdk/javadoc/ignition83/8.3.5/index.html)
 - **Module Guide:** [Official Ignition SDK Guide](https://github.com/inductiveautomation/ignition-sdk-guide)
-- **Community Extensions:** [Ignition Extensions (Phil Turmel)](https://github.com/pturmel/ignition-extensions)
 - **React Flow Docs:** [React Flow Developer Portal](https://reactflow.dev/learn)
 - **React Flow API Reference:** [React Flow API Docs](https://reactflow.dev/api-reference)
 - **React Flow v11 Migration:** [Migrating to v11](https://reactflow.dev/learn/troubleshooting/migrate-to-v11)
