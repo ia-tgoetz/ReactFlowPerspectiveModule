@@ -45,23 +45,56 @@ export const buildPolylinePath = (pts: { x: number; y: number }[], borderRadius:
     return d + ` L ${pts[pts.length - 1].x} ${pts[pts.length - 1].y}`;
 };
 
-// Same-axis pairs produce 2 waypoints that exactly match getSmoothStepPath's bend points,
-// giving 1 draggable middle segment. Mixed-axis pairs produce 3 waypoints where the 3rd
-// starts coincident with the target, so the initial path also matches getSmoothStepPath
-// (1 handle, correct visual). After the first segment drag the 3rd waypoint separates
-// from the target and a second handle emerges automatically.
+const CLEARANCE = 25;
+
 export const computeAutoWaypoints = (
     sx: number, sy: number, sp: string,
     tx: number, ty: number, tp: string
 ): { x: number; y: number }[] => {
     const isHorizSrc = sp === 'right' || sp === 'left';
     const isHorizTgt = tp === 'right' || tp === 'left';
-    const midX = (sx + tx) / 2;
+
+    if (isHorizSrc && !isHorizTgt) {
+        // Horizontal source → vertical target: L-shape when clear, 3-waypoint U when not.
+        const srcOK = sp === 'right' ? tx >= sx + CLEARANCE : tx <= sx - CLEARANCE;
+        const tgtOK = tp === 'top'   ? sy <= ty - CLEARANCE : sy >= ty + CLEARANCE;
+        if (srcOK && tgtOK) return [{ x: tx, y: sy }];
+        const ex = sp === 'right' ? sx + CLEARANCE : sx - CLEARANCE;
+        const ey = tp === 'top'   ? ty - CLEARANCE : ty + CLEARANCE;
+        return [{ x: ex, y: sy }, { x: ex, y: ey }, { x: tx, y: ey }];
+    }
+
+    if (!isHorizSrc && isHorizTgt) {
+        // Vertical source → horizontal target: L-shape when clear, 3-waypoint U when not.
+        const srcOK = sp === 'top'    ? ty <= sy - CLEARANCE : ty >= sy + CLEARANCE;
+        const tgtOK = tp === 'right'  ? sx >= tx + CLEARANCE : sx <= tx - CLEARANCE;
+        if (srcOK && tgtOK) return [{ x: sx, y: ty }];
+        const ey = sp === 'top'   ? sy - CLEARANCE : sy + CLEARANCE;
+        const ex = tp === 'right' ? tx + CLEARANCE : tx - CLEARANCE;
+        return [{ x: sx, y: ey }, { x: ex, y: ey }, { x: ex, y: ty }];
+    }
+
+    if (isHorizSrc) {
+        // Same horizontal axis: Z-shape when midX clears both handles, 4-waypoint U when not.
+        const midX = (sx + tx) / 2;
+        const srcOK = sp === 'right' ? midX >= sx + CLEARANCE : midX <= sx - CLEARANCE;
+        const tgtOK = tp === 'left'  ? midX <= tx - CLEARANCE : midX >= tx + CLEARANCE;
+        if (srcOK && tgtOK) return [{ x: midX, y: sy }, { x: midX, y: ty }];
+        const ex = sp === 'right' ? sx + CLEARANCE : sx - CLEARANCE;
+        const fx = tp === 'right' ? tx + CLEARANCE : tx - CLEARANCE;
+        const midY = (sy + ty) / 2;
+        return [{ x: ex, y: sy }, { x: ex, y: midY }, { x: fx, y: midY }, { x: fx, y: ty }];
+    }
+
+    // Same vertical axis: Z-shape when midY clears both handles, 4-waypoint U when not.
     const midY = (sy + ty) / 2;
-    if (isHorizSrc && isHorizTgt)   return [{ x: midX, y: sy }, { x: midX, y: ty }];
-    if (!isHorizSrc && !isHorizTgt) return [{ x: sx, y: midY }, { x: tx, y: midY }];
-    if (isHorizSrc) return [{ x: midX, y: sy }, { x: midX, y: ty }, { x: tx, y: ty }];
-    return [{ x: sx, y: midY }, { x: tx, y: midY }, { x: tx, y: ty }];
+    const srcOK = sp === 'top'    ? midY <= sy - CLEARANCE : midY >= sy + CLEARANCE;
+    const tgtOK = tp === 'bottom' ? midY >= ty + CLEARANCE : midY <= ty - CLEARANCE;
+    if (srcOK && tgtOK) return [{ x: sx, y: midY }, { x: tx, y: midY }];
+    const ey = sp === 'top'    ? sy - CLEARANCE : sy + CLEARANCE;
+    const fy = tp === 'top'    ? ty - CLEARANCE : ty + CLEARANCE;
+    const midX = (sx + tx) / 2;
+    return [{ x: sx, y: ey }, { x: midX, y: ey }, { x: midX, y: fy }, { x: tx, y: fy }];
 };
 
 export const mapIgnitionToReactFlowEdges = (

@@ -47,14 +47,17 @@ export const CustomEdge = ({
     // Pin the perpendicular axis of the first/last waypoint on every render so the
     // edge always exits/enters perpendicular to the handle, even when nodes move.
     // The parallel axis (the user's flat segment) is untouched.
+    // Both pins are applied sequentially so a single-waypoint L-shape corner tracks
+    // both the source AND target node positions correctly.
     const pinnedWaypoints: Waypoint[] =
         isStepType && baseWaypoints.length > 0
             ? baseWaypoints.map((wp, i) => {
+                let result = wp;
                 if (i === 0)
-                    return isHorizSrc ? { ...wp, y: sourceY } : { ...wp, x: sourceX };
+                    result = isHorizSrc ? { ...result, y: sourceY } : { ...result, x: sourceX };
                 if (i === baseWaypoints.length - 1)
-                    return isHorizTgt ? { ...wp, y: targetY } : { ...wp, x: targetX };
-                return wp;
+                    result = isHorizTgt ? { ...result, y: targetY } : { ...result, x: targetX };
+                return result;
             })
             : baseWaypoints;
 
