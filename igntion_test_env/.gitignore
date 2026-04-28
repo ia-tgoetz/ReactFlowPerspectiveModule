@@ -9,5 +9,6 @@
 **/migration-log-*.md
 **/.resources/
 
-# Environmental Variables file
-*.env
+.claude/
+
+

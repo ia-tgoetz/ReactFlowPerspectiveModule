@@ -44,6 +44,7 @@ This repository is **Repo 3 of a 3-Repo Ecosystem** that powers the Ignition Arc
 - **React Flow:** Primary library for the node-based Architecture Builder replacement.
 - **State Management:** Map Ignition Tag data from `this.props.props` into React Flow Nodes/Edges.
 - **Component Communication:** Use the Perspective JavaScript SDK `emit` functions and `props.write()` to sync the canvas state (BOM, connections) back to the Ignition Gateway.
+- **`getPropsReducer` is the gateway for ALL props.** In `perspective-client.ts`, `ArchitectureBuilderMeta.getPropsReducer(tree)` must call `tree.read('propName', defaultValue)` for every property in `architecturebuilder.props.json`. If a prop is missing from `getPropsReducer`, it will NEVER appear in `props.props` inside the component — no amount of `extractDeep` or MobX tracking will help. Adding a prop to the schema AND the component code without also adding it to `getPropsReducer` is a silent failure.
 
 ### ArchitectureBuilder Edge Routing Rules
 These rules are non-negotiable — never break them when modifying edge logic:
@@ -60,6 +61,48 @@ These rules are non-negotiable — never break them when modifying edge logic:
 - **Build Module:** `./gradlew build`
 - **Clean Project:** `./gradlew clean`
 - **Fast Deploy:** `./gradlew installModule`
+
+## 🤖 Claude Code Automation
+
+### Slash Commands (`.claude/commands/`)
+Invoke these from the Claude Code prompt with `/`:
+
+| Command | What it does |
+|---|---|
+| `/build` | Runs `./gradlew build`, reports errors with fix suggestions |
+| `/install` | Runs `./gradlew installModule`, deploys to local test gateway |
+| `/clean` | Runs `./gradlew clean`, use before a full rebuild |
+| `/validate-edges` | Full 8-rule audit of edge routing code with PASS/FAIL/WARN table |
+| `/sync-tools` | Re-syncs all automation files from CLAUDE.md (run after editing rules) |
+
+### Subagents (`.claude/agents/`)
+Long-running, read-only audits that don't consume main conversation context:
+
+| Agent | How to invoke | Purpose |
+|---|---|---|
+| `edge-validator` | "Use the edge-validator agent to check my changes" | Deep audit of CustomEdge, EdgeUtils, and useArchitectureFlowHandlers against all 8 routing rules. Returns a PASS/FAIL/WARN table with file:line references. |
+| `props-wiring` | "Use the props-wiring agent to audit my prop changes" | Verifies that every property in `architecturebuilder.props.json` has a matching `tree.read()` in `getPropsReducer` (perspective-client.ts), and that every `props.props.*` access in the component is actually wired. Catches silent missing-prop failures before they reach the Designer. |
+
+### Hooks (`.claude/settings.json`)
+Two hooks fire automatically on every `Edit` or `Write`:
+
+- **`check-edge-rules.js`** — reads patterns from `.claude/edge-rules.json` and scans edge files for violations. Exit 2 blocks the edit immediately. Currently checks Rules 3, 6, and 8.
+- **`notify-claude-md-change.js`** — when `CLAUDE.md` is edited, writes a reminder to stdout telling Claude to run `/sync-tools`.
+
+### Auto-update pipeline
+Rules live in one place (CLAUDE.md). When you change them:
+1. The `notify-claude-md-change.js` hook fires and prompts Claude to run `/sync-tools`
+2. `/sync-tools` updates `.claude/edge-rules.json`, `validate-edges.md`, and `edge-validator/agent.md` to match
+3. The hook script picks up new patterns from `edge-rules.json` on its next run — no restart needed
+
+`.claude/edge-rules.json` is the machine-readable single source of truth for static pattern checks.
+
+### When to use each tool
+- **Daily workflow:** `/build` and `/install` for the compile-deploy loop
+- **After edge changes:** hook fires automatically; run `/validate-edges` for the full 8-rule report before committing
+- **Deep audit:** spawn `edge-validator` when making structural changes to CustomEdge or EdgeUtils
+- **After adding/renaming a prop:** spawn `props-wiring` to verify schema ↔ getPropsReducer ↔ component usage are all consistent
+- **After editing CLAUDE.md rules:** run `/sync-tools` (or let the hook remind you)
 
 ## 🛑 Claude Instruction Overrides
 - **No Python 3:** Never suggest Python 3 features for internal Ignition scripts.
