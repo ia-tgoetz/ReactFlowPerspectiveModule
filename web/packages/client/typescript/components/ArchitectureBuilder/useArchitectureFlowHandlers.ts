@@ -273,16 +273,15 @@ export const useArchitectureFlowHandlers = ({
             const nodePositions: Record<string, { x: number; y: number }> = {};
             insideIds.forEach(id => { nodePositions[id] = { x: rawNodesDict[id].x, y: rawNodesDict[id].y }; });
 
-            // Capture waypoints that fall inside the container bbox so they move with it.
-            const edgeWaypoints: Record<string, { originalWaypoints: { x: number; y: number }[]; moveMask: boolean[] }> = {};
+            // Capture all waypoints for edges that have ANY waypoint inside the container bbox.
+            // All waypoints translate together — partial translation creates diagonal middle segments.
+            const edgeWaypoints: Record<string, { x: number; y: number }[]> = {};
             Object.entries(rawEdgesDict).forEach(([edgeId, edgeVal]: any) => {
                 if (!edgeVal || !Array.isArray(edgeVal.waypoints) || edgeVal.waypoints.length === 0) return;
-                const mask: boolean[] = edgeVal.waypoints.map((wp: any) =>
+                const anyInside = edgeVal.waypoints.some((wp: any) =>
                     wp.x >= cx1 && wp.y >= cy1 && wp.x <= cx2 && wp.y <= cy2
                 );
-                if (mask.some(Boolean)) {
-                    edgeWaypoints[edgeId] = { originalWaypoints: edgeVal.waypoints, moveMask: mask };
-                }
+                if (anyInside) edgeWaypoints[edgeId] = edgeVal.waypoints;
             });
 
             dragStartPos.current = { nodes: nodePositions, edges: edgeWaypoints };
@@ -303,17 +302,18 @@ export const useArchitectureFlowHandlers = ({
                 return n;
             }));
 
-            const edgeDragData = dragStartPos.current.edges;
-            if (Object.keys(edgeDragData).length > 0) {
-                setLocalEdges(edges => edges.map((edge: any) => {
-                    const info = edgeDragData[edge.id];
-                    if (!info) return edge;
-                    const newWaypoints = info.originalWaypoints.map((wp: any, i: number) =>
-                        info.moveMask[i] ? { x: wp.x + dx, y: wp.y + dy } : wp
-                    );
-                    return { ...edge, data: { ...edge.data, waypoints: newWaypoints } };
-                }));
-            }
+            const edgeDragData = dragStartPos.current.edges as Record<string, { x: number; y: number }[]>;
+            const movingNodeIds = new Set(Object.keys(dragStartPos.current.nodes));
+            setLocalEdges(edges => edges.map((edge: any) => {
+                const originalWps = edgeDragData[edge.id];
+                if (originalWps) {
+                    // Translate all waypoints — pinning in CustomEdge corrects the endpoints.
+                    return { ...edge, data: { ...edge.data, waypoints: originalWps.map(wp => ({ x: wp.x + dx, y: wp.y + dy })) } };
+                }
+                // Touch edges connected to moving nodes so CustomEdge pinning re-runs.
+                if (movingNodeIds.has(edge.source) || movingNodeIds.has(edge.target)) return { ...edge };
+                return edge;
+            }));
         }
     }, [rawNodesDict, setLocalNodes, setLocalEdges]);
 
@@ -333,16 +333,12 @@ export const useArchitectureFlowHandlers = ({
                     }
                 });
 
-                type EdgeDragInfo = { originalWaypoints: { x: number; y: number }[]; moveMask: boolean[] };
-                const edgeDragData = dragStartPos.current.edges as Record<string, EdgeDragInfo>;
+                const edgeDragData = dragStartPos.current.edges as Record<string, { x: number; y: number }[]>;
                 if (Object.keys(edgeDragData).length > 0) {
                     const nextEdges = { ...rawEdgesDict };
-                    Object.entries(edgeDragData).forEach(([edgeId, info]) => {
+                    Object.entries(edgeDragData).forEach(([edgeId, originalWps]: [string, { x: number; y: number }[]]) => {
                         if (nextEdges[edgeId]) {
-                            const newWaypoints = info.originalWaypoints.map((wp, i) =>
-                                info.moveMask[i] ? { x: wp.x + dx, y: wp.y + dy } : wp
-                            );
-                            nextEdges[edgeId] = { ...nextEdges[edgeId], waypoints: newWaypoints };
+                            nextEdges[edgeId] = { ...nextEdges[edgeId], waypoints: originalWps.map(wp => ({ x: wp.x + dx, y: wp.y + dy })) };
                         }
                     });
                     store.props.write('edges', nextEdges);

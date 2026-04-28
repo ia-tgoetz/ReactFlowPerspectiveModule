@@ -473,18 +473,24 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
             .arch-node-gear:hover { transform: rotate(360deg); }
             .arch-node-gear:active { transform: translateX(-100%) rotate(-360deg); }
             .arch-node-svg-wrapper svg { width: 100%; height: 100%; max-width: 100%; max-height: 100%; object-fit: contain; }
-            .arch-node-handle::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 30px; height: 30px; background: transparent; }
-            .arch-node-handle:hover { background-color: var(--callToAction) !important; border-color: var(--callToAction) !important; transform: scale(1.5); }
-            .react-flow__handle.connecting { background: #3b82f6 !important; border-color: #2563eb !important; width: 14px !important; height: 14px !important; }
-            .react-flow__handle.valid { background: #22c55e !important; border-color: #16a34a !important; width: 14px !important; height: 14px !important; cursor: crosshair !important; }
+            /* Base handle is a transparent anchor — React Flow's translate(-50%,-50%) is never overwritten */
+            .arch-node-handle { background: transparent !important; border-color: transparent !important; }
+            /* ::after renders the visible dot and owns all visual transitions */
+            .arch-node-handle::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 8px; height: 8px; border-radius: 50%; background: var(--neutral-90); border: 1px solid var(--neutral-90); pointer-events: none; transition: transform 0.15s ease-in-out, background 0.15s ease-in-out, border-color 0.15s ease-in-out; }
+            /* Hover: scale ::after from its own center — base anchor is untouched */
+            .arch-node-handle:hover::after { background: var(--callToAction) !important; border-color: var(--callToAction) !important; transform: translate(-50%, -50%) scale(1.5); }
+            /* React Flow connection states: base stays transparent, ::after carries the color */
+            .react-flow__handle.connecting { background: transparent !important; border-color: transparent !important; }
+            .react-flow__handle.connecting::after { background: #3b82f6 !important; border-color: #2563eb !important; width: 14px !important; height: 14px !important; }
+            .react-flow__handle.valid { background: transparent !important; border-color: transparent !important; cursor: crosshair !important; }
+            .react-flow__handle.valid::after { background: #22c55e !important; border-color: #16a34a !important; width: 14px !important; height: 14px !important; }
+            /* Cursors live on the base handle (the pointer-events target) */
             .arch-creating-edge .arch-node-handle { cursor: crosshair !important; }
-            .arch-creating-edge .arch-node-handle::after { cursor: crosshair !important; }
             .arch-moving-edge .arch-node-handle { cursor: grab !important; }
-            .arch-moving-edge .arch-node-handle::after { cursor: grab !important; }
             .arch-creating-edge .arch-node-handle.connecting:not(.valid):hover,
-            .arch-moving-edge   .arch-node-handle.connecting:not(.valid):hover { background: #ef4444 !important; border-color: #dc2626 !important; cursor: not-allowed !important; }
+            .arch-moving-edge   .arch-node-handle.connecting:not(.valid):hover { cursor: not-allowed !important; }
             .arch-creating-edge .arch-node-handle.connecting:not(.valid):hover::after,
-            .arch-moving-edge   .arch-node-handle.connecting:not(.valid):hover::after { cursor: not-allowed !important; }
+            .arch-moving-edge   .arch-node-handle.connecting:not(.valid):hover::after { background: #ef4444 !important; border-color: #dc2626 !important; }
             `}</style>
 
             <div className="arch-theme-wrapper">
