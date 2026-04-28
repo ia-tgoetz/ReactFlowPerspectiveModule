@@ -62,9 +62,278 @@
           "basis": "800px"
         },
         "props": {
-          "connectionTypes": {
-            "rest": {
-              "color": "lightblue"
+          "edges": {
+            "I14944c01": {
+              "arrow": false,
+              "connectionType": "db",
+              "dashed": false,
+              "lineType": "smoothstep",
+              "showLabel": false,
+              "source": "I0e3896a6",
+              "sourceHandle": "right-0",
+              "target": "I4de7f266",
+              "targetHandle": "left-0",
+              "waypoints": [
+                {
+                  "x": 465,
+                  "y": 225
+                },
+                {
+                  "x": 465,
+                  "y": 225
+                }
+              ]
+            },
+            "I49350915": {
+              "arrow": false,
+              "connectionType": "opc-ua",
+              "dashed": false,
+              "lineType": "smoothstep",
+              "showLabel": false,
+              "source": "I0e3896a6",
+              "sourceHandle": "right-2",
+              "target": "I24a32b8a",
+              "targetHandle": "top-2",
+              "waypoints": [
+                {
+                  "x": 600,
+                  "y": 405
+                }
+              ]
+            },
+            "I54db169a": {
+              "arrow": true,
+              "connectionType": "gateway-network",
+              "dashed": false,
+              "lineType": "smoothstep",
+              "showLabel": false,
+              "source": "I0e3896a6",
+              "sourceHandle": "top-2",
+              "target": "I24a32b8a",
+              "targetHandle": "right-2",
+              "waypoints": [
+                {
+                  "x": 239.99996948242188,
+                  "y": 165
+                },
+                {
+                  "x": 495,
+                  "y": 165
+                },
+                {
+                  "x": 495,
+                  "y": 420
+                }
+              ]
+            },
+            "I6c06c2aa": {
+              "arrow": false,
+              "connectionType": "mqtt",
+              "dashed": false,
+              "lineType": "smoothstep",
+              "showLabel": false,
+              "source": "I0e3896a6",
+              "sourceHandle": "right-1",
+              "target": "I24a32b8a",
+              "targetHandle": "top-3",
+              "waypoints": [
+                {
+                  "x": 630,
+                  "y": 375
+                }
+              ]
+            }
+          },
+          "hierarchy": {
+            "areas": [
+              {
+                "areas": [
+                  {
+                    "areas": [],
+                    "id": "I42c90d49",
+                    "label": "Area / Site",
+                    "nodes": [
+                      {
+                        "id": "I0e3896a6",
+                        "label": "Standard",
+                        "typeId": "standard"
+                      },
+                      {
+                        "id": "I24a32b8a",
+                        "label": "Edge IIOT Gateway",
+                        "typeId": "edge-iiot"
+                      }
+                    ],
+                    "typeId": "container"
+                  }
+                ],
+                "id": "Ib773c169",
+                "label": "Area / Site",
+                "nodes": [
+                  {
+                    "id": "I4de7f266",
+                    "label": "SQL DB",
+                    "typeId": "Database"
+                  }
+                ],
+                "typeId": "container"
+              }
+            ],
+            "nodes": []
+          },
+          "nodes": {
+            "I0e3896a6": {
+              "b64Image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJMYXllcl8yIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMjIxLjQzIDMxNC4zOSI+PGRlZnM+PHN0eWxlPi5jbHMtMSwuY2xzLTIsLmNscy0ze2ZpbGw6bm9uZTt9LmNscy0ye2NsaXAtcGF0aDp1cmwoI2NsaXBwYXRoLTEpO30uY2xzLTR7ZmlsbDojZjc5NDM1O30uY2xzLTV7ZmlsbDojZmZmO30uY2xzLTZ7ZmlsbDojYWNjY2UyO30uY2xzLTd7ZmlsbDojMzU1OTgwO30uY2xzLTh7ZmlsbDojMmY0NjY2O30uY2xzLTN7Y2xpcC1wYXRoOnVybCgjY2xpcHBhdGgpO308L3N0eWxlPjxjbGlwUGF0aCBpZD0iY2xpcHBhdGgiPjxyZWN0IGNsYXNzPSJjbHMtMSIgd2lkdGg9IjIyMS40MyIgaGVpZ2h0PSIzMTQuMzkiLz48L2NsaXBQYXRoPjxjbGlwUGF0aCBpZD0iY2xpcHBhdGgtMSI+PHJlY3QgY2xhc3M9ImNscy0xIiB3aWR0aD0iMjIxLjQzIiBoZWlnaHQ9IjMxNC4zOSIvPjwvY2xpcFBhdGg+PC9kZWZzPjxnIGlkPSJMYXllcl8xLTIiPjxnIGlkPSJTZXJ2ZXJfQmx1ZV8tX0xlZnQiPjxnIGNsYXNzPSJjbHMtMyI+PHBvbHlnb24gY2xhc3M9ImNscy03IiBwb2ludHM9IjcyLjEyIDEyNy44NSA3Mi4xMyAzMTQuMzkgMjIxLjQzIDIyOC4xOSAyMjEuNDMgNDEuNjQgNzIuMTIgMTI3Ljg1Ii8+PHBvbHlnb24gY2xhc3M9ImNscy02IiBwb2ludHM9IjE0OS4zMiAwIDAgODYuMjEgNzIuMTIgMTI3Ljg1IDIyMS40MyA0MS42NCAxNDkuMzIgMCIvPjxwb2x5Z29uIGNsYXNzPSJjbHMtOCIgcG9pbnRzPSIwIDI3Mi43NCA3Mi4xMiAzMTQuMzkgNzIuMTIgMTI3Ljg1IDAgODYuMjEgMCAyNzIuNzQiLz48ZyBjbGFzcz0iY2xzLTIiPjxwYXRoIGNsYXNzPSJjbHMtNCIgZD0ibTEzNS4xNCwyMDkuOWMxLjY1LTIuMzcsMy41MS00LjA3LDUuNTctNS4xLDIuMDctMS4wNCwzLjgyLTEuMTUsNS4yMy0uMzEsMS40Mi44MywyLjA0LDIuMzIsMS44OSw0LjQ4LS4xNiwyLjE3LTEuMDUsNC4zNS0yLjcsNi41OC0xLjYzLDIuMjItMy40OSwzLjg1LTUuNTUsNC44OC0yLjA4LDEuMDQtMy44MywxLjIyLTUuMjQuNTItMS40Mi0uNy0yLjA2LTIuMTEtMS45LTQuMjguMTYtMi4xNiwxLjA2LTQuNDMsMi43MS02Ljc4Ii8+PHBhdGggY2xhc3M9ImNscy00IiBkPSJtMTg0LjUyLDExOC4wOGMtLjctMS4xMy0xLjc5LTEuNjktMy4yOC0xLjY4LTEuNS4wMy0zLjA3LjYxLTQuNzQsMS43Ny0xLjY3LDEuMTYtMy4xLDMuMTUtNC4zMiw1Ljk3LS4yMS41Mi0uNzgsMi4wNS0xLjcyLDQuNTktLjk0LDIuNTYtMi4xMSw1Ljc5LTMuNTUsOS43LTEuNDMsMy45MS0zLjA1LDguMzEtNC44NywxMy4yMS0xLjgxLDQuODktMy42OSwxMC4wMi01LjYzLDE1LjM5LTEuOTQsNS4zNi0zLjksMTAuNzctNS44OCwxNi4yNS0xLjk0LDUuMzUtMy43OSwxMC40NC01LjUzLDE1LjI2LjgzLS4xMiwxLjYzLS4xMiwyLjM3LDAsMy42LTcuMzMsNy40NC0xNS4xNSwxMS41Mi0yMy40NSw0LjEzLTguNCw3Ljk3LTE2LjI1LDExLjUyLTIzLjU1LDMuNTUtNy4zMSw2LjU3LTEzLjUxLDkuMDUtMTguNjIsMi41LTUuMTEsMy45Mi04LjA4LDQuMjgtOC45MSwxLjIxLTIuODIsMS40Ni00LjguNzctNS45MyIvPjxwYXRoIGNsYXNzPSJjbHMtNCIgZD0ibTEzNS4wNSwyMDQuMzljLTEuMTQtMy44Ny0yLjA2LTYuOTctMi43OC05LjMyLS43MS0yLjM2LTEuMzItNC4yMy0xLjc4LTUuNTgtLjQ4LTEuMzYtLjg1LTIuMzMtMS4xMy0yLjkzLS4yNy0uNi0uNTMtMS4xLS43OS0xLjQ3LS42MS0uOTMtMS41LTEuMjQtMi42OS0uOTYtMS4xOS4zMS0yLjQ2LDEuMTctMy44LDIuNTgtMS4zNCwxLjQyLTIuMjQsMi44NS0yLjY4LDQuMjctLjQ1LDEuNDItLjM2LDIuNi4yNCwzLjUyLjI2LjM4LjU5LjgsMS4wMSwxLjI0LjQxLjQ2LDEuMTEsMS4xLDIuMDgsMS45My45Ny44MywyLjMxLDEuOTEsNC4wMywzLjIzLDEuNzEsMS4zMiwzLjk5LDMuMDUsNi44Myw1LjE3LjQ4LS41OS45Ny0xLjE1LDEuNDgtMS42OCIvPjxwYXRoIGNsYXNzPSJjbHMtNSIgZD0ibTU4LjYyLDE1Mi4yNWMtLjQ5LDAtLjk5LS4xMi0xLjQ0LS4zOWwtNDUuMjUtMjYuMTRjLTEuMzgtLjgtMS44NS0yLjU2LTEuMDYtMy45NC44LTEuMzgsMi41Ni0xLjg1LDMuOTQtMS4wNmw0NS4yNSwyNi4xNGMxLjM4LjgsMS44NSwyLjU2LDEuMDYsMy45NC0uNTMuOTMtMS41MSwxLjQ0LTIuNSwxLjQ0Ii8+PHBhdGggY2xhc3M9ImNscy01IiBkPSJtNTguNjIsMTY3LjIxYy0uNDksMC0uOTktLjEyLTEuNDQtLjM5bC00NS4yNS0yNi4xM2MtMS4zOC0uOC0xLjg1LTIuNTYtMS4wNi0zLjk0LjgtMS4zOCwyLjU2LTEuODUsMy45NC0xLjA2bDQ1LjI1LDI2LjEzYzEuMzguOCwxLjg1LDIuNTYsMS4wNiwzLjk0LS41My45My0xLjUxLDEuNDQtMi41LDEuNDQiLz48cGF0aCBjbGFzcz0iY2xzLTUiIGQ9Im01OC42MiwxODIuMTdjLS40OSwwLS45OS0uMTItMS40NC0uMzlsLTQ1LjI1LTI2LjEyYy0xLjM4LS44LTEuODUtMi41Ni0xLjA2LTMuOTQuOC0xLjM4LDIuNTYtMS44NSwzLjk0LTEuMDZsNDUuMjUsMjYuMTJjMS4zOC44LDEuODUsMi41NiwxLjA2LDMuOTQtLjUzLjkzLTEuNTEsMS40NC0yLjUsMS40NCIvPjwvZz48L2c+PC9nPjwvZz48L3N2Zz4\u003d",
+              "configs": {},
+              "connections": [
+                "I14944c01",
+                "I49350915",
+                "I54db169a",
+                "I6c06c2aa"
+              ],
+              "hideHandles": false,
+              "hierarchy": [
+                "Ib773c169",
+                "I42c90d49"
+              ],
+              "label": "Standard",
+              "labelStyle": {
+                "classes": ""
+              },
+              "paletteId": "standard",
+              "style": {
+                "classes": ""
+              },
+              "supportedConnections": [
+                "gateway-network",
+                "mqtt",
+                "rest",
+                "standard",
+                "device-driver",
+                "opc-ua",
+                "opc-com",
+                "mongodb",
+                "kafka",
+                "db",
+                "client"
+              ],
+              "tooltip": "Edge IIOT Gateway",
+              "typeId": "standard",
+              "x": 180,
+              "y": 210
+            },
+            "I24a32b8a": {
+              "b64Image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJMYXllcl8yIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMzcuNDYgNTQuNTUiPjxkZWZzPjxzdHlsZT4uY2xzLTEsLmNscy0yLC5jbHMtMywuY2xzLTQsLmNscy01LC5jbHMtNntmaWxsOm5vbmU7fS5jbHMtMntjbGlwLXBhdGg6dXJsKCNjbGlwcGF0aC0zKTt9LmNscy0ze2NsaXAtcGF0aDp1cmwoI2NsaXBwYXRoLTIpO30uY2xzLTR7Y2xpcC1wYXRoOnVybCgjY2xpcHBhdGgtMSk7fS5jbHMtNXtpc29sYXRpb246aXNvbGF0ZTt9LmNscy03e2ZpbGw6IzFlMjUyODt9LmNscy04e2ZpbGw6IzZlNzA3MDt9LmNscy05e2ZpbGw6IzI4MzQzOTt9LmNscy0xMHtmaWxsOiM3OGQxNzU7fS5jbHMtMTF7ZmlsbDojNGU1NTU4O30uY2xzLTZ7Y2xpcC1wYXRoOnVybCgjY2xpcHBhdGgpO308L3N0eWxlPjxjbGlwUGF0aCBpZD0iY2xpcHBhdGgiPjxyZWN0IGNsYXNzPSJjbHMtMSIgd2lkdGg9IjM3LjQ2IiBoZWlnaHQ9IjU0LjU1Ii8+PC9jbGlwUGF0aD48Y2xpcFBhdGggaWQ9ImNsaXBwYXRoLTEiPjxyZWN0IGNsYXNzPSJjbHMtMSIgeT0iMCIgd2lkdGg9IjM3LjQ2IiBoZWlnaHQ9IjU0LjU1Ii8+PC9jbGlwUGF0aD48Y2xpcFBhdGggaWQ9ImNsaXBwYXRoLTIiPjxyZWN0IGNsYXNzPSJjbHMtMSIgeD0iMTIuNDQiIHk9IjE3LjI5IiB3aWR0aD0iMTkuOTEiIGhlaWdodD0iMjcuMzkiLz48L2NsaXBQYXRoPjxjbGlwUGF0aCBpZD0iY2xpcHBhdGgtMyI+PHBvbHlnb24gY2xhc3M9ImNscy0xIiBwb2ludHM9IjEyLjQ0IDQ0LjY3IDEyLjUyIDI3LjY0IDMyLjI4IDE3LjI5IDMyLjE5IDM0LjMyIDEyLjQ0IDQ0LjY3Ii8+PC9jbGlwUGF0aD48L2RlZnM+PGcgaWQ9IkxheWVyXzEtMiI+PGcgaWQ9IkVkZ2VfR2F0ZXdheV8tX0xlZnQiPjxnIGNsYXNzPSJjbHMtNiI+PGcgY2xhc3M9ImNscy00Ij48cGF0aCBjbGFzcz0iY2xzLTkiIGQ9Im0yOC44MSwxdjMxLjU2YzAsLjcxLS4zOCwxLjM3LTEsMS43M2wtMTcuNDQsMTAuMDQtLjQzLjI0LTguNDQsNC44NmMtLjIyLjEzLS40Ny4xNi0uNjkuMTFoLS4wMmMtLjIxLS4wNS0uMzktLjE1LS41NC0uMzFDLjEsNDkuMDYsMCw0OC44MywwLDQ4LjU2di0zMS41NWMwLS4zNS4wOS0uNjkuMjYtLjk5LDAtLjAyLjAyLS4wNC4wNC0uMDYuMDUtLjA4LjEtLjE2LjE3LS4yNCwwLDAsLjAxLDAsLjAyLS4wMiwwLDAsLjAxLS4wMi4wMi0uMDMuMDgtLjA5LjE3LS4xOC4yNy0uMjUuMDctLjA2LjE0LS4xMS4yMi0uMTVsMS43OC0xLjAzLDE1LjM5LTguODVMMjcuMzIuMTNjLjI0LS4xNC41MS0uMTYuNzUtLjA5LjE3LjA0LjMzLjEzLjQ1LjI2LjE4LjE3LjI5LjQyLjI5LjciLz48cGF0aCBjbGFzcz0iY2xzLTExIiBkPSJtMzYuNjgsNS4wMmMtLjIzLS4wNS0uNDgtLjAzLS43Mi4xMWwtNy4xNSw0LjExLTE5LjE2LDExLjAzYy0uMDkuMDUtLjE4LjExLS4yNi4xN2gwYy0uMTkuMTYtLjM1LjM1LS40OC41NkwuMjYsMTYuMDJzLjAyLS4wNC4wNC0uMDZjLjA1LS4wOC4xLS4xNi4xNy0uMjQsMCwwLC4wMi0uMDMuMDQtLjA1LjA4LS4wOS4xNy0uMTguMjctLjI1TDI3LjMyLjEzYy4yNC0uMTQuNTEtLjE2Ljc1LS4wOWwuNDUuMjYsOC4xNiw0LjcyWiIvPjxwYXRoIGNsYXNzPSJjbHMtNyIgZD0ibTguNjQsMjJjMC0uMzYuMS0uNy4yNy0xaDBTLjI2LDE2LjAyLjI2LDE2LjAyQy4wOSwxNi4zMiwwLDE2LjY2LDAsMTcuMDF2MzEuNTVjMCwuMjcuMS41LjI1LjY3bC41NC4zMWguMDJsOC4wNyw0LjY0Yy0uMTUtLjE3LS4yMy0uMzgtLjIzLS42M3YtMzEuNTVaIi8+PHBhdGggY2xhc3M9ImNscy05IiBkPSJtMzcuNDYsNS45OXYzMS41NmMwLC43Mi0uMzgsMS4zOC0xLDEuNzNsLTI2LjA5LDE1LjAxLS4yMy4xM2MtLjIxLjEyLS40NC4xNi0uNjUuMTEtLjI0LS4wMy0uNDYtLjE2LS42MS0uMzUtLjE1LS4xNy0uMjMtLjM4LS4yMy0uNjN2LTMxLjU1Yy0uMDEtLjcyLjM4LTEuMzgsMS0xLjczbDI2LjMxLTE1LjE0Yy42Ny0uMzksMS41LjA5LDEuNS44NiIvPjxwYXRoIGNsYXNzPSJjbHMtOCIgZD0ibTkuMzksMjAuNDRoMHMtLjAxLjA0LS4wMS4wNGMtLjE5LjE1LS4zNS4zMy0uNDcuNTQtLjE3LjI5LS4yNy42My0uMjcuOThMMCwxNy4wMWMwLS4zNS4wOS0uNjkuMjYtLjk5LjAxLS4wMi4wMi0uMDQuMDQtLjA2LjA1LS4wOC4xLS4xNi4xNy0uMjQuMDEsMCwuMDItLjAzLjA0LS4wNS4wOC0uMDkuMTctLjE4LjI3LS4yNWw4LjYxLDUuMDJaIi8+PGcgY2xhc3M9ImNscy01Ij48ZyBjbGFzcz0iY2xzLTMiPjxnIGNsYXNzPSJjbHMtMiI+PHBhdGggY2xhc3M9ImNscy0xMCIgZD0ibTIwLjEsMjMuODZjLTMuMzMsMS43NS02LjMyLDUuMzgtNy42LDkuMjUtLjEuMjkuMDEuNTEuMjQuNDlsLjE4LS4wNmMuMTgtLjA5LjM0LS4yOS40Mi0uNTEsMS4xNS0zLjQ0LDMuOC02LjY4LDYuNzctOC4yMy43MS0uMzcsMS40LS42MywyLjA3LS43OC4wNCwwLC4wOC0uMDIuMTItLjA1LjE5LS4xLjM3LS4zMy40NC0uNTcuMDctLjI4LS4wNy0uNDctLjMtLjQyLS43NS4xNy0xLjUzLjQ2LTIuMzIuODciLz48cGF0aCBjbGFzcz0iY2xzLTEwIiBkPSJtMjAuMDcsMjguNTVjLTEuNS43OC0yLjg0LDIuNDItMy40Miw0LjE2LS4xLjI5LjAxLjUxLjI0LjQ5bC4xNy0uMDVjLjE4LS4wOS4zNC0uMjkuNDItLjUxLjQ0LTEuMzIsMS40NS0yLjU2LDIuNTktMy4xNS4yNy0uMTQuNTUtLjI0LjgxLS4zLjA0LDAsLjA5LS4wMy4xMy0uMDUuMTktLjEuMzctLjMzLjQzLS41Ni4wNy0uMjgtLjA2LS40OC0uMy0uNDItLjM1LjA4LS43LjIxLTEuMDYuMzkiLz48cGF0aCBjbGFzcz0iY2xzLTEwIiBkPSJtMjAuMDgsMjYuMjFjLTIuNDIsMS4yNy00LjU4LDMuOS01LjUxLDYuNzEtLjEuMjguMDEuNTEuMjQuNDhsLjE3LS4wNWMuMTgtLjA5LjM0LS4yOS40Mi0uNTEuNzktMi4zOCwyLjYzLTQuNjIsNC42OC01LjY5LjQ5LS4yNi45OC0uNDQsMS40NC0uNTMuMDQsMCwuMDgtLjAzLjEyLS4wNS4xOS0uMS4zNy0uMzMuNDQtLjU3LjA3LS4yOC0uMDctLjQ4LS4zLS40Mi0uNTUuMTItMS4xMS4zMy0xLjY5LjYzIi8+PHBhdGggY2xhc3M9ImNscy0xMCIgZD0ibTMwLjg2LDE4LjAzYy0uMDcuMDMtLjEzLjA3LS4yLjEyLS4zNC4yMi0uNjMuNjEtLjg4LDEuMTktLjA0LjEtLjE2LjQyLS4zNS45My0uMTkuNTItLjQzLDEuMTgtLjcyLDEuOTgtLjI5LjgtLjYyLDEuNjktLjk5LDIuNy0uMzcsMS0uNzUsMi4wNS0xLjE1LDMuMTUtLjQsMS4xLS44LDIuMjEtMS4yLDMuMzItLjM5LDEuMS0uNzcsMi4xNC0xLjEzLDMuMTIuMTctLjAxLjMzLDAsLjQ4LjA0LjczLTEuNDgsMS41MS0zLjA3LDIuMzQtNC43NS44NC0xLjcsMS42Mi0zLjI5LDIuMzQtNC43Ny43Mi0xLjQ3LDEuMzMtMi43MywxLjg0LTMuNzYuNTEtMS4wNC44LTEuNjUuODctMS44MS4yNC0uNTcuMy0uOTkuMTYtMS4yMy0uMTQtLjI1LS4zNi0uMzktLjY2LS40MS0uMjQtLjAxLS40OS4wNS0uNzYuMTkiLz48cGF0aCBjbGFzcz0iY2xzLTEwIiBkPSJtMjAuMTIsMzEuMzJjLS4xNi4wOC0uMzIuMjEtLjQ5LjM4LS4yNy4yOC0uNDUuNTYtLjU0Ljg1LS4wOS4zLS4wOC41NC4wNC43NS4wNS4wOC4xMS4xOC4yLjI4LjA4LjEuMjIuMjUuNDEuNDQuMi4xOS40Ny40NC44MS43NC4zNS4zMS44LjcxLDEuMzcsMS4yLjEtLjExLjItLjIzLjMtLjMzLS4yMy0uODItLjQxLTEuNDktLjU1LTItLjE1LS41LS4yNy0uOS0uMzUtMS4yLS4wOS0uMjgtLjE3LS41LS4yMi0uNjMtLjA2LS4xMy0uMTEtLjI0LS4xNi0uMzItLjEyLS4yMS0uMy0uMjktLjU0LS4yNC0uMDkuMDItLjE4LjA1LS4yOC4xIi8+PHBhdGggY2xhc3M9ImNscy0xMCIgZD0ibTIzLjI1LDM1Ljg1Yy0uODQuNDQtMS41MiwxLjUxLTEuNTIsMi4zOCwwLC44Ny42NywxLjIyLDEuNTEuNzguODQtLjQ0LDEuNTItMS41LDEuNTItMi4zNywwLS44OC0uNjctMS4yMy0xLjUxLS43OSIvPjwvZz48L2c+PC9nPjwvZz48L2c+PC9nPjwvZz48L3N2Zz4\u003d",
+              "configs": {},
+              "connections": [
+                "I49350915",
+                "I54db169a",
+                "I6c06c2aa"
+              ],
+              "hideHandles": false,
+              "hierarchy": [
+                "Ib773c169",
+                "I42c90d49"
+              ],
+              "label": "Edge IIOT Gateway",
+              "labelStyle": {
+                "classes": ""
+              },
+              "paletteId": "edge-iiot",
+              "style": {
+                "classes": ""
+              },
+              "supportedConnections": [
+                "gateway-network",
+                "mqtt",
+                "rest",
+                "standard",
+                "device-driver",
+                "opc-ua",
+                "opc-com"
+              ],
+              "tooltip": "Edge IIOT Gateway",
+              "typeId": "edge-iiot",
+              "x": 315,
+              "y": 405
+            },
+            "I42c90d49": {
+              "b64Image": "",
+              "configs": {},
+              "connections": [],
+              "height": 465,
+              "hideHandles": false,
+              "hierarchy": [
+                "Ib773c169"
+              ],
+              "label": "Area / Site",
+              "labelStyle": {
+                "classes": ""
+              },
+              "paletteId": "container",
+              "style": {
+                "backgroundColor": "rgba(128, 128, 128, 0.8)",
+                "classes": "",
+                "padding": "10px"
+              },
+              "supportedConnections": [],
+              "tooltip": "Grouping Container",
+              "typeId": "container",
+              "width": 435,
+              "x": 135,
+              "y": 135,
+              "zIndex": -2
+            },
+            "I4de7f266": {
+              "b64Image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIiB2aWV3Qm94PSIwIDAgNDEgNTMiPg0KICA8ZGVmcy8+DQogIDxyZWN0IGZpbGw9IiNlNWU1ZTUiIGhlaWdodD0iMTciIHJ4PSI1IiBzdHJva2U9IiM0ZTRlNGUiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMnB4IiB3aWR0aD0iMzkiIHg9IjEiIHk9IjM1Ii8+DQogIDxjaXJjbGUgY3g9IjEwIiBjeT0iNDMuNSIgZmlsbD0iIzRlNGU0ZSIgcj0iMS41Ii8+DQogIDxyZWN0IGZpbGw9IiNlNWU1ZTUiIGhlaWdodD0iMTciIHJ4PSI1IiBzdHJva2U9IiM0ZTRlNGUiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMnB4IiB3aWR0aD0iMzkiIHg9IjEiIHk9IjE4Ii8+DQogIDxjaXJjbGUgY3g9IjkuNSIgY3k9IjI2LjUiIGZpbGw9IiM0ZTRlNGUiIHI9IjEuNSIvPg0KICA8cmVjdCBmaWxsPSIjZTVlNWU1IiBoZWlnaHQ9IjE3IiByeD0iNSIgc3Ryb2tlPSIjNGU0ZTRlIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjJweCIgd2lkdGg9IjM5IiB4PSIxIiB5PSIxIi8+DQogIDxjaXJjbGUgY3g9IjkuNSIgY3k9IjkuNSIgZmlsbD0iIzRlNGU0ZSIgcj0iMS41Ii8+DQo8c3ZnIGhlaWdodD0iMjYuNSIgd2lkdGg9IjIwLjUiIHg9IjIwLjUiIHk9IjI2LjUiPjxyZWN0IGZpbGw9InJnYmEoMjU1LCAyNTUsIDI1NSwgMC44NSkiIGhlaWdodD0iMTAwJSIgcng9IjUiIHJ5PSI1IiB3aWR0aD0iMTAwJSIvPjxzdmcgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIGZpbGw9IiMwMDAwMDAiIGhlaWdodD0iMjQuNSIgaWQ9IkNhcGFfMSIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTUwLjgwMSA1NTAuODAxIiB3aWR0aD0iMTguNSIgeD0iMSIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgeT0iMSI+DQo8Zz4NCgk8Zz4NCgkJPHBhdGggZD0iTTI3Ny40MjUsNDAyLjExNmMtMjAuMjA4LDAtMzEuODcsMTkuODMzLTMxLjg3LDQ0LjMxN2MtMC4yLDI0Ljg4LDExLjg1Myw0My45MzQsMzEuNjgxLDQzLjkzNCAgICBjMjAuMDE4LDAsMzEuNjgzLTE4Ljg1OCwzMS42ODMtNDQuNTA4QzMwOC45MTgsNDIxLjk0OSwyOTcuNjQ0LDQwMi4xMTYsMjc3LjQyNSw0MDIuMTE2eiIvPg0KCQk8cGF0aCBkPSJNNDc1LjA5NSwxMzEuOTkyYy0wLjAzMi0yLjUyNi0wLjgzMy01LjAyMS0yLjU2OC02Ljk5M0wzNjYuMzI0LDMuNjk0Yy0wLjAyMS0wLjAzNC0wLjA2Mi0wLjA0NS0wLjA4NC0wLjA3NiAgICBjLTAuNjMzLTAuNzA3LTEuMzYtMS4yOS0yLjE0MS0xLjgwNGMtMC4yMzItMC4xNS0wLjQ3NS0wLjI4NS0wLjcxOC0wLjQyMmMtMC42NzUtMC4zNjYtMS4zODItMC42Ny0yLjEzLTAuODkyICAgIGMtMC4xOS0wLjA1OC0wLjM4LTAuMTQtMC41OC0wLjE5MkMzNTkuODcsMC4xMTQsMzU5LjAzNywwLDM1OC4yMDMsMEg5Ny4yQzg1LjI5MiwwLDc1LjYsOS42OTMsNzUuNiwyMS42MDF2NTA3LjYgICAgYzAsMTEuOTEzLDkuNjkyLDIxLjYwMSwyMS42LDIxLjYwMUg0NTMuNmMxMS45MDgsMCwyMS42MDEtOS42ODgsMjEuNjAxLTIxLjYwMVYxMzMuMjAyICAgIEM0NzUuMiwxMzIuNzk2LDQ3NS4xMzcsMTMyLjM5OCw0NzUuMDk1LDEzMS45OTJ6IE0xNDcuMzgyLDUxMy42OTFjLTE0Ljk3NCwwLTI5Ljc0Mi0zLjg5Mi0zNy4xMjUtNy45NzlsNi4wMjItMjQuNDg1ICAgIGM3Ljk2Myw0LjA4MiwyMC4yMTYsOC4xNjQsMzIuODQzLDguMTY0YzEzLjYxMywwLDIwLjc5OS01LjY0MywyMC43OTktMTQuMTk2YzAtOC4xNjktNi4yMS0xMi44MjUtMjEuOTU2LTE4LjQ1NyAgICBjLTIxLjc2Ni03LjU4My0zNS45NjItMTkuNjQ0LTM1Ljk2Mi0zOC42ODdjMC0yMi4zNTQsMTguNjY4LTM5LjQ2MSw0OS41Ny0zOS40NjFjMTQuNzc2LDAsMjUuNjYxLDMuMTExLDMzLjQzMSw2LjYxMyAgICBsLTYuNjEzLDIzLjkwNGMtNS4yNDQtMi41MjEtMTQuNTc1LTYuMjA3LTI3LjQtNi4yMDdjLTEyLjgzNiwwLTE5LjA0NSw1LjgyMi0xOS4wNDUsMTIuNjNjMCw4LjM1OCw3LjM4LDEyLjA1LDI0LjI4OSwxOC40NjMgICAgYzIzLjEyNyw4LjU1MywzNC4wMjQsMjAuNjA4LDM0LjAyNCwzOS4wNzZDMjAwLjI1Myw0OTUuMDIzLDE4My4zMzYsNTEzLjY5MSwxNDcuMzgyLDUxMy42OTF6IE0zMzIuMjM3LDUzNC4yODQgICAgYy0xOC42NTctNS40NDItMzQuMjA0LTExLjA3NC01MS43MDEtMTguNDY4Yy0yLjkxMS0xLjE2LTYuMDIyLTEuNzQ1LTkuMTM0LTEuOTM2Yy0yOS41NDItMS45MzYtNTcuMTQtMjMuNzE1LTU3LjE0LTY2LjQ4MiAgICBjMC0zOS4yNjEsMjQuODc3LTY4LjgwOCw2My45NDItNjguODA4YzQwLjA0NywwLDYyLjAwNiwzMC4zMjIsNjIuMDA2LDY2LjA4N2MwLDI5Ljc0Mi0xMy43OTYsNTAuNzM1LTMxLjEwNCw1OC41MDR2MC43ODUgICAgYzEwLjExNSwyLjkyMiwyMS4zOSw1LjI1MywzMS42ODQsNy4zNzhMMzMyLjIzNyw1MzQuMjg0eiBNNDQxLjQ5Miw1MTEuNzQ1aC04MS44MzNWMzgwLjczN2gyOS43NDJWNDg2Ljg2aDUyLjA5MVY1MTEuNzQ1eiAgICAgTTk3LjIsMzY2Ljc1MlYyMS42MDFoMjUwLjIwM3YxMTAuNTE1YzAsNS45NjEsNC44MzEsMTAuOCwxMC44LDEwLjhINDUzLjZsMC4wMTEsMjIzLjgzNkg5Ny4yeiIvPg0KCQk8cGF0aCBkPSJNMzM0LjExNCwxNzEuMTcxYzAuNDc1LTEuMzA4LDAuODEyLTIuNjQ3LDAuODEyLTQuMDYzYzAtMTcuMzg2LTM3LjU2OC0yNi43NjUtNzIuOTI0LTI2Ljc2NSAgICBjLTM1LjMyMSwwLTcyLjg3OSw5LjM3OS03Mi44NzksMjYuNzY1YzAsMS40MTYsMC4zMywyLjc2MSwwLjgxLDQuMDc0bC0wLjE4OCwwLjMzNWMtMS42MTYsMi45MzItMi40MTUsNS44OS0yLjQxNSw4LjgwMXYyMS41MTMgICAgYzAsMy4zMTIsMS4wNDIsNi40OTIsMi44OSw5LjQ5OGwtMC4yNDIsMC40MTFjLTEuNzYyLDMuMDU2LTIuNjQ3LDYuMTUxLTIuNjQ3LDkuMjA4djIxLjUwOGMwLDMuMjA4LDAuOTgzLDYuMjg2LDIuNzMxLDkuMjA4ICAgIGwtMC4wODQsMC4xMzRjLTEuNzYyLDMuMDUxLTIuNjQ3LDYuMTUyLTIuNjQ3LDkuMjAydjIxLjUxYzAsMTkuMTIyLDMyLjgwMSwzNC4wOTMsNzQuNjcyLDM0LjA5MyAgICBjNDEuOTE2LDAsNzQuNzE3LTE0Ljk3MSw3NC43MTctMzQuMDkzdi0yMS41MWMwLTMuMDU2LTAuODg2LTYuMTYyLTIuNjY5LTkuMjA4bC0wLjA3My0wLjExOGMxLjczNC0yLjkyNywyLjc0Mi02LjAwNCwyLjc0Mi05LjIxOCAgICB2LTIxLjUwOGMwLTMuMDYxLTAuODg2LTYuMTY3LTIuNjY5LTkuMjE4bC0wLjIzMS0wLjM5NmMxLjg0Ni0zLjAxMSwyLjktNi4xODYsMi45LTkuNTA4di0yMS41MTNjMC0yLjkxMS0wLjgxMi01Ljg3Ny0yLjQxNS04LjgxICAgIEwzMzQuMTE0LDE3MS4xNzF6IE0zMjguNzE1LDI4Mi41MDljMCwxMi4zNTEtMjcuMzgsMjYuMDkzLTY2LjcxMiwyNi4wOTNjLTM5LjI5NSwwLTY2LjY4LTEzLjc0Mi02Ni42OC0yNi4wOTN2LTIwLjIzMSAgICBjMTIuMjYzLDExLjIzMiwzNy40OTIsMTguMzk2LDY2LjY4LDE4LjM5NmMyOS4yMjgsMCw1NC40NTYtNy4xNjksNjYuNzEyLTE4LjQwN1YyODIuNTA5eiBNMzI4LjcxNSwyNDIuNDU1ICAgIGMwLDEyLjM0LTI3LjM4LDI2LjA5My02Ni43MTIsMjYuMDkzYy0zOS4yOTUsMC02Ni42OC0xMy43NTMtNjYuNjgtMjYuMDkzdi0yMC4yMzRjMTIuMjYzLDExLjIyNywzNy40OTIsMTguMzk4LDY2LjY4LDE4LjM5OCAgICBjMjkuMjI4LDAsNTQuNDU2LTcuMTcyLDY2LjcxMi0xOC40MDlWMjQyLjQ1NXogTTMyOC43MTUsMjAxLjgyNWMwLDEyLjM0LTI3LjM4LDI2LjA5My02Ni43MTIsMjYuMDkzICAgIGMtMzkuMjk1LDAtNjYuNjgtMTMuNzQ4LTY2LjY4LTI2LjA5M3YtMTcuOWMxMS45ODQsMTAuMTU2LDM5Ljc3MiwxNS40MjIsNjYuNjgsMTUuNDIyYzI2Ljk0NCwwLDU0LjcyLTUuMjY2LDY2LjcxMi0xNS40MjIgICAgVjIwMS44MjV6Ii8+DQoJPC9nPg0KPC9nPg0KPC9zdmc+PC9zdmc+PC9zdmc+",
+              "configs": {},
+              "connections": [
+                "I14944c01"
+              ],
+              "hideHandles": false,
+              "hierarchy": [
+                "Ib773c169"
+              ],
+              "label": "SQL DB",
+              "labelStyle": {
+                "classes": ""
+              },
+              "paletteId": "SQLDB",
+              "style": {
+                "classes": ""
+              },
+              "supportedConnections": [
+                "db"
+              ],
+              "tooltip": "",
+              "typeId": "Database",
+              "x": 600,
+              "y": 210
+            },
+            "Ib773c169": {
+              "b64Image": "",
+              "configs": {},
+              "connections": [],
+              "height": 675,
+              "hideHandles": false,
+              "hierarchy": [],
+              "label": "Area / Site",
+              "labelStyle": {
+                "classes": ""
+              },
+              "paletteId": "container",
+              "style": {
+                "backgroundColor": "rgba(128, 128, 128, 0.8)",
+                "classes": "",
+                "padding": "10px"
+              },
+              "supportedConnections": [],
+              "tooltip": "Grouping Container",
+              "typeId": "container",
+              "width": 690,
+              "x": 75,
+              "y": 15,
+              "zIndex": -3
             }
           }
         },

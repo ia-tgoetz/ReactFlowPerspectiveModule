@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xxd \"C:\\\\Users\\\\tgoetz\\\\Documents\\\\GitHub Project\\\\active\\\\ModuleDevelopment\\\\DatabaseSchema\\\\exampleResources\\\\hierarchy.json\")"
+    ]
+  }
+}

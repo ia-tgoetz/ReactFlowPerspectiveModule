@@ -67,15 +67,15 @@ export const ArchitectureNode = ({ id, data, selected }: NodeProps<ArchitectureN
         boxShadow: selected ? '0 0 0 2px rgba(0, 123, 255, 0.25)' : (restStyle.boxShadow || '0 2px 4px rgba(0,0,0,0.1)')
     };
 
-    const handleStyle: React.CSSProperties = { 
-        background: 'var(--neutral-50)',
+    const handleStyle: React.CSSProperties = {
+        background: 'var(--neutral-90)',
         width: '8px',
         height: '8px',
         minWidth: '8px',
         minHeight: '8px',
-        opacity: showHandles ? 1 : 0, 
+        opacity: showHandles ? 1 : 0,
         pointerEvents: showHandles ? 'auto' : 'none',
-        border: showHandles ? '1px solid var(--neutral-40)' : 'none',
+        border: showHandles ? '1px solid var(--neutral-90)' : 'none',
         transition: 'all 0.15s ease-in-out'
     };
     

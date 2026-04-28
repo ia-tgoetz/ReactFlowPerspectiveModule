@@ -25,9 +25,9 @@ services:
       IGNITION_EDITION: ${IGN_EDITION:-standard}
       TZ: ${IGN_TZ:-America/New_York}
       DISABLE_QUICKSTART: ${ING_SKIP_QUICKSTART:-true}
-      GATEWAY_MODULES_ACCEPTED: ${IGN_DEV_MODULE}
-      ACCEPT_MODULE_LICENSES: ${IGN_DEV_MODULE}
-      ACCEPT_MODULE_CERTS: ${IGN_DEV_MODULE}
+      GATEWAY_MODULES_ACCEPTED: ${IGN_DEV_MODULE:-com.wargoetz.reactflow}
+      ACCEPT_MODULE_LICENSES: ${IGN_DEV_MODULE:-com.wargoetz.reactflow}
+      ACCEPT_MODULE_CERTS: ${IGN_DEV_MODULE:-com.wargoetz.reactflow}
 
     command: >
       -n "${IGN_GATEWAY_NAME:-module-dev-ignition}"
