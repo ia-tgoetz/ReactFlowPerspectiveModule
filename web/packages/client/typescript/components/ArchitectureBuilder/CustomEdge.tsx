@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-ignore
-import { BaseEdge, getBezierPath, getSmoothStepPath, getStraightPath, EdgeLabelRenderer, useReactFlow } from 'reactflow';
+import { BaseEdge, getBezierPath, getStraightPath, EdgeLabelRenderer, useReactFlow } from 'reactflow';
 import { buildPolylinePath, computeAutoWaypoints } from './EdgeUtils';
 
 type Waypoint = { x: number; y: number };
@@ -21,7 +21,7 @@ interface DragState {
 export const CustomEdge = ({
     sourceX, sourceY, targetX, targetY,
     sourcePosition, targetPosition,
-    data, markerEnd, style, label,
+    data, markerEnd, style, label, interactionWidth,
 }: any) => {
     const storedWaypoints: Waypoint[] = data?.waypoints ?? [];
     const showLabel = data?.showLabel === true;
@@ -76,10 +76,8 @@ export const CustomEdge = ({
         }
     } else if (data?.lineType === 'straight') {
         [edgePath, labelX, labelY] = getStraightPath({ sourceX, sourceY, targetX, targetY });
-    } else if (data?.lineType === 'default') {
-        [edgePath, labelX, labelY] = getBezierPath({ sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition });
     } else {
-        [edgePath, labelX, labelY] = getSmoothStepPath({ sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, borderRadius: 15 });
+        [edgePath, labelX, labelY] = getBezierPath({ sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition });
     }
 
     // ─── Pointer-capture drag engine ──────────────────────────────────────
@@ -153,7 +151,7 @@ export const CustomEdge = ({
 
     return (
         <>
-            <BaseEdge path={edgePath} markerEnd={markerEnd} style={{ ...style, fill: 'none' }} />
+            <BaseEdge path={edgePath} markerEnd={markerEnd} style={{ ...style, fill: 'none' }} interactionWidth={interactionWidth} />
             {label && showLabel && (
                 <EdgeLabelRenderer>
                     <div

@@ -1587,6 +1587,11 @@
       "description": "The size of the snap grid in pixels.",
       "default": 15
     },
+    "edgeWidth": {
+      "type": "number",
+      "description": "The global thickness of the edge lines. Selected edges render at edgeWidth + 2.",
+      "default": 6
+    },
     "hideHandles": {
       "type": "boolean",
       "description": "Globally hide all connection handles.",

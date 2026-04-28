@@ -103,15 +103,17 @@ export const mapIgnitionToReactFlowEdges = (
     selectedId: string | null,
     onWaypointsChange?: (id: string, wps: { x: number; y: number }[]) => void,
     snapEnabled?: boolean,
-    snapPixels?: number
+    snapPixels?: number,
+    globalEdgeWidth?: number
 ) => {
+    const baseWidth = globalEdgeWidth ?? 6;
     if (!ignitionEdges) return [];
     return Object.entries(ignitionEdges)
         .filter(([, edgeData]: any) => edgeData !== null && edgeData !== undefined)
         .map(([id, edgeData]: any) => {
             const typeConfig = connectionTypes[edgeData.connectionType] || {};
             const isSelected = id === selectedId;
-            const strokeStyle: any = { stroke: typeConfig.color || '#888', strokeWidth: isSelected ? 8 : 6 };
+            const strokeStyle: any = { stroke: typeConfig.color || '#888', strokeWidth: isSelected ? baseWidth + 2 : baseWidth };
             if (edgeData.dashed) strokeStyle.strokeDasharray = '8 5';
             const arrowMarker = edgeData.arrow !== false
                 ? { type: MarkerType.ArrowClosed, width: 10, height: 10, color: strokeStyle.stroke }

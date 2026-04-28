@@ -534,7 +534,17 @@ export const useArchitectureFlowHandlers = ({
                 const nextEdges = { ...rawEdgesDict };
                 const currentEdge = nextEdges[contextMenu.id];
                 if (currentEdge) {
-                    nextEdges[contextMenu.id] = { ...currentEdge, source: currentEdge.target, target: currentEdge.source, sourceHandle: currentEdge.targetHandle, targetHandle: currentEdge.sourceHandle };
+                    const reversedWaypoints = Array.isArray(currentEdge.waypoints)
+                        ? [...currentEdge.waypoints].reverse()
+                        : [];
+                    nextEdges[contextMenu.id] = {
+                        ...currentEdge,
+                        source: currentEdge.target,
+                        target: currentEdge.source,
+                        sourceHandle: currentEdge.targetHandle,
+                        targetHandle: currentEdge.sourceHandle,
+                        waypoints: reversedWaypoints,
+                    };
                     store.props.write('edges', nextEdges);
                 }
             }

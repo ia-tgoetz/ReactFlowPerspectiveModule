@@ -290,7 +290,7 @@ const computeHierarchyData = (nodesDict: any, edgesDict: any) => {
 
 export interface ArchitectureBuilderProps {
     enabled?: any; hideHandles?: any; handleCount?: any; defaultConnectionType?: string;
-    snapEnabled?: any; snapPixels?: any; style?: any; connectionTypes: any; paletteItems: any[];
+    snapEnabled?: any; snapPixels?: any; edgeWidth?: any; style?: any; connectionTypes: any; paletteItems: any[];
     nodes: any; edges: any; hierarchy?: any;
 }
 
@@ -308,6 +308,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
     const [selectedId, setSelectedId] = React.useState<string | null>(null);
     const [localNodes, setLocalNodes] = React.useState<any[]>([]);
     const [localEdges, setLocalEdges] = React.useState<any[]>([]);
+    const [hoveredEdgeId, setHoveredEdgeId] = React.useState<string | null>(null);
 
     // ─── Prop extraction ───────────────────────────────────────────────────
 
@@ -316,18 +317,34 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
     const connectionTypesJson = JSON.stringify(extractDeep(props.props.connectionTypes) || {});
     const paletteItemsJson = JSON.stringify(extractDeep(props.props.paletteItems) || []);
 
+    // Scalar display props use the same extractDeep + JSON pipeline as complex props.
+    // Direct property access on Perspective's observable store can miss scalar updates;
+    // running them through extractDeep forces a MobX subscription that reliably
+    // triggers re-renders when any of these values change in the Designer or Session.
+    const rawConfigJson = JSON.stringify({
+        edgeWidth:             extractDeep(props.props.edgeWidth),
+        snapEnabled:           extractDeep(props.props.snapEnabled),
+        snapPixels:            extractDeep(props.props.snapPixels),
+        hideHandles:           extractDeep(props.props.hideHandles),
+        handleCount:           extractDeep(props.props.handleCount),
+        defaultConnectionType: extractDeep(props.props.defaultConnectionType),
+        enabled:               extractDeep(props.props.enabled),
+    });
+
     const rawNodesDict = React.useMemo(() => JSON.parse(rawNodesJson), [rawNodesJson]);
     const rawEdgesDict = React.useMemo(() => JSON.parse(rawEdgesJson), [rawEdgesJson]);
     const connectionTypes = React.useMemo(() => JSON.parse(connectionTypesJson), [connectionTypesJson]);
     const paletteItems = React.useMemo(() => JSON.parse(paletteItemsJson), [paletteItemsJson]);
+    const rawConfig = React.useMemo(() => JSON.parse(rawConfigJson), [rawConfigJson]);
 
-    const globalHideHandles = props.props.hideHandles === true || String(props.props.hideHandles).toLowerCase() === 'true';
-    const globalHandleCount = Number(props.props.handleCount) || 5;
-    const globalDefaultConnectionType = props.props.defaultConnectionType || '';
-    const isEnabled = props.props.enabled !== false && String(props.props.enabled).toLowerCase() !== 'false';
-    const snapEnabled = props.props.snapEnabled !== false && String(props.props.snapEnabled).toLowerCase() !== 'false';
-    const snapPixels = Number(props.props.snapPixels) || 15;
+    const globalHideHandles = rawConfig.hideHandles === true || String(rawConfig.hideHandles ?? '').toLowerCase() === 'true';
+    const globalHandleCount = Number(rawConfig.handleCount) || 5;
+    const globalDefaultConnectionType = rawConfig.defaultConnectionType || '';
+    const isEnabled = rawConfig.enabled !== false && String(rawConfig.enabled ?? 'true').toLowerCase() !== 'false';
+    const snapEnabled = rawConfig.snapEnabled !== false && String(rawConfig.snapEnabled ?? 'true').toLowerCase() !== 'false';
+    const snapPixels = Number(rawConfig.snapPixels) || 15;
     const snapGrid = React.useMemo<[number, number]>(() => [snapPixels, snapPixels], [snapPixels]);
+    const globalEdgeWidth = Math.max(1, Number(rawConfig.edgeWidth) || 6);
 
     // ─── Hierarchy sync ────────────────────────────────────────────────────
 
@@ -398,12 +415,28 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
         [rawNodesDict, handleGearClick, handleResizeEnd, handleTextChange, selectedId, globalHideHandles, globalHandleCount]
     );
     const flowEdges = React.useMemo(
-        () => mapIgnitionToReactFlowEdges(rawEdgesDict, connectionTypes, selectedId, handleWaypointsChange, snapEnabled, snapPixels),
-        [rawEdgesDict, connectionTypes, selectedId, handleWaypointsChange, snapEnabled, snapPixels]
+        () => mapIgnitionToReactFlowEdges(rawEdgesDict, connectionTypes, selectedId, handleWaypointsChange, snapEnabled, snapPixels, globalEdgeWidth),
+        [rawEdgesDict, connectionTypes, selectedId, handleWaypointsChange, snapEnabled, snapPixels, globalEdgeWidth]
     );
 
     React.useEffect(() => { setLocalNodes(flowNodes); }, [flowNodes]);
     React.useEffect(() => { setLocalEdges(flowEdges); }, [flowEdges]);
+
+    const displayEdges = React.useMemo(() => {
+        const localMap = new Map(localEdges.map((e: any) => [e.id, e]));
+        return flowEdges.map((fresh: any) => {
+            const local = localMap.get(fresh.id);
+            const isHovered = fresh.id === hoveredEdgeId;
+            const isSelected = fresh.data?.isSelected === true;
+            const strokeWidth = (isHovered || isSelected) ? globalEdgeWidth + 2 : globalEdgeWidth;
+            const waypoints = local?.data?.waypoints ?? fresh.data?.waypoints;
+            return {
+                ...fresh,
+                style: { ...fresh.style, strokeWidth },
+                data: { ...fresh.data, waypoints },
+            };
+        });
+    }, [localEdges, flowEdges, hoveredEdgeId, globalEdgeWidth]);
 
     // ─── Keyboard shortcuts ────────────────────────────────────────────────
 
@@ -499,7 +532,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
                 <div style={{ flexGrow: 1, height: '100%', position: 'relative', overflow: 'hidden' }} ref={reactFlowWrapper} className={isConnecting ? 'arch-creating-edge' : isUpdatingEdge ? 'arch-moving-edge' : ''}>
                     <ReactFlowProvider>
                         <ReactFlow
-                            nodes={localNodes} edges={localEdges} nodeTypes={nodeTypes} edgeTypes={edgeTypes}
+                            nodes={localNodes} edges={displayEdges} nodeTypes={nodeTypes} edgeTypes={edgeTypes}
                             isValidConnection={isValidConnection} onInit={setReactFlowInstance}
                             onDrop={isEnabled ? onDrop : undefined} onDragOver={isEnabled ? onDragOver : undefined}
                             onConnect={isEnabled ? onConnect : undefined} onEdgeUpdate={isEnabled ? onEdgeUpdate : undefined}
@@ -512,6 +545,8 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
                             onNodeClick={isEnabled ? onNodeClick : undefined} onEdgeClick={isEnabled ? onEdgeClick : undefined}
                             onNodesDelete={isEnabled ? onNodesDelete : undefined} onEdgesDelete={isEnabled ? onEdgesDelete : undefined}
                             onNodeContextMenu={isEnabled ? onNodeContextMenu : undefined} onEdgeContextMenu={isEnabled ? onEdgeContextMenu : undefined}
+                            onEdgeMouseEnter={(_evt, edge) => setHoveredEdgeId(edge.id)}
+                            onEdgeMouseLeave={() => setHoveredEdgeId(null)}
                             onPaneClick={onPaneClick} onPaneContextMenu={isEnabled ? onPaneContextMenu : undefined}
                             nodesDraggable={isEnabled} nodesConnectable={isEnabled} elementsSelectable={isEnabled}
                             connectionMode={ConnectionMode.Loose} snapToGrid={snapEnabled} snapGrid={snapGrid}
