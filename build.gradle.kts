@@ -24,7 +24,7 @@ if (signPropsFile.exists()) {
 }
 
 allprojects {
-    version = "1.0.1" // <-- Change this from 2.0.0 to force the Designer to download the new files!
+    version = "1.0.2" // <-- Change this from 2.0.0 to force the Designer to download the new files!
     group = "com.wargoetz.reactflow" // <-- UPDATED
 }
 
