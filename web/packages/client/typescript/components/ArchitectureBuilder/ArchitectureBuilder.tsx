@@ -573,7 +573,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
                             minZoom={0.05}
                         >
                             <Background gap={snapPixels} />
-                            <Controls />
+                            <Controls showInteractive={false} />
                         </ReactFlow>
                     </ReactFlowProvider>
 

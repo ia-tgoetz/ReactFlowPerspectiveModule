@@ -82,16 +82,16 @@
         {
           "supportedConnections": [
             "gateway-network",
+            "device-driver",
+            "client",
+            "db",
+            "opc-ua",
             "mqtt",
             "rest",
-            "standard",
-            "device-driver",
-            "opc-ua",
             "opc-com",
             "mongodb",
             "kafka",
-            "db",
-            "client"
+            "standard"
           ],
           "tooltip": "Edge IIOT Gateway",
           "typeId": "standard",
@@ -108,12 +108,12 @@
         {
           "supportedConnections": [
             "gateway-network",
-            "mqtt",
-            "rest",
-            "standard",
             "device-driver",
             "opc-ua",
-            "opc-com"
+            "mqtt",
+            "rest",
+            "opc-com",
+            "standard"
           ],
           "tooltip": "Edge IIOT Gateway",
           "typeId": "edge-iiot",
@@ -130,13 +130,13 @@
         {
           "supportedConnections": [
             "gateway-network",
+            "device-driver",
+            "client",
+            "opc-ua",
             "mqtt",
             "rest",
-            "client",
-            "standard",
-            "device-driver",
-            "opc-ua",
-            "opc-com"
+            "opc-com",
+            "standard"
           ],
           "tooltip": "Edge Panel Gateway",
           "typeId": "edge-panel",
@@ -153,14 +153,15 @@
         {
           "supportedConnections": [
             "gateway-network",
+            "client",
             "db",
+            "opc-ua",
             "mqtt",
             "rest",
-            "client",
-            "standard",
+            "opc-com",
             "mongodb",
             "kafka",
-            "opc-ua"
+            "standard"
           ],
           "tooltip": "Cloud Gateway",
           "typeId": "cloud",
@@ -538,9 +539,10 @@
           "tooltip": "Device",
           "b64Image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJMYXllcl8yIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMTc0LjA4IDE3Mi4yMyI+PGRlZnM+PHN0eWxlPi5jbHMtMSwuY2xzLTIsLmNscy0ze2ZpbGw6bm9uZTt9LmNscy0ye2NsaXAtcGF0aDp1cmwoI2NsaXBwYXRoLTEpO30uY2xzLTR7ZmlsbDojZmZmO30uY2xzLTV7ZmlsbDojYWNjZGUzO30uY2xzLTZ7ZmlsbDojMzY1NzdmO30uY2xzLTd7ZmlsbDojMmY0NTY2O30uY2xzLTN7Y2xpcC1wYXRoOnVybCgjY2xpcHBhdGgpO308L3N0eWxlPjxjbGlwUGF0aCBpZD0iY2xpcHBhdGgiPjxyZWN0IGNsYXNzPSJjbHMtMSIgd2lkdGg9IjE3NC4wOCIgaGVpZ2h0PSIxNzIuMjMiLz48L2NsaXBQYXRoPjxjbGlwUGF0aCBpZD0iY2xpcHBhdGgtMSI+PHJlY3QgY2xhc3M9ImNscy0xIiB3aWR0aD0iMTc0LjA4IiBoZWlnaHQ9IjE3Mi4yMyIvPjwvY2xpcFBhdGg+PC9kZWZzPjxnIGlkPSJMYXllcl8xLTIiPjxnIGlkPSJQTENfQmx1ZV8tX0xlZnQiPjxnIGNsYXNzPSJjbHMtMyI+PHBvbHlnb24gY2xhc3M9ImNscy01IiBwb2ludHM9IjEzMS4zNSAwIDAgNzUuODMgMCAxNDguNTcgNDIuNzUgMTcyLjIzIDE3NC4wOCA5Ni40MiAxNzQuMDggMjMuNjYgMTMxLjM1IDAiLz48cG9seWdvbiBjbGFzcz0iY2xzLTYiIHBvaW50cz0iNDIuNzUgOTkuNDkgNDIuNzUgMTcyLjIzIDE3NC4wOCA5Ni40MiAxNzQuMDggMjMuNjYgNDIuNzUgOTkuNDkiLz48ZyBjbGFzcz0iY2xzLTIiPjxwYXRoIGNsYXNzPSJjbHMtNCIgZD0ibTExNS43LDExOS42MWMtMS41OSwwLTIuODktMS4yOS0yLjg5LTIuODl2LTQ1Ljk2YzAtMS41OSwxLjI5LTIuODksMi44OS0yLjg5czIuODksMS4yOSwyLjg5LDIuODl2NDUuOTZjMCwxLjU5LTEuMjksMi44OS0yLjg5LDIuODkiLz48cGF0aCBjbGFzcz0iY2xzLTQiIGQ9Im04OC43OCwxMzUuMTRjLTEuNTksMC0yLjg5LTEuMjktMi44OS0yLjg5di00NS45NWMwLTEuNTksMS4yOS0yLjg5LDIuODktMi44OXMyLjg5LDEuMjksMi44OSwyLjg5djQ1Ljk1YzAsMS41OS0xLjI5LDIuODktMi44OSwyLjg5Ii8+PHBhdGggY2xhc3M9ImNscy00IiBkPSJtMTQzLjk2LDEwMy4yOGMtMS41OSwwLTIuODktMS4yOS0yLjg5LTIuODl2LTQ1Ljk1YzAtMS41OSwxLjI5LTIuODksMi44OS0yLjg5czIuODksMS4yOSwyLjg5LDIuODl2NDUuOTVjMCwxLjU5LTEuMjksMi44OS0yLjg5LDIuODkiLz48cGF0aCBjbGFzcz0iY2xzLTQiIGQ9Im02My43NSwxMDQuNDZjMCwzLjEtMi40OSw3LjAyLTUuNTYsOC44LTMuMTIsMS44LTUuNjQuNzYtNS42NC0yLjM1czIuNTItNy4wNiw1LjY0LTguODNjMy4wNy0xLjgsNS41Ni0uNzQsNS41NiwyLjM4Ii8+PHBhdGggY2xhc3M9ImNscy00IiBkPSJtNzYuODcsOTYuODZjMCwzLjExLTIuNDksNy4wNS01LjU5LDguODItMy4xMSwxLjgtNS42MS43Ni01LjYxLTIuMzRzMi41LTcuMDQsNS42MS04Ljg0YzMuMS0xLjc5LDUuNTktLjczLDUuNTksMi4zNiIvPjxwb2x5Z29uIGNsYXNzPSJjbHMtNyIgcG9pbnRzPSIwIDc1LjgzIDQyLjc1IDk5LjQ5IDQyLjc1IDE3Mi4yMyAwIDE0OC41NyAwIDc1LjgzIi8+PC9nPjwvZz48L2c+PC9nPjwvc3ZnPg==",
           "supportedConnections": [
-            "opc-ua",
             "device-driver",
-            "mqtt"
+            "opc-ua",
+            "mqtt",
+            "opc-com"
           ],
           "swappableWith": [
             "DeviceBlue",
@@ -561,7 +563,8 @@
           "supportedConnections": [
             "device-driver",
             "opc-ua",
-            "mqtt"
+            "mqtt",
+            "opc-com"
           ],
           "defaultConfigs": {},
           "hideHandles": false,
@@ -588,7 +591,8 @@
           "supportedConnections": [
             "device-driver",
             "opc-ua",
-            "mqtt"
+            "mqtt",
+            "opc-com"
           ],
           "defaultConfigs": {},
           "hideHandles": false,
@@ -615,7 +619,8 @@
           "supportedConnections": [
             "device-driver",
             "opc-ua",
-            "mqtt"
+            "mqtt",
+            "opc-com"
           ],
           "defaultConfigs": {},
           "hideHandles": false,
