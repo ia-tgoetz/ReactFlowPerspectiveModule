@@ -36,7 +36,9 @@ All props are defined in `architecturebuilder.props.json`.
 
 | Prop | Type | Description |
 |---|---|---|
-| `enabled` | boolean | Enables/disables all editing interactions. Read-only when false. |
+| `enabled` | boolean | Enables/disables all editing interactions (drag, connect, delete, context menu). Read-only when false. |
+| `enableOnClickEvents` | boolean | When true, node/edge/pane click events fire even if `enabled` is false (default true). Allows scripts to respond to clicks on a locked canvas. |
+| `edgeWidth` | number | Global stroke width for edges in pixels (default 6). Hovered and selected edges render at `edgeWidth + 2`. |
 | `hideHandles` | boolean | Globally hides connection handles on all nodes. |
 | `handleCount` | number | Number of handles per side on each node (1–8, default 5). |
 | `defaultConnectionType` | string | Connection type auto-selected when multiple valid types exist. |
@@ -143,10 +145,11 @@ Edge data is stored in `props.edges` as a flat dictionary keyed by short hex IDs
 | `dashed` | boolean | Renders edge as a dashed line. |
 | `arrow` | boolean | Shows arrowhead at target (default true). |
 | `showLabel` | boolean | Displays the connection type label on the edge. |
-| `offsetX` | number | Horizontal offset of the edge's midpoint bend. |
-| `offsetY` | number | Vertical offset of the edge's midpoint bend. |
+| `waypoints` | array | `[{x, y}, ...]` defining the orthogonal path. Computed at placement; updated by segment drag. |
 
-Selected edges render at **8px** stroke width; unselected at **6px**.
+Stroke width is driven by the `edgeWidth` prop (default 6). Hovered and selected edges render at `edgeWidth + 2`. `waypoints[]` is the only routing storage — there are no offset fields.
+
+New connections are created with `waypoints: []`. The edge routes automatically via live path computation until the user drags a segment, at which point the waypoints are persisted. Reconnecting an existing endpoint immediately recomputes a clean route.
 
 ---
 
@@ -155,6 +158,8 @@ Selected edges render at **8px** stroke width; unselected at **6px**.
 Containers are special nodes (`paletteId === "container"`) that act as resizable, labeled zones. They always render below regular nodes (`zIndex: -1` by default).
 
 **Drag behavior:** Dragging a container moves all nodes fully enclosed within its bounds. Toggle this off per-container via `configs.unlinked` (right-click → Toggle Link).
+
+**Resize behavior:** The resize handle appears when a container is selected. Resizing is disabled when `enabled` is false — the handle is hidden and `onResizeEnd` cannot fire.
 
 **Stacking order:** Multiple overlapping containers can be reordered via right-click → Order submenu (Bring to Front, Bring Forward, Send Backward, Send to Back).
 
@@ -325,7 +330,7 @@ Right-click on a node, edge, or the canvas pane to open the context menu.
 | Toggle Arrow | Shows/hides the arrowhead. |
 | Toggle Label | Shows/hides the connection type label on the edge. |
 | Toggle Dashed | Switches between solid and dashed rendering. |
-| Reverse Edge | Swaps source and target. |
+| Reverse Edge | Swaps source and target (and handles). Waypoints are reversed so the path geometry stays identical — only the arrowhead moves to the other end. |
 | Delete | Removes the edge. |
 
 ### Pane Actions
@@ -395,6 +400,19 @@ Both `b64Image` and drag ghost images support raw SVG markup (detected by leadin
 
 When `snapEnabled` is true, node drops and drags snap to a `snapPixels × snapPixels` grid. The ReactFlow `<Background>` dot grid matches this spacing.
 
+### Connected Handle Highlight
+
+When an edge is selected, the two handles it connects to are highlighted: they grow to 12 px and glow in `var(--callToAction)`. This makes it immediately clear which endpoints an edge spans, even when handles are normally hidden (`hideHandles: true`).
+
 ### Read-only Mode
 
-When `enabled` is false, the sidebar is hidden, all drag/drop and connection interactions are disabled, and the context menu is suppressed. Pan and zoom remain active.
+`enabled` and `enableOnClickEvents` are independent flags:
+
+| `enabled` | `enableOnClickEvents` | Editing | Click events |
+|---|---|---|---|
+| true | true | ✓ | ✓ |
+| false | true | ✗ | ✓ |
+| true | false | ✓ | ✗ |
+| false | false | ✗ | ✗ |
+
+When `enabled` is false: the sidebar is hidden; drag/drop, connect, delete, and context menus are suppressed; edge segment and endpoint drag handles are hidden; container resize handles are hidden. Pan and zoom remain active. When `enableOnClickEvents` is also false, `onNodeClick`, `onEdgeClick`, and `onPaneClick` component events are suppressed.
