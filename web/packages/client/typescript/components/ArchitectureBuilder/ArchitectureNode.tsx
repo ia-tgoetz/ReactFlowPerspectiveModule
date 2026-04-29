@@ -16,6 +16,7 @@ export interface ArchitectureNodeData {
     hideHandles?: boolean;
     globalHideHandles?: boolean;
     handleCount?: number;
+    highlightedHandles?: string[];
     onGearClick?: (id: string, event: React.MouseEvent) => void;
     onTextChange?: (id: string, text: string) => void;
 }
@@ -81,14 +82,16 @@ export const ArchitectureNode = ({ id, data, selected }: NodeProps<ArchitectureN
     
     const handleCount = Math.max(1, Math.min(8, Number(data.handleCount) || 5));
     const positions = Array.from({ length: handleCount }, (_, i) => `${((i + 0.5) / handleCount) * 100}%`);
+    const highlighted = new Set(data.highlightedHandles || []);
+    const handleClass = (id: string) => highlighted.has(id) ? 'arch-node-handle arch-node-handle--connected' : 'arch-node-handle';
 
     return (
         <div style={combinedStyle} title={data.tooltip}>
             {/* All handles are type="source"; ConnectionMode.Loose in the parent allows source-to-source connections */}
-            {positions.map((pos, i) => <Handle className="arch-node-handle" key={`top-${i}`} type="source" position={Position.Top} id={`top-${i}`} style={{ ...handleStyle, left: pos }} />)}
-            {positions.map((pos, i) => <Handle className="arch-node-handle" key={`right-${i}`} type="source" position={Position.Right} id={`right-${i}`} style={{ ...handleStyle, top: pos }} />)}
-            {positions.map((pos, i) => <Handle className="arch-node-handle" key={`bottom-${i}`} type="source" position={Position.Bottom} id={`bottom-${i}`} style={{ ...handleStyle, left: pos }} />)}
-            {positions.map((pos, i) => <Handle className="arch-node-handle" key={`left-${i}`} type="source" position={Position.Left} id={`left-${i}`} style={{ ...handleStyle, top: pos }} />)}
+            {positions.map((pos, i) => <Handle className={handleClass(`top-${i}`)} key={`top-${i}`} type="source" position={Position.Top} id={`top-${i}`} style={{ ...handleStyle, left: pos }} />)}
+            {positions.map((pos, i) => <Handle className={handleClass(`right-${i}`)} key={`right-${i}`} type="source" position={Position.Right} id={`right-${i}`} style={{ ...handleStyle, top: pos }} />)}
+            {positions.map((pos, i) => <Handle className={handleClass(`bottom-${i}`)} key={`bottom-${i}`} type="source" position={Position.Bottom} id={`bottom-${i}`} style={{ ...handleStyle, left: pos }} />)}
+            {positions.map((pos, i) => <Handle className={handleClass(`left-${i}`)} key={`left-${i}`} type="source" position={Position.Left} id={`left-${i}`} style={{ ...handleStyle, top: pos }} />)}
 
             <div
                 style={{

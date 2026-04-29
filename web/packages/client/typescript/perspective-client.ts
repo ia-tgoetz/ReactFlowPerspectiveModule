@@ -90,6 +90,7 @@ export class ArchitectureBuilderMeta implements ComponentMeta {
             
             // These must exactly match the keys in your architecturebuilder.props.json
             enabled: tree.read('enabled', true),
+            enableOnClickEvents: tree.read('enableOnClickEvents', true),
             snapEnabled: tree.read('snapEnabled', true),
             snapPixels: tree.read('snapPixels', 15),
             edgeWidth: tree.read('edgeWidth', 6),

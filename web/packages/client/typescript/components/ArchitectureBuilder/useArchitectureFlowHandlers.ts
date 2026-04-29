@@ -131,12 +131,9 @@ export const useArchitectureFlowHandlers = ({
         if (globalDefaultConnectionType && validTypes.includes(globalDefaultConnectionType)) selectedType = globalDefaultConnectionType;
         const typeDef = connectionTypes[selectedType] || {};
         if (store?.props) {
-            const src = getHandlePixelPos(connectionParams.source, connectionParams.sourceHandle || '', rawNodesDict, globalHandleCount);
-            const tgt = getHandlePixelPos(connectionParams.target, connectionParams.targetHandle || '', rawNodesDict, globalHandleCount);
-            const waypoints = src && tgt ? computeAutoWaypoints(src.x, src.y, src.position, tgt.x, tgt.y, tgt.position) : [];
             store.props.write('edges', {
                 ...rawEdgesDict,
-                [generateShortId()]: { ...connectionParams, lineType: 'smoothstep', dashed: false, arrow: typeDef.arrow !== false, showLabel: false, connectionType: selectedType, waypoints },
+                [generateShortId()]: { ...connectionParams, lineType: 'smoothstep', dashed: false, arrow: typeDef.arrow !== false, showLabel: false, connectionType: selectedType, waypoints: [] },
             });
         }
     }, [store, rawEdgesDict, rawNodesDict, globalHandleCount, getValidIntersection, connectionTypes, globalDefaultConnectionType]);
@@ -454,7 +451,10 @@ export const useArchitectureFlowHandlers = ({
         const paletteItem = draggedItemRef.current;
         if (!paletteItem || !reactFlowInstance) return;
         const position = reactFlowInstance.screenToFlowPosition({ x: event.clientX, y: event.clientY });
-        let dropX = Math.round(position.x), dropY = Math.round(position.y);
+        const nodeW = paletteItem.id === 'container' ? 300 : 150;
+        const nodeH = paletteItem.id === 'container' ? 300 : 150;
+        let dropX = Math.round(position.x - nodeW / 2);
+        let dropY = Math.round(position.y - nodeH / 2);
         if (snapEnabled) { dropX = Math.round(dropX / snapPixels) * snapPixels; dropY = Math.round(dropY / snapPixels) * snapPixels; }
         const initialConfigs = JSON.parse(JSON.stringify(paletteItem.defaultConfigs || {}));
         const initialStyle = JSON.parse(JSON.stringify(paletteItem.style || { classes: '' }));

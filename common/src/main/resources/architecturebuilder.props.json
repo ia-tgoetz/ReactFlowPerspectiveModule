@@ -1577,6 +1577,11 @@
       "description": "When false, hides the component palette and prevents all editing interactions. Pan and zoom remain functional.",
       "default": true
     },
+    "enableOnClickEvents": {
+      "type": "boolean",
+      "description": "When true, node and edge click events are fired even if the general enabled property is false.",
+      "default": true
+    },
     "snapEnabled": {
       "type": "boolean",
       "description": "Enable snapping to grid when moving components.",

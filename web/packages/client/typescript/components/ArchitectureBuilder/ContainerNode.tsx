@@ -4,10 +4,11 @@ import { NodeProps, NodeResizer } from 'reactflow';
 
 export interface ContainerNodeData {
     label: string;
-    style?: any; 
+    style?: any;
     labelStyle?: any;
+    isEditable?: boolean;
     onGearClick?: (id: string, event: React.MouseEvent) => void;
-    onResizeEnd?: (id: string, x: number, y: number, width: number, height: number) => void; 
+    onResizeEnd?: (id: string, x: number, y: number, width: number, height: number) => void;
 }
 
 export const ContainerNode = ({ id, data, selected }: NodeProps<ContainerNodeData>) => {
@@ -33,7 +34,7 @@ export const ContainerNode = ({ id, data, selected }: NodeProps<ContainerNodeDat
         <>
 <NodeResizer 
                 color="var(--callToAction)" 
-                isVisible={selected} 
+                isVisible={selected && data.isEditable !== false}
                 minWidth={150} 
                 minHeight={150}
                 // <-- FIXED: Enlarge Area grab-boxes to 16px! -->

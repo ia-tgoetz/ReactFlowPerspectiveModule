@@ -82,7 +82,7 @@ export const CustomEdge = ({
 
     // ─── Pointer-capture drag engine ──────────────────────────────────────
 
-    const canEdit = data?.isSelected && isStepType;
+    const canEdit = data?.isSelected && isStepType && data?.isEditable !== false;
 
     // Shared delta computation — reads only from dragState (ref, always current)
     // and getZoom (stable hook reference), so it never goes stale.

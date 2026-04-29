@@ -206,7 +206,9 @@ const mapIgnitionToReactFlowNodes = (
     handleTextChange: (id: string, text: string) => void,
     selectedId: string | null,
     globalHideHandles: boolean,
-    globalHandleCount: number
+    globalHandleCount: number,
+    highlightedHandlesMap: Record<string, string[]>,
+    isEditable: boolean
 ) => {
     if (!ignitionNodes) return [];
     return Object.entries(ignitionNodes)
@@ -223,6 +225,8 @@ const mapIgnitionToReactFlowNodes = (
                     style: nodeData.style || {}, labelStyle: nodeData.labelStyle || {}, textStyle: nodeData.textStyle || {},
                     paletteId: nodeData.paletteId || 'unknown', inactive: nodeData.inactive || false,
                     hideHandles: nodeData.hideHandles, globalHideHandles, handleCount: globalHandleCount,
+                    highlightedHandles: highlightedHandlesMap[id] || [],
+                    isEditable,
                     onGearClick: handleGearClick, onTextChange: handleTextChange,
                     onResizeEnd: isContainer ? handleResizeEnd : undefined,
                 },
@@ -289,7 +293,7 @@ const computeHierarchyData = (nodesDict: any, edgesDict: any) => {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export interface ArchitectureBuilderProps {
-    enabled?: any; hideHandles?: any; handleCount?: any; defaultConnectionType?: string;
+    enabled?: any; enableOnClickEvents?: any; hideHandles?: any; handleCount?: any; defaultConnectionType?: string;
     snapEnabled?: any; snapPixels?: any; edgeWidth?: any; style?: any; connectionTypes: any; paletteItems: any[];
     nodes: any; edges: any; hierarchy?: any;
 }
@@ -329,6 +333,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
         handleCount:           extractDeep(props.props.handleCount),
         defaultConnectionType: extractDeep(props.props.defaultConnectionType),
         enabled:               extractDeep(props.props.enabled),
+        enableOnClickEvents:   extractDeep(props.props.enableOnClickEvents),
     });
 
     const rawNodesDict = React.useMemo(() => JSON.parse(rawNodesJson), [rawNodesJson]);
@@ -341,6 +346,7 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
     const globalHandleCount = Number(rawConfig.handleCount) || 5;
     const globalDefaultConnectionType = rawConfig.defaultConnectionType || '';
     const isEnabled = rawConfig.enabled !== false && String(rawConfig.enabled ?? 'true').toLowerCase() !== 'false';
+    const enableOnClickEvents = rawConfig.enableOnClickEvents !== false && String(rawConfig.enableOnClickEvents ?? 'true').toLowerCase() !== 'false';
     const snapEnabled = rawConfig.snapEnabled !== false && String(rawConfig.snapEnabled ?? 'true').toLowerCase() !== 'false';
     const snapPixels = Number(rawConfig.snapPixels) || 15;
     const snapGrid = React.useMemo<[number, number]>(() => [snapPixels, snapPixels], [snapPixels]);
@@ -410,9 +416,18 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
 
     // ─── Derived flow data ─────────────────────────────────────────────────
 
+    const highlightedHandlesMap = React.useMemo<Record<string, string[]>>(() => {
+        const edge = selectedId ? rawEdgesDict[selectedId] : null;
+        if (!edge) return {};
+        const map: Record<string, string[]> = {};
+        if (edge.source && edge.sourceHandle) map[edge.source] = [edge.sourceHandle];
+        if (edge.target && edge.targetHandle) map[edge.target] = [...(map[edge.target] || []), edge.targetHandle];
+        return map;
+    }, [selectedId, rawEdgesDict]);
+
     const flowNodes = React.useMemo(
-        () => mapIgnitionToReactFlowNodes(rawNodesDict, handleGearClick, handleResizeEnd, handleTextChange, selectedId, globalHideHandles, globalHandleCount),
-        [rawNodesDict, handleGearClick, handleResizeEnd, handleTextChange, selectedId, globalHideHandles, globalHandleCount]
+        () => mapIgnitionToReactFlowNodes(rawNodesDict, handleGearClick, handleResizeEnd, handleTextChange, selectedId, globalHideHandles, globalHandleCount, highlightedHandlesMap, isEnabled),
+        [rawNodesDict, handleGearClick, handleResizeEnd, handleTextChange, selectedId, globalHideHandles, globalHandleCount, highlightedHandlesMap, isEnabled]
     );
     const flowEdges = React.useMemo(
         () => mapIgnitionToReactFlowEdges(rawEdgesDict, connectionTypes, selectedId, handleWaypointsChange, snapEnabled, snapPixels, globalEdgeWidth),
@@ -432,11 +447,12 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
             const waypoints = local?.data?.waypoints ?? fresh.data?.waypoints;
             return {
                 ...fresh,
+                updatable: isEnabled,
                 style: { ...fresh.style, strokeWidth },
-                data: { ...fresh.data, waypoints },
+                data: { ...fresh.data, waypoints, isEditable: isEnabled },
             };
         });
-    }, [localEdges, flowEdges, hoveredEdgeId, globalEdgeWidth]);
+    }, [localEdges, flowEdges, hoveredEdgeId, globalEdgeWidth, isEnabled]);
 
     // ─── Keyboard shortcuts ────────────────────────────────────────────────
 
@@ -512,6 +528,8 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
             .arch-node-handle::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 8px; height: 8px; border-radius: 50%; background: var(--neutral-90); border: 1px solid var(--neutral-90); pointer-events: none; transition: transform 0.15s ease-in-out, background 0.15s ease-in-out, border-color 0.15s ease-in-out; }
             /* Hover: scale ::after from its own center — base anchor is untouched */
             .arch-node-handle:hover::after { background: var(--callToAction) !important; border-color: var(--callToAction) !important; transform: translate(-50%, -50%) scale(1.5); }
+            /* Connected handle: shown when the selected edge touches this handle */
+            .arch-node-handle--connected::after { background: var(--callToAction) !important; border-color: var(--callToAction) !important; width: 12px !important; height: 12px !important; box-shadow: 0 0 5px var(--callToAction); }
             /* React Flow connection states: base stays transparent, ::after carries the color */
             .react-flow__handle.connecting { background: transparent !important; border-color: transparent !important; }
             .react-flow__handle.connecting::after { background: #3b82f6 !important; border-color: #2563eb !important; width: 14px !important; height: 14px !important; }
@@ -542,12 +560,12 @@ export const ArchitectureBuilder = observer((props: ComponentProps<ArchitectureB
                             onConnectEnd={isEnabled ? onConnectEnd : undefined}
                             onNodeDragStart={isEnabled ? onNodeDragStart : undefined} onNodeDrag={isEnabled ? onNodeDrag : undefined} onNodeDragStop={isEnabled ? onNodeDragStop : undefined}
                             onNodesChange={onNodesChange}
-                            onNodeClick={isEnabled ? onNodeClick : undefined} onEdgeClick={isEnabled ? onEdgeClick : undefined}
+                            onNodeClick={enableOnClickEvents ? onNodeClick : undefined} onEdgeClick={enableOnClickEvents ? onEdgeClick : undefined}
                             onNodesDelete={isEnabled ? onNodesDelete : undefined} onEdgesDelete={isEnabled ? onEdgesDelete : undefined}
                             onNodeContextMenu={isEnabled ? onNodeContextMenu : undefined} onEdgeContextMenu={isEnabled ? onEdgeContextMenu : undefined}
                             onEdgeMouseEnter={(_evt, edge) => setHoveredEdgeId(edge.id)}
                             onEdgeMouseLeave={() => setHoveredEdgeId(null)}
-                            onPaneClick={onPaneClick} onPaneContextMenu={isEnabled ? onPaneContextMenu : undefined}
+                            onPaneClick={enableOnClickEvents ? onPaneClick : undefined} onPaneContextMenu={isEnabled ? onPaneContextMenu : undefined}
                             nodesDraggable={isEnabled} nodesConnectable={isEnabled} elementsSelectable={isEnabled}
                             connectionMode={ConnectionMode.Loose} snapToGrid={snapEnabled} snapGrid={snapGrid}
                             connectionLineStyle={{ stroke: '#cccccc', strokeWidth: 6 }}

@@ -136,7 +136,6 @@ export const mapIgnitionToReactFlowEdges = (
                 style: strokeStyle,
                 markerEnd: arrowMarker,
                 interactionWidth: 20,
-                updatable: true,
             };
         });
 };
